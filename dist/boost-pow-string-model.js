@@ -1,39 +1,31 @@
-import * as bsv from 'bsv';
-
-export class BoostHeaderModel {
-    private _blockheader;
-
-    private constructor(blockheader: bsv.BlockHeader) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const bsv = require("bsv");
+class BoostPowStringModel {
+    constructor(blockheader) {
         this._blockheader = blockheader;
-
         if (!this._blockheader.validProofOfWork()) {
             throw new Error('INVALID_POW');
         }
     }
-
-    hash(): string {
+    hash() {
         return this._blockheader.hash;
     }
-
-    static validProofOfWorkFromBuffer(buf): boolean {
+    static validProofOfWorkFromBuffer(buf) {
         const blockheader = bsv.BlockHeader.fromBuffer(buf);
-
         if (blockheader.validProofOfWork()) {
             return true;
         }
         return false;
     }
-
-    static validProofOfWorkFromString(str): boolean {
+    static validProofOfWorkFromString(str) {
         const blockheader = bsv.BlockHeader.fromString(str);
-
         if (blockheader.validProofOfWork()) {
             return true;
         }
         return false;
     }
-
-    static validProofOfWorkFromObject(obj): boolean {
+    static validProofOfWorkFromObject(obj) {
         const spoofedObj = {
             prevHash: obj.content,
             bits: obj.bits,
@@ -41,24 +33,20 @@ export class BoostHeaderModel {
             merkleRoot: obj.abstract,
             time: obj.time,
             nonce: obj.nonce,
-        }
+        };
         const blockheader = bsv.BlockHeader.fromObject(spoofedObj);
-
         if (blockheader.validProofOfWork()) {
             return true;
         }
         return false;
     }
-
-    static fromBuffer (buf) {
-        return new BoostHeaderModel(bsv.BlockHeader.fromBuffer(buf));
+    static fromBuffer(buf) {
+        return new BoostPowStringModel(bsv.BlockHeader.fromBuffer(buf));
     }
-
     static fromString(str) {
-        var buf = Buffer.from(str, 'hex')
-        return new BoostHeaderModel(bsv.BlockHeader.fromBuffer(buf));
+        var buf = Buffer.from(str, 'hex');
+        return new BoostPowStringModel(bsv.BlockHeader.fromBuffer(buf));
     }
-
     static fromObject(obj) {
         const spoofedObj = {
             prevHash: obj.content,
@@ -67,20 +55,16 @@ export class BoostHeaderModel {
             merkleRoot: obj.abstract,
             time: obj.time,
             nonce: obj.nonce,
-        }
-        return new BoostHeaderModel(bsv.BlockHeader.fromObject(spoofedObj));
+        };
+        return new BoostPowStringModel(bsv.BlockHeader.fromObject(spoofedObj));
     }
-
-    toBuffer () {
-        return this._blockheader.toBufferWriter().concat()
+    toBuffer() {
+        return this._blockheader.toBufferWriter().concat();
     }
-
-    toString () {
+    toString() {
         return this._blockheader.toBuffer().toString('hex');
     }
-
-    toObject () {
-
+    toObject() {
         const blockheaderObj = this._blockheader.toObject();
         const boostheaderObj = {
             hash: blockheaderObj.hash,
@@ -93,4 +77,11 @@ export class BoostHeaderModel {
         };
         return boostheaderObj;
     }
+    getDifficulty() {
+        return this._blockheader.getDifficulty();
+    }
+    getTargetDifficulty(bits) {
+        return this._blockheader.getTargetDifficulty(bits);
+    }
 }
+exports.BoostPowStringModel = BoostPowStringModel;

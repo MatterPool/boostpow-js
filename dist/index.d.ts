@@ -1,10 +1,10 @@
-import { BoostHeaderModel } from './boost-header-model';
+import { BoostPowStringModel } from './boost-pow-string-model';
 export declare class BoostClient {
     options: any;
     constructor(providedOptions?: any);
-    readonly BoostHeader: typeof BoostHeaderModel;
+    readonly BoostPowString: typeof BoostPowStringModel;
     setOptions(newOptions: any): void;
     static instance(newOptions?: any): BoostClient;
 }
 export declare function instance(newOptions?: any): BoostClient;
-export declare var BoostHeader: typeof BoostHeaderModel;
+export declare var BoostPowString: typeof BoostPowStringModel;

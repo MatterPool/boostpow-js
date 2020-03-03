@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const boost_header_model_1 = require("./boost-header-model");
+const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const defaultOptions = {
     api_url: 'https://api.matterpool.io',
     network: 'bsv',
@@ -10,8 +10,8 @@ class BoostClient {
     constructor(providedOptions) {
         this.options = Object.assign({}, defaultOptions, providedOptions);
     }
-    get BoostHeader() {
-        return boost_header_model_1.BoostHeaderModel;
+    get BoostPowString() {
+        return boost_pow_string_model_1.BoostPowStringModel;
     }
     setOptions(newOptions) {
         this.options = Object.assign({}, this.options, newOptions);
@@ -31,11 +31,11 @@ try {
     if (window) {
         window['Boost'] = {
             Service: new BoostClient(),
-            BoostHeader: boost_header_model_1.BoostHeaderModel
+            BoostPowString: boost_pow_string_model_1.BoostPowStringModel
         };
     }
 }
 catch (ex) {
     // Window is not defined, must be running in windowless env....
 }
-exports.BoostHeader = boost_header_model_1.BoostHeaderModel;
+exports.BoostPowString = boost_pow_string_model_1.BoostPowStringModel;

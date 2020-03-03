@@ -1,4 +1,4 @@
-import { BoostHeaderModel } from './boost-header-model';
+import { BoostPowStringModel } from './boost-pow-string-model';
 
 const defaultOptions: any = {
   api_url: 'https://api.matterpool.io',
@@ -12,8 +12,8 @@ export class BoostClient {
     this.options = Object.assign({}, defaultOptions, providedOptions);
   }
 
-  get BoostHeader() {
-    return BoostHeaderModel;
+  get BoostPowString() {
+    return BoostPowStringModel;
   }
 
   setOptions(newOptions) {
@@ -35,7 +35,7 @@ try {
   if (window) {
     window['Boost'] = {
       Service: new BoostClient(),
-      BoostHeader: BoostHeaderModel
+      BoostPowString: BoostPowStringModel
     };
   }
 }
@@ -43,5 +43,5 @@ catch (ex) {
   // Window is not defined, must be running in windowless env....
 }
 
-export var BoostHeader = BoostHeaderModel;
+export var BoostPowString = BoostPowStringModel;
 
