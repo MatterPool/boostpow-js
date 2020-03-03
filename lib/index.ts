@@ -1,5 +1,4 @@
 import { BoostHeaderModel } from './boost-header-model';
-import { BoostMagicStringModel } from './boost-magic-string-model';
 
 const defaultOptions: any = {
   api_url: 'https://api.matterpool.io',
@@ -15,10 +14,6 @@ export class BoostClient {
 
   get BoostHeader() {
     return BoostHeaderModel;
-  }
-
-  get MagicString() {
-    return BoostMagicStringModel;
   }
 
   setOptions(newOptions) {
@@ -40,7 +35,7 @@ try {
   if (window) {
     window['Boost'] = {
       Service: new BoostClient(),
-      MagicString: BoostMagicStringModel
+      BoostHeader: BoostHeaderModel
     };
   }
 }
@@ -49,5 +44,4 @@ catch (ex) {
 }
 
 export var BoostHeader = BoostHeaderModel;
-export var MagicString = BoostMagicStringModel;
 

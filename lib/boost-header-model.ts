@@ -15,8 +15,39 @@ export class BoostHeaderModel {
         return this._blockheader.hash;
     }
 
-    validProofOfWork(): boolean {
-        return this._blockheader.validProofOfWork();
+    static validProofOfWorkFromBuffer(buf): boolean {
+        const blockheader = bsv.BlockHeader.fromBuffer(buf);
+
+        if (blockheader.validProofOfWork()) {
+            return true;
+        }
+        return false;
+    }
+
+    static validProofOfWorkFromString(str): boolean {
+        const blockheader = bsv.BlockHeader.fromString(str);
+
+        if (blockheader.validProofOfWork()) {
+            return true;
+        }
+        return false;
+    }
+
+    static validProofOfWorkFromObject(obj): boolean {
+        const spoofedObj = {
+            prevHash: obj.content,
+            bits: obj.bits,
+            version: obj.version,
+            merkleRoot: obj.abstract,
+            time: obj.time,
+            nonce: obj.nonce,
+        }
+        const blockheader = bsv.BlockHeader.fromObject(spoofedObj);
+
+        if (blockheader.validProofOfWork()) {
+            return true;
+        }
+        return false;
     }
 
     static fromBuffer (buf) {

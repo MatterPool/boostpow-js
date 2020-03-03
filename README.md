@@ -73,7 +73,7 @@ npm run test
 
 -----------
 
- ## Any questions or ideas?
+## Any questions or ideas?
 
 matterpool.io
 

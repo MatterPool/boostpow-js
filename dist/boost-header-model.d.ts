@@ -2,7 +2,9 @@ export declare class BoostHeaderModel {
     private _blockheader;
     private constructor();
     hash(): string;
-    validProofOfWork(): boolean;
+    static validProofOfWorkFromBuffer(buf: any): boolean;
+    static validProofOfWorkFromString(str: any): boolean;
+    static validProofOfWorkFromObject(obj: any): boolean;
     static fromBuffer(buf: any): BoostHeaderModel;
     static fromString(str: any): BoostHeaderModel;
     static fromObject(obj: any): BoostHeaderModel;
