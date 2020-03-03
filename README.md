@@ -1,43 +1,21 @@
 # Boost Pow Javascript Library
-> [matterpool.io](https://www.matterpool.io)
+> boostpow.com
 
-See examples at: https://github.com/MatterPool/boostpow-js/blob/master/test/boost-magic-string.test.js
-
-# DOCUMENTATION NEEDS IMPROVEMENT
-
-[VIEW COMPLETE DEVELOPER DOCUMENTATION](https://developers.matterpool.io)
+See usage examples at: https://github.com/MatterPool/boostpow-js/blob/master/test/boost-magic-string.test.js
 
 ---
 
 ## Quick Start
 
-_Small < 24KB library size_
 **Installation**
 ```sh
 npm install boostpow-js --save
 ```
 
 **Include**
-
-```javascript
-
-var boost = require('boostpow-js').instance(options);
-
-```
-
-[VIEW COMPLETE DEVELOPER DOCUMENTATION](https://developers.mattercloud.net)
-
-## Detailed Installation and Usage
-
-**Installation**
-```sh
-npm install mattercloudjs --save
-```
-
-**Include**
 ```javascript
 // Node
-var boostpow = require('boostpow-js').instance(options);
+var boostpow = require('boostpow-js');
 
 ```
 
@@ -46,33 +24,11 @@ var boostpow = require('boostpow-js').instance(options);
 <script src="dist/boostpow.js"></script>
 <script language="javascript">
     // mattercloud.setApiKey('my key');
-    var result = await boostpow.getUtxos('12XXBHkRNrBEb7GCvAP4G8oUs5SoDREkVX');
+    var result = Boost.MagicString.fromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
     console.log('result', result);
+    document.getElementById('results').innerHTML = JSON.stringify(result.toObject());
 </script>
 ```
-See browser usage examples: https://github.com/matterpool/boostpow/blob/master/dist/basic.html
-
-### Promises vs. Callback
-
-Both `await` and callback styles are supported for all methods.
-
-Example:
-
-```javascript
-
-// Await style with promises
-var result = await boostpow.requestBoost('...');
-
-// Callback style
-boostpow.requestBoost('...', function(result) {
-    // ...
-});
-
-```
-
-## Detailed Documentation
-
-[VIEW COMPLETE DEVELOPER DOCUMENTATION](https://developers.mattercloud.net)
 
 
 ## Build and Test
@@ -88,10 +44,7 @@ npm run test
 
  ## Any questions or ideas?
 
- We would love to hear from you!
+matterpool.io
 
- https://www.mattercloud.net
-
- https://twitter.com/MatterCloud
-
+boostpow.com
 
