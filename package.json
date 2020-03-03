@@ -1,7 +1,7 @@
 {
   "name": "boostpow-js",
-  "version": "1.0.0",
-  "description": "Boost POW Javascript SDK - Created by Matterpool.io",
+  "version": "1.0.1",
+  "description": "Boost Proof of Work Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
