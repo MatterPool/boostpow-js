@@ -33,7 +33,7 @@
     "satoshi",
     "satoshi-vision"
   ],
-  "homepage": "https://github.com/MatterPool/boost-pow-js#readme",
+  "homepage": "https://github.com/MatterPool/boostpow-js#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
