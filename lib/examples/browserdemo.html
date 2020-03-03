@@ -1,0 +1,27 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Boostpow-js SDK Example</title>
+    <base href="/"/>
+    <script src="boostpow.js"></script>
+    <script language="javascript">
+      // On ready taken from https://stackoverflow.com/a/7053197
+      function r(f){/in/.test(document.readyState)?setTimeout(r,9,f):f()}
+      r(async () => {
+        // When content loaded in page on ready, then run this code....
+        var result = boostpow.BoostMagicNumber.fromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
+        console.log('result', result);
+        document.getElementById('results').innerHTML = JSON.stringify(result.toObject());
+      });
+    </script>
+  </head>
+  <body>
+    <a href="https://matterpool.io">MatterPool</a>
+    <p>
+     Result:
+    </p>
+    <div id="results" style="word-break: break-word"></div>
+  </body>
+</html>
