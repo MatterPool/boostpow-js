@@ -1,13 +1,13 @@
 {
   "name": "boostpow-js",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && gulp build",
     "test": "mocha --reporter spec",
-    "test_boostpow": "mocha --reporter spec --grep boost",
+    "test_boostpow": "mocha --reporter spec --grep 'BoostPowJob create various getters and sette'",
     "prepare": "npm run build"
   },
   "repository": {
@@ -72,6 +72,7 @@
   "dependencies": {
     "@types/node": "^13.7.7",
     "axios": "^0.18.0",
+    "crypto-random-string": "^3.1.0",
     "i": "^0.3.6"
   },
   "files": [

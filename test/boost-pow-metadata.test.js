@@ -1,0 +1,54 @@
+'use strict';
+var expect = require('chai').expect;
+var index = require('../dist/index.js');
+
+describe('boost #BoostPowMetadata tests', () => {
+
+   it('should success create', async () => {
+      const abstract = index.BoostPowMetadata.fromObject({
+         tag: '01',
+         minerAddress: '00000000000000000000000000000000000000a4',
+         unique: '014e',
+         minerNonce: '0000000000000011',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000042',
+      });
+
+      const obj = abstract.toObject();
+      expect(obj).to.eql({
+         tag: '0000000000000000000000000000000000000001',
+         minerAddress: '00000000000000000000000000000000000000a4',
+         unique: '000000000000014e',
+         minerNonce: '0000000000000011',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000042',
+      });
+   });
+
+   it('should success create hex ', async () => {
+      const abstract = index.BoostPowMetadata.fromObject({
+         tag: '0000000000000000000000000000000000000001',
+         minerAddress: '00000000000000000000000000000000000000a4',
+         unique: '000000000000014e',
+         minerNonce: '0000000000000011',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000042',
+      });
+
+      const obj = abstract.toObject();
+      expect(obj).to.eql({
+         tag: '0000000000000000000000000000000000000001',
+         minerAddress: '00000000000000000000000000000000000000a4',
+         unique: '000000000000014e',
+         minerNonce: '0000000000000011',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000042',
+      });
+      expect(abstract.toHex()).to.eql('0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e0100000000000011000000000000004200000000000000000000000000000000000000000000000000000000000000');
+      const fromHex = index.BoostPowMetadata.fromHex('0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e0100000000000011000000000000004200000000000000000000000000000000000000000000000000000000000000');
+      expect(abstract.toHex()).to.eql(fromHex.toHex());
+      expect(fromHex.toObject()).to.eql(obj);
+   });
+
+   it('should success create and get hash of abstract', async () => {
+      const fromHex = index.BoostPowMetadata.fromHex('000000000000000000000000000000000000000100000000000000000000000000000000000000a4000000000000014e00000000000000110000000000000000000000000000000000000000000000000000000000000042');
+      expect(fromHex.hash()).to.eql('4783a3fb34daa3a63b326fcc2dad58a524d603ed1bd014028db5cc4309c46cd6');
+   });
+
+});

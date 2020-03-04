@@ -1,3 +1,7 @@
+/// <reference types="node" />
+import { BoostPowStringModel } from './boost-pow-string-model';
+import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
+import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
     private content;
     private diff;
@@ -7,26 +11,30 @@ export declare class BoostPowJobModel {
     private unique;
     static operations: any[];
     private constructor();
-    id(): string;
+    getContent(): Buffer;
+    getDiff(): number;
+    getCategory(): Buffer;
+    getTag(): Buffer;
+    getMetadata(): Buffer;
+    getUnique(): Buffer;
     static fromObject(params: {
         content: string;
         diff: number;
-        category: number;
+        category: string;
         tag: string;
         metadata: string;
-        unique: number;
+        unique: string;
     }): BoostPowJobModel;
     static createBufferAndPad(buf: any, length: number): any;
     toObject(): {
         content: string;
         diff: number;
-        category: number;
+        category: string;
         tag: string;
         metadata: string;
-        unique: number;
+        unique: string;
     };
     static difficulty2bits(difficulty: any): number;
-    private getNumberHexBuffer;
     getTargetAsNumberBuffer(): any;
     toHex(): string;
     /**
@@ -43,7 +51,9 @@ export declare class BoostPowJobModel {
     static remainingOperationsMatchExactly(remainingChunks: any): boolean;
     static fromHex(asm: string): BoostPowJobModel;
     toASM(): string;
-    static fromASM(asm: string): BoostPowJobModel;
+    static fromASM(str: string): BoostPowJobModel;
     toString(): string;
     static fromString(str: string): BoostPowJobModel;
+    static createPowAbstract(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: true): BoostPowStringModel | null;
 }

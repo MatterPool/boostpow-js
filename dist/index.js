@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
-const boost_pow_job_1 = require("./boost-pow-job");
+const boost_pow_job_model_1 = require("./boost-pow-job-model");
+const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
+const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const defaultOptions = {
     api_url: 'https://api.matterpool.io',
     network: 'bsv',
@@ -33,7 +35,9 @@ try {
         window['Boost'] = {
             Service: new BoostClient(),
             BoostPowString: boost_pow_string_model_1.BoostPowStringModel,
-            BoostPowJob: boost_pow_job_1.BoostPowJobModel
+            BoostPowJob: boost_pow_job_model_1.BoostPowJobModel,
+            BoostPowJobProof: boost_pow_job_proof_model_1.BoostPowJobProofModel,
+            BoostPowMetadata: boost_pow_metadata_model_1.BoostPowMetadataModel,
         };
     }
 }
@@ -41,4 +45,6 @@ catch (ex) {
     // Window is not defined, must be running in windowless env....
 }
 exports.BoostPowString = boost_pow_string_model_1.BoostPowStringModel;
-exports.BoostPowJob = boost_pow_job_1.BoostPowJobModel;
+exports.BoostPowJob = boost_pow_job_model_1.BoostPowJobModel;
+exports.BoostPowJobProof = boost_pow_job_proof_model_1.BoostPowJobProofModel;
+exports.BoostPowMetadata = boost_pow_metadata_model_1.BoostPowMetadataModel;
