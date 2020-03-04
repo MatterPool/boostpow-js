@@ -4,18 +4,17 @@ export declare class BoostPowJobModel {
     private category;
     private tag;
     private metadata;
-    private time;
     private unique;
+    static operations: any[];
     private constructor();
     id(): string;
     static fromObject(params: {
         content: string;
         diff: number;
-        category?: number;
-        tag?: string;
-        metadata?: string;
-        time?: number;
-        unique?: number;
+        category: number;
+        tag: string;
+        metadata: string;
+        unique: number;
     }): BoostPowJobModel;
     static createBufferAndPad(buf: any, length: number): any;
     toObject(): {
@@ -24,12 +23,27 @@ export declare class BoostPowJobModel {
         category: number;
         tag: string;
         metadata: string;
-        time: number;
         unique: number;
     };
-    private getBufferHex;
-    private getNumberHex;
-    private getTarget;
-    private expandTarget;
-    toScriptASM(): string;
+    static difficulty2bits(difficulty: any): number;
+    private getNumberHexBuffer;
+    getTargetAsNumberBuffer(): any;
+    toHex(): string;
+    /**
+     * Returns the target difficulty for this block
+     * @param {Number} bits
+     * @returns {BN} An instance of BN with the decoded difficulty bits
+     */
+    static getTargetDifficulty(bits: any): any;
+    /**
+     * @link https://en.bitcoin.it/wiki/Difficulty
+     * @return {Number}
+     */
+    static getDifficulty(bits: any): number;
+    static remainingOperationsMatchExactly(remainingChunks: any): boolean;
+    static fromHex(asm: string): BoostPowJobModel;
+    toASM(): string;
+    static fromASM(asm: string): BoostPowJobModel;
+    toString(): string;
+    static fromString(str: string): BoostPowJobModel;
 }
