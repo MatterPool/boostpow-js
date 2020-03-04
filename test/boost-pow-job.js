@@ -18,7 +18,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 0,
          tag: '0000000000000000000000000000000000000000',
-         metadata: "",
+         metadata: "0000000000000000000000000000000000000000000000000000000000000000",
          // auto-generated
          // time: 1305200806,
          // unique: 2436437219,
@@ -44,7 +44,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 1234,
          tag: index.BoostPowJob.createBufferAndPad('animals', 20).toString('hex'),
-         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 0).toString('hex'),
+         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 32).toString('hex'),
          time: 1305200806,
          unique: 2436437219,
       });
@@ -54,7 +54,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 1234,
          tag: '616e696d616c7300000000000000000000000000',
-         metadata: '6d657461646174612068657265',
+         metadata: '6d65746164617461206865726500000000000000000000000000000000000000',
          time: 1305200806,
          unique: 2436437219,
       });
@@ -66,7 +66,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 1234,
          tag: '616e696d616c7300000000000000000000000000',
-         metadata: '6d657461646174612068657265',
+         metadata: '6d65746164617461206865726500000000000000000000000000000000000000',
          time: 1305200806,
          unique: 2436437219,
       });
@@ -77,7 +77,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 1234,
          tag: index.BoostPowJob.createBufferAndPad('animals', 20).toString('hex'),
-         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 0).toString('hex'),
+         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 32).toString('hex'),
          time: 1305200806,
          unique: 2436437219,
       });
@@ -87,9 +87,24 @@ describe('boost #BoostPowJob.createBoostJob', () => {
          diff: 8,
          category: 1234,
          tag: '616e696d616c7300000000000000000000000000',
-         metadata: '6d657461646174612068657265',
+         metadata: '6d65746164617461206865726500000000000000000000000000000000000000',
          time: 1305200806,
          unique: 2436437219,
       });
+   });
+
+   it('should generate output script ASM', async () => {
+      const job = index.BoostPowJob.fromObject({
+         content: '68656c6c6f20776f726c64000000000000000000000000000000000000000000',
+         diff: 8,
+         category: 1234,
+         tag: '616e696d616c7300000000000000000000000000',
+         metadata: '6d65746164617461206865726500000000000000000000000000000000000000',
+         time: 1305200806,
+         unique: 2436437219,
+      });
+
+      const outputScript = job.toScriptASM();
+      expect(outputScript).to.eql('asm goes here');
    });
 });

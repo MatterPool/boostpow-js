@@ -27,4 +27,9 @@ export declare class BoostPowJobModel {
         time: number;
         unique: number;
     };
+    private getBufferHex;
+    private getNumberHex;
+    private getTarget;
+    private expandTarget;
+    toScriptASM(): string;
 }
