@@ -1,4 +1,5 @@
 import { BoostPowStringModel } from './boost-pow-string-model';
+import { BoostPowJobModel } from './boost-pow-job';
 export declare class BoostClient {
     options: any;
     constructor(providedOptions?: any);
@@ -8,3 +9,4 @@ export declare class BoostClient {
 }
 export declare function instance(newOptions?: any): BoostClient;
 export declare var BoostPowString: typeof BoostPowStringModel;
+export declare var BoostPowJob: typeof BoostPowJobModel;

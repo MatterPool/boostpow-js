@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
+const boost_pow_job_1 = require("./boost-pow-job");
 const defaultOptions = {
     api_url: 'https://api.matterpool.io',
     network: 'bsv',
@@ -31,7 +32,8 @@ try {
     if (window) {
         window['Boost'] = {
             Service: new BoostClient(),
-            BoostPowString: boost_pow_string_model_1.BoostPowStringModel
+            BoostPowString: boost_pow_string_model_1.BoostPowStringModel,
+            BoostPowJob: boost_pow_job_1.BoostPowJobModel
         };
     }
 }
@@ -39,3 +41,4 @@ catch (ex) {
     // Window is not defined, must be running in windowless env....
 }
 exports.BoostPowString = boost_pow_string_model_1.BoostPowStringModel;
+exports.BoostPowJob = boost_pow_job_1.BoostPowJobModel;

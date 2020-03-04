@@ -1,4 +1,5 @@
 import { BoostPowStringModel } from './boost-pow-string-model';
+import { BoostPowJobModel } from './boost-pow-job';
 
 const defaultOptions: any = {
   api_url: 'https://api.matterpool.io',
@@ -35,7 +36,8 @@ try {
   if (window) {
     window['Boost'] = {
       Service: new BoostClient(),
-      BoostPowString: BoostPowStringModel
+      BoostPowString: BoostPowStringModel,
+      BoostPowJob: BoostPowJobModel
     };
   }
 }
@@ -44,4 +46,5 @@ catch (ex) {
 }
 
 export var BoostPowString = BoostPowStringModel;
+export var BoostPowJob = BoostPowJobModel;
 
