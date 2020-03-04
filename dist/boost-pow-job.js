@@ -60,11 +60,12 @@ class BoostPowJobModel {
     getBufferHex(field) {
         return field.toString('hex');
     }
-    getNumberHex(v) {
-        return Buffer.from(v.toString(16), 'hex').toString('hex');
+    getNumberHex(v, length) {
+        const num = _1.BoostPowJob.createBufferAndPad(v.toString(16).padStart(2, '0'), length).toString('hex');
+        return num;
     }
     getTarget() {
-        return '08';
+        return '00000008';
     }
     expandTarget() {
         /*
@@ -89,8 +90,9 @@ FROMALTSTACK {3} SUB RSHIFT
     }
     toScriptASM() {
         let str = `
-        OP_4 ${this.getNumberHex(this.category)} OP_32 ${this.getBufferHex(this.content)} OP_4 ${this.getTarget()}
-        OP_20 ${this.getBufferHex(this.tag)} OP_8 ${this.getNumberHex(this.unique)} OP_32 ${this.getBufferHex(this.metadata)}
+        OP_4 ${this.getNumberHex(this.category, 4)} OP_PUSHDATA1 20 ${this.getBufferHex(this.content)} OP_4 ${this.getTarget()}
+        OP_PUSHDATA1 14 ${this.getBufferHex(this.tag)} OP_8 ${this.getNumberHex(this.unique, 8)}
+        OP_PUSHDATA1 20 ${this.getBufferHex(this.metadata)}
         OP_8 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY
         OP_6 OP_ROLL OP_DUP OP_TOALTSTACK OP_ROT
         OP_4 OP_PICK ${this.expandTarget()} OP_TOALTSTACK
@@ -104,7 +106,6 @@ FROMALTSTACK {3} SUB RSHIFT
         `;
         str = str.replace(/\r\n|\n|\r/gm, '');
         str = str.replace(/\s\s+/g, ' ');
-        console.log('str', str);
         var script = bsv.Script.fromASM(str);
         return script.toASM();
         /*
