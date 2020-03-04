@@ -58,7 +58,7 @@ export class BoostPowJobModel {
             }
         }
         if (paddedBuf.byteLength < length) {
-            const emptyBuffer = new Buffer(length);
+            const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
             return Buffer.concat([paddedBuf, emptyBuffer]);
         } else {
