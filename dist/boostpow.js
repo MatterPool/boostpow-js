@@ -1,6 +1,6 @@
 /**
  * boostpow-js - Boost Proof of Work Javascript SDK - matterpool.io
- * @version v1.0.4
+ * @version v1.0.5
  * @link https://github.com/MatterPool/boostpow-js#readme
  *
  * Copyright (c) 2020 MatterPool Inc.

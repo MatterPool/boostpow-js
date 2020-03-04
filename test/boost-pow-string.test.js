@@ -127,3 +127,5 @@ describe('boost #BoostPowString validateProofOfWork ', () => {
    });
 
 });
+
+

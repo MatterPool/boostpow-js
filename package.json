@@ -1,7 +1,7 @@
 {
   "name": "boostpow-js",
   "version": "1.0.5",
-  "description": "Boost Proof of Work Javascript SDK - matterpool.io",
+  "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -25,7 +25,7 @@
     "bitcoin-sv",
     "metanet",
     "boost pow",
-    "proof of work",
+    "proof-of-work",
     "pow",
     "hashcash",
     "blockchain",
