@@ -97,7 +97,7 @@ describe('boost #BoostPowJob.createBoostJob', () => {
       const job = index.BoostPowJob.fromObject({
          content: '68656c6c6f20776f726c64000000000000000000000000000000000000000000',
          diff: 8,
-         category: 1234,
+         category: 2,
          tag: '616e696d616c7300000000000000000000000000',
          metadata: '6d65746164617461206865726500000000000000000000000000000000000000',
          time: 1305200806,

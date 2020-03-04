@@ -103,12 +103,13 @@ FROMALTSTACK {3} SUB RSHIFT
         OP_DUP OP_PUSHDATA1 32 OP_LESSTHANOREQUAL OP_VERIFY
         OP_TOALTSTACK
         0000000000000000000000000000000000000000000000000000000000 OP_CAT
-        OP_FRROMALTSTACK OP_3 OP_SUB OP_RSHIFT
+        OP_FROMALTSTACK OP_3 OP_SUB OP_RSHIFT
         `;
         str = str.replace(/\r\n|\n|\r/gm, '');
         str = str.replace(/\s\s+/g, ' ');
         return str;
     }
+
     toScriptASM(): string {
         let str = `
         OP_4 ${this.getNumberHex(this.category)} OP_32 ${this.getBufferHex(this.content)} OP_4 ${this.getTarget()}
