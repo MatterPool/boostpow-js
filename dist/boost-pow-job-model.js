@@ -290,6 +290,21 @@ class BoostPowJobModel {
     static fromString(str) {
         return BoostPowJobModel.fromHex(str);
     }
+    static fromScript(script) {
+        return BoostPowJobModel.fromHex(script);
+    }
+    static fromTransaction(tx) {
+        for (const out of tx.outputs) {
+            if (out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
+                return BoostPowJobModel.fromScript(out.script);
+            }
+        }
+        return undefined;
+    }
+    static fromRawTransaction(rawtx) {
+        const tx = new bsv.Transaction(rawtx);
+        return BoostPowJobModel.fromTransaction(tx);
+    }
     static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
         const takeSecondHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(8, 16);
         return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({

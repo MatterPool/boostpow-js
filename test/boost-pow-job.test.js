@@ -1,6 +1,7 @@
 'use strict';
 var expect = require('chai').expect;
 var index = require('../dist/index.js');
+var bsv = require('bsv');
 
 describe('boost #BoostPowJob create various getters and setters', () => {
 
@@ -19,6 +20,16 @@ describe('boost #BoostPowJob create various getters and setters', () => {
          metadata: "0000000000000000000000000000000000000000000000000000000000000000",
          unique: "0000000000000000",
       })
+   });
+
+   it('should output script compatible with MB and Relay', async () => {
+      const job = index.BoostPowJob.fromObject({
+         content: 'hello world',
+         diff: 157416.40184364,
+      });
+
+      const jobObj = job.toASM();
+      expect(jobObj).to.eql('31307674736f6f62 OP_DROP 00000000 646c726f77206f6c6c6568000000000000000000000000000000000000000000 b3936a1a 0000000000000000000000000000000000000000 0000000000000000 0000000000000000000000000000000000000000000000000000000000000000 OP_8 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_6 OP_ROLL OP_DUP OP_TOALTSTACK OP_ROT OP_4 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_3 OP_GREATERTHANOREQUAL OP_VERIFY OP_DUP 20 OP_LESSTHANOREQUAL OP_VERIFY OP_TOALTSTACK 0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_RSHIFT OP_TOALTSTACK OP_7 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_4 OP_SPLIT OP_TOALTSTACK OP_CAT OP_ROT OP_CAT OP_CAT OP_CAT OP_HASH256 OP_SWAP OP_CAT OP_CAT OP_CAT OP_SWAP OP_CAT OP_FROMALTSTACK OP_CAT OP_FROMALTSTACK OP_CAT OP_HASH256 OP_FROMALTSTACK OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH256 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
    });
 
    it('should be valid full', async () => {
@@ -359,42 +370,30 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
 });
 
 describe('BoostPowJob', () => {
-   it('should correctly load from transaction BSV.js format', async () => {
-
-      const job = index.BoostPowJob.fromObject({
-         content: 'hello world',
-         diff: 157416.40184364,
-         // Optional fields below
-         category: '04d2',
-         tag: 'animals',
-         metadata: 'metadata here',
-         // Optional and auto-generated
-         unique: '00000000913914e3',
+   it('should correctly load from fromTransaction', async () => {
+      const job = index.BoostPowJob.fromTransaction(new bsv.Transaction('0100000001c57af713fdd0750ea6556fef16ba58c6fd7946b6a6600163b84303a6047d2ab9010000006a4730440220302c22161af7d29186d420477b5f41329c470fadd43750944e094be69f39cab802204259cff79fb9a6b0947363ac6c9da6e607436f5c5acda931db0c908d3633ee71412102b618dda1256faf611127bbe9f213a00b74014740712fd2c4bac2647a9603e26effffffff0240420f0000000000d40831307674736f6f627504000000002074736f6f42206f6c6c654800000000000000000000000000000000000000000004ffff001d1400000000000000000000000000000000000000000800000000000000002000000000000000000000000000000000000000000000000000000000000000005879825488567a766b7b5479825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b577a825888547f6b7e7b7e7e7eaa7c7e7e7e7c7e6c7e6c7eaa6c9f6976aa6c88aca3055f0e000000001976a914ac04bc2ddd762c0fae2d2756f6d673899366cd3588ac00000000'));
+      expect(job.toObject()).to.eql({
+         content: '00000000000000000000000000000000000000000048656c6c6f20426f6f7374',
+         diff: 1,
+         category: '00000000',
+         tag: '0000000000000000000000000000000000000000',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000000',
+         unique: '0000000000000000',
       });
+   });
+});
 
-      const boostPowString = index.BoostPowString.fromString('01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc');
-      expect(boostPowString.hash()).to.equal('0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc');
-      expect(boostPowString.toObject()).to.eql({
-         hash: '0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc',
-         content: '00000000000000000000000000000000000000000048656c6c6f20776f726c64',
-         bits: 486604799,
-         difficulty: 1,
-         metadataHash: "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a",
-         time: 1305200806,
-         nonce: 3698479534,
-         category: 1,
+
+describe('BoostPowJob', () => {
+   it('should correctly load from fromTransaction', async () => {
+      const job = index.BoostPowJob.fromRawTransaction('0100000001c57af713fdd0750ea6556fef16ba58c6fd7946b6a6600163b84303a6047d2ab9010000006a4730440220302c22161af7d29186d420477b5f41329c470fadd43750944e094be69f39cab802204259cff79fb9a6b0947363ac6c9da6e607436f5c5acda931db0c908d3633ee71412102b618dda1256faf611127bbe9f213a00b74014740712fd2c4bac2647a9603e26effffffff0240420f0000000000d40831307674736f6f627504000000002074736f6f42206f6c6c654800000000000000000000000000000000000000000004ffff001d1400000000000000000000000000000000000000000800000000000000002000000000000000000000000000000000000000000000000000000000000000005879825488567a766b7b5479825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b577a825888547f6b7e7b7e7e7eaa7c7e7e7e7c7e6c7e6c7eaa6c9f6976aa6c88aca3055f0e000000001976a914ac04bc2ddd762c0fae2d2756f6d673899366cd3588ac00000000');
+      expect(job.toObject()).to.eql({
+         content: '00000000000000000000000000000000000000000048656c6c6f20426f6f7374',
+         diff: 1,
+         category: '00000000',
+         tag: '0000000000000000000000000000000000000000',
+         metadata: '0000000000000000000000000000000000000000000000000000000000000000',
+         unique: '0000000000000000',
       });
-
-      expect(boostPowString.contentHex()).to.eql('00000000000000000000000000000000000000000048656c6c6f20776f726c64');
-      expect(boostPowString.contentBuffer().toString('hex')).to.eql('00000000000000000000000000000000000000000048656c6c6f20776f726c64');
-      expect(boostPowString.contentString(false)).to.eql('\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000Hello world');
-      expect(boostPowString.contentString()).to.eql('Hello world');
-      expect(boostPowString.contentString(true)).to.eql('Hello world');
-      expect(boostPowString.bits()).to.eql(486604799);
-      expect(boostPowString.difficulty()).to.eql(1);
-      expect(boostPowString.metadataHash()).to.eql('acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a');
-      expect(boostPowString.time()).to.eql(1305200806);
-      expect(boostPowString.nonce()).to.eql(3698479534);
-      expect(boostPowString.category()).to.eql(1);
    });
 });

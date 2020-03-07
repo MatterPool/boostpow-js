@@ -6,10 +6,11 @@ const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model");
 const boost_utils_1 = require("./boost-utils");
+const api_client_1 = require("./api-client");
 const defaultOptions = {
-    api_url: 'https://api.matterpool.io',
-    network: 'bsv',
-    version_path: 'api/v1',
+    api_url: 'https://api.mattercloud.net',
+    network: 'main',
+    version_path: 'api/v3',
 };
 class BoostClient {
     constructor(providedOptions) {
@@ -17,6 +18,22 @@ class BoostClient {
     }
     get BoostPowString() {
         return boost_pow_string_model_1.BoostPowStringModel;
+    }
+    get BoostPowJob() {
+        return boost_pow_job_model_1.BoostPowJobModel;
+    }
+    get BoostPowJobProof() {
+        return boost_pow_job_proof_model_1.BoostPowJobProofModel;
+    }
+    get BoostPowMetadata() {
+        return boost_pow_metadata_model_1.BoostPowMetadataModel;
+    }
+    get BoostPowSimpleMiner() {
+        return boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
+    }
+    loadBoostJob(txid, callback) {
+        const apiClient = new api_client_1.APIClient(this.options);
+        return apiClient.loadBoostJob(txid, callback);
     }
     setOptions(newOptions) {
         this.options = Object.assign({}, this.options, newOptions);
@@ -27,15 +44,15 @@ class BoostClient {
     }
 }
 exports.BoostClient = BoostClient;
-function instance(newOptions) {
+function Client(newOptions) {
     const mergedOptions = Object.assign({}, defaultOptions, newOptions);
     return new BoostClient(mergedOptions);
 }
-exports.instance = instance;
+exports.Client = Client;
 try {
     if (window) {
         window['Boost'] = {
-            Service: new BoostClient(),
+            Client: new BoostClient(),
             BoostPowString: boost_pow_string_model_1.BoostPowStringModel,
             BoostPowJob: boost_pow_job_model_1.BoostPowJobModel,
             BoostPowJobProof: boost_pow_job_proof_model_1.BoostPowJobProofModel,

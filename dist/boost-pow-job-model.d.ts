@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import * as bsv from 'bsv';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -53,6 +54,9 @@ export declare class BoostPowJobModel {
     static fromASM(str: string): BoostPowJobModel;
     toString(): string;
     static fromString(str: string): BoostPowJobModel;
+    static fromScript(script: bsv.Script): BoostPowJobModel;
+    static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
+    static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
     static operations: any[];

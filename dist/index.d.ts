@@ -8,10 +8,15 @@ export declare class BoostClient {
     options: any;
     constructor(providedOptions?: any);
     readonly BoostPowString: typeof BoostPowStringModel;
+    readonly BoostPowJob: typeof BoostPowJobModel;
+    readonly BoostPowJobProof: typeof BoostPowJobProofModel;
+    readonly BoostPowMetadata: typeof BoostPowMetadataModel;
+    readonly BoostPowSimpleMiner: typeof BoostPowSimpleMinerModel;
+    loadBoostJob(txid: string, callback?: Function): Promise<any>;
     setOptions(newOptions: any): void;
     static instance(newOptions?: any): BoostClient;
 }
-export declare function instance(newOptions?: any): BoostClient;
+export declare function Client(newOptions?: any): BoostClient;
 export declare var BoostPowString: typeof BoostPowStringModel;
 export declare var BoostPowJob: typeof BoostPowJobModel;
 export declare var BoostPowJobProof: typeof BoostPowJobProofModel;

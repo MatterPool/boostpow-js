@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = require("axios");
+const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const defaultOptions = {
-    api_url: 'https://api.matterpool.net',
-    network: 'bsv',
-    version_path: 'api/v1',
+    api_url: 'https://api.mattercloud.net',
+    network: 'main',
+    version_path: 'api/v3',
 };
 class APIClient {
     constructor(options) {
@@ -19,6 +21,29 @@ class APIClient {
             };
         }
         return {};
+    }
+    loadBoostJob(txid, callback) {
+        return new Promise((resolve, reject) => {
+            if (!txid || /^(\s*)$/.test(txid)) {
+                return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    code: 422,
+                    message: 'txid required'
+                }), callback);
+            }
+            axios_1.default.get(this.fullUrl + `/tx/${txid}`, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                console.log('response', response);
+                const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
+                return this.resolveOrCallback(resolve, job, callback);
+                /*return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    message: 'Invalid Boost Job'
+                }), callback)*/
+            }).catch((ex) => {
+                console.log('ex', ex);
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
     }
     /**
      * Resolve a promise and/or invoke a callback

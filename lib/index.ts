@@ -4,11 +4,12 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
 import { BoostUtils } from './boost-utils';
+import { APIClient } from './api-client';
 
 const defaultOptions: any = {
-  api_url: 'https://api.matterpool.io',
-  network: 'bsv',          // 'bsv'
-  version_path: 'api/v1',  // Do not change
+  api_url: 'https://api.mattercloud.net',
+  network: 'main',          // 'bsv'
+  version_path: 'api/v3',  // Do not change
 }
 
 export class BoostClient {
@@ -21,6 +22,27 @@ export class BoostClient {
     return BoostPowStringModel;
   }
 
+  get BoostPowJob() {
+    return BoostPowJobModel;
+  }
+
+  get BoostPowJobProof() {
+    return BoostPowJobProofModel;
+  }
+
+  get BoostPowMetadata() {
+    return BoostPowMetadataModel;
+  }
+
+  get BoostPowSimpleMiner() {
+    return BoostPowSimpleMinerModel;
+  }
+
+  loadBoostJob(txid: string, callback?: Function): Promise<any> {
+    const apiClient = new APIClient(this.options);
+    return apiClient.loadBoostJob(txid, callback);
+  }
+
   setOptions(newOptions) {
     this.options = Object.assign({}, this.options, newOptions);
   }
@@ -31,7 +53,7 @@ export class BoostClient {
   }
 }
 
-export function instance(newOptions?: any): BoostClient {
+export function Client(newOptions?: any): BoostClient {
   const mergedOptions = Object.assign({}, defaultOptions, newOptions);
   return new BoostClient(mergedOptions);
 }
@@ -39,7 +61,7 @@ export function instance(newOptions?: any): BoostClient {
 try {
   if (window) {
     window['Boost'] = {
-      Service: new BoostClient(),
+      Client: new BoostClient(),
       BoostPowString: BoostPowStringModel,
       BoostPowJob: BoostPowJobModel,
       BoostPowJobProof: BoostPowJobProofModel,

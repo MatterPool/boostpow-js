@@ -1,4 +1,5 @@
-// import axios from 'axios';
+import axios from 'axios';
+import { BoostPowJobModel } from './boost-pow-job-model';
 export interface BoostClientApiClientOptions {
     api_url: string;
     api_key?: string;
@@ -7,9 +8,9 @@ export interface BoostClientApiClientOptions {
 }
 
 const defaultOptions: BoostClientApiClientOptions = {
-    api_url: 'https://api.matterpool.net',   // api url
-    network: 'bsv',                         // 'bsv'
-    version_path: 'api/v1',                 // Leave as is
+    api_url: 'https://api.mattercloud.net',   // api url
+    network: 'main',                          // 'bsv'
+    version_path: 'api/v3',                   // Leave as is
 }
 export class APIClient {
     options = defaultOptions;
@@ -29,6 +30,31 @@ export class APIClient {
         return {};
     }
 
+    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            if (!txid || /^(\s*)$/.test(txid)) {
+                return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    code: 422,
+                    message: 'txid required'
+                }), callback)
+            }
+            axios.get(this.fullUrl + `/tx/${txid}`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                console.log('response', response);
+                const job =  BoostPowJobModel.fromRawTransaction(response.data.rawtx);
+                return this.resolveOrCallback(resolve, job, callback);
+                /*return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    message: 'Invalid Boost Job'
+                }), callback)*/
+            }).catch((ex) => {
+                console.log('ex', ex);
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
     /**
      * Resolve a promise and/or invoke a callback
      * @param resolve Resolve function to call when done

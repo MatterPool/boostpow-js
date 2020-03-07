@@ -354,6 +354,24 @@ export class BoostPowJobModel {
         return BoostPowJobModel.fromHex(str);
     }
 
+    static fromScript(script: bsv.Script): BoostPowJobModel {
+        return BoostPowJobModel.fromHex(script);
+    }
+
+    static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined {
+        for (const out of tx.outputs) {
+            if (out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
+                return BoostPowJobModel.fromScript(out.script);
+            }
+        }
+        return undefined;
+    }
+
+    static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined {
+        const tx = new bsv.Transaction(rawtx);
+        return BoostPowJobModel.fromTransaction(tx);
+    }
+
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
         const takeSecondHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(8, 16);
         return BoostPowMetadataModel.fromBuffer({
