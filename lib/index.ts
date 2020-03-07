@@ -2,6 +2,7 @@ import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
+import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
 
 const defaultOptions: any = {
   api_url: 'https://api.matterpool.io',
@@ -42,6 +43,7 @@ try {
       BoostPowJob: BoostPowJobModel,
       BoostPowJobProof: BoostPowJobProofModel,
       BoostPowMetadata: BoostPowMetadataModel,
+      BoostPowSimpleMiner: BoostPowSimpleMinerModel,
     };
   }
 }
@@ -53,4 +55,5 @@ export var BoostPowString = BoostPowStringModel;
 export var BoostPowJob = BoostPowJobModel;
 export var BoostPowJobProof = BoostPowJobProofModel;
 export var BoostPowMetadata = BoostPowMetadataModel;
+export var BoostPowSimpleMiner = BoostPowSimpleMinerModel;
 

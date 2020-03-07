@@ -41,13 +41,13 @@ export class BoostPowJobProofModel {
     getTime(): Buffer {
         return this.time;
     }
-    updateTime(time: string) {
+    setTime(time: string) {
         this.time = BoostPowJobModel.createBufferAndPad(time, 4)
     }
     getMinerNonce(): Buffer {
         return this.minerNonce;
     }
-    updateMinerNonce(minerNonce: string) {
+    setMinerNonce(minerNonce: string) {
         this.minerNonce = BoostPowJobModel.createBufferAndPad(minerNonce, 8)
     }
     getMinerAddress(): Buffer {

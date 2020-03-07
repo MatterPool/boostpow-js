@@ -9,7 +9,6 @@ export declare class BoostPowJobModel {
     private tag;
     private metadata;
     private unique;
-    static operations: any[];
     private constructor();
     getContent(): Buffer;
     getDiff(): number;
@@ -54,6 +53,7 @@ export declare class BoostPowJobModel {
     static fromASM(str: string): BoostPowJobModel;
     toString(): string;
     static fromString(str: string): BoostPowJobModel;
-    static createPowAbstract(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: true): BoostPowStringModel | null;
+    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
+    static operations: any[];
 }

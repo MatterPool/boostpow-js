@@ -83,8 +83,8 @@ describe('boost #BoostPowJob redeem work', () => {
       });
 
       // Important so we can create a mini cpu miner to just update the relevant sections quickly
-      jobProof.updateMinerNonce('0000000000000002');
-      jobProof.updateTime('12300009');
+      jobProof.setMinerNonce('0000000000000002');
+      jobProof.setTime('12300009');
 
       expect(jobProof.toObject()).to.eql({
          signature: '0000000000000000000000000000000000000000000000000000000000000001',

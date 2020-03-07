@@ -307,7 +307,7 @@ class BoostPowJobModel {
     static fromString(str) {
         return BoostPowJobModel.fromHex(str);
     }
-    static createPowAbstract(boostPowJob, boostPowJobProof) {
+    static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
         const takeSecondHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(8, 16);
         return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
             tag: boostPowJob.getTag(),
@@ -317,23 +317,24 @@ class BoostPowJobModel {
             metadata: boostPowJob.getMetadata(),
         });
     }
-    static tryValidateJobProof(boostPowJob, boostPowJobProof, debug) {
-        const abstractHash = BoostPowJobModel.createPowAbstract(boostPowJob, boostPowJobProof);
+    static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {
+        const metadataHash = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof');
             console.log('category', boostPowJob.getCategory().toString('hex'), boostPowJob.getCategory().byteLength);
             console.log('content', boostPowJob.getContent().toString('hex'), boostPowJob.getContent().byteLength);
-            console.log('abstract', abstractHash, abstractHash.hash());
+            console.log('metadataHash', metadataHash, metadataHash.hash());
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
-            console.log('unique', boostPowJobProof.getMinerNonce().toString('hex'), boostPowJob.getUnique().byteLength);
+            console.log('minerNonce', boostPowJobProof.getMinerNonce().toString('hex'), boostPowJobProof.getMinerNonce().byteLength);
+            console.log('unique', boostPowJob.getUnique().toString('hex'), boostPowJob.getUnique().byteLength);
         }
         const takeFirstHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(0, 8);
         const headerBuf = Buffer.concat([
             boostPowJob.getCategory(),
             boostPowJob.getContent(),
-            abstractHash.hashAsBuffer(),
-            // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // abstractHash.hashAsBuffer(),
+            metadataHash.hashAsBuffer(),
+            // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // metadataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
             Buffer.from(takeFirstHalf, 'hex')

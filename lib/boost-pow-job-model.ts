@@ -5,103 +5,6 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 
 export class BoostPowJobModel {
-    // Start of Boost Output after push datas
-    static operations = [
-       // BEGIN
-       // {8} PICK SIZE {4} EQUALVERIFY              // check size of timestamp
-       bsv.Opcode.OP_8,
-       bsv.Opcode.OP_PICK,
-       bsv.Opcode.OP_SIZE,
-       bsv.Opcode.OP_4,
-       bsv.Opcode.OP_EQUALVERIFY,
-
-       // {6} ROLL DUP TOALTSTACK ROT                // copy miner’s address to alt stack
-       bsv.Opcode.OP_6,
-       bsv.Opcode.OP_ROLL,
-       bsv.Opcode.OP_DUP,
-       bsv.Opcode.OP_TOALTSTACK,
-       bsv.Opcode.OP_ROT,
-
-       // {4} PICK expand_target TOALTSTACK          // target to alt stack.
-       bsv.Opcode.OP_4,
-       bsv.Opcode.OP_PICK,
-
-       // Expand Target
-       bsv.Opcode.OP_SIZE,
-       bsv.Opcode.OP_4,
-       bsv.Opcode.OP_EQUALVERIFY,
-       bsv.Opcode.OP_3,
-       bsv.Opcode.OP_SPLIT,
-       bsv.Opcode.OP_DUP,
-       bsv.Opcode.OP_3,
-       bsv.Opcode.OP_GREATERTHANOREQUAL,
-       bsv.Opcode.OP_VERIFY,
-       bsv.Opcode.OP_DUP,
-       1,
-       32,
-       bsv.Opcode.OP_LESSTHANOREQUAL,
-       bsv.Opcode.OP_VERIFY,
-       bsv.Opcode.OP_TOALTSTACK,
-       Buffer.from('0000000000000000000000000000000000000000000000000000000000', 'hex'),
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_FROMALTSTACK,
-       bsv.Opcode.OP_3,
-       bsv.Opcode.OP_SUB,
-       bsv.Opcode.OP_RSHIFT,
-      // Expand target end
-
-       bsv.Opcode.OP_TOALTSTACK,
-
-       // {7} ROLL SIZE {8} EQUALVERIFY              // check miner nonce size
-       bsv.Opcode.OP_7,
-       bsv.Opcode.OP_ROLL,
-       bsv.Opcode.OP_SIZE,
-       bsv.Opcode.OP_8,
-       bsv.Opcode.OP_EQUALVERIFY,
-
-       // {4} SPLIT TOALTSTACK                       // split miner nonce and keep half
-       bsv.Opcode.OP_4,
-       bsv.Opcode.OP_SPLIT,
-       bsv.Opcode.OP_TOALTSTACK,
-
-       // CAT ROT CAT CAT CAT HASH256                // create abstract page and hash it.
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_ROT,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_HASH256,
-
-       // SWAP CAT CAT CAT SWAP CAT                  // attach merkle_root and timestamp.
-       bsv.Opcode.OP_SWAP,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_SWAP,
-       bsv.Opcode.OP_CAT,
-
-       // FROMALTSTACK CAT FROMALTSTACK CAT          // attach target and nonce
-       bsv.Opcode.OP_FROMALTSTACK,
-       bsv.Opcode.OP_CAT,
-       bsv.Opcode.OP_FROMALTSTACK,
-       bsv.Opcode.OP_CAT,
-
-       // check that the hash of the title is less than the target
-       // HASH256 FROMALTSTACK LESSTHAN VERIFY
-       bsv.Opcode.OP_HASH256,
-       bsv.Opcode.OP_FROMALTSTACK,
-       bsv.Opcode.OP_LESSTHAN,
-       bsv.Opcode.OP_VERIFY,
-
-       // check that the given address matches the pubkey and check signature.
-       // DUP HASH256 FROMALTSTACK EQUALVERIFY CHECKSIG
-       bsv.Opcode.OP_DUP,
-       bsv.Opcode.OP_HASH256,
-       bsv.Opcode.OP_FROMALTSTACK,
-       bsv.Opcode.OP_EQUALVERIFY,
-       bsv.Opcode.OP_CHECKSIG,
-    ];
-
     private constructor(
         private content: Buffer,
         private diff: number,
@@ -462,7 +365,7 @@ export class BoostPowJobModel {
         return BoostPowJobModel.fromHex(str);
     }
 
-    static createPowAbstract(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
+    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
         const takeSecondHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(8, 16);
         return BoostPowMetadataModel.fromBuffer({
             tag: boostPowJob.getTag(),
@@ -473,23 +376,24 @@ export class BoostPowJobModel {
         });
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: true): BoostPowStringModel | null {
-        const abstractHash = BoostPowJobModel.createPowAbstract(boostPowJob, boostPowJobProof);
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug: boolean = false): BoostPowStringModel | null {
+        const metadataHash = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof')
             console.log('category', boostPowJob.getCategory().toString('hex'), boostPowJob.getCategory().byteLength);
             console.log('content', boostPowJob.getContent().toString('hex'), boostPowJob.getContent().byteLength);
-            console.log('abstract', abstractHash, abstractHash.hash(),);
+            console.log('metadataHash', metadataHash, metadataHash.hash(),);
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
-            console.log('unique', boostPowJobProof.getMinerNonce().toString('hex'), boostPowJob.getUnique().byteLength);
+            console.log('minerNonce', boostPowJobProof.getMinerNonce().toString('hex'), boostPowJobProof.getMinerNonce().byteLength)
+            console.log('unique', boostPowJob.getUnique().toString('hex'), boostPowJob.getUnique().byteLength);
         }
         const takeFirstHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(0, 8);
         const headerBuf = Buffer.concat([
             boostPowJob.getCategory(),
             boostPowJob.getContent(),
-            abstractHash.hashAsBuffer(),
-            // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // abstractHash.hashAsBuffer(),
+            metadataHash.hashAsBuffer(),
+            // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // metadataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
             Buffer.from(takeFirstHalf, 'hex')
@@ -509,4 +413,101 @@ export class BoostPowJobModel {
         }
         return null;
     }
+    // Start of Boost Output after push datas
+    static operations = [
+        // BEGIN
+        // {8} PICK SIZE {4} EQUALVERIFY              // check size of timestamp
+        bsv.Opcode.OP_8,
+        bsv.Opcode.OP_PICK,
+        bsv.Opcode.OP_SIZE,
+        bsv.Opcode.OP_4,
+        bsv.Opcode.OP_EQUALVERIFY,
+
+        // {6} ROLL DUP TOALTSTACK ROT                // copy miner’s address to alt stack
+        bsv.Opcode.OP_6,
+        bsv.Opcode.OP_ROLL,
+        bsv.Opcode.OP_DUP,
+        bsv.Opcode.OP_TOALTSTACK,
+        bsv.Opcode.OP_ROT,
+
+        // {4} PICK expand_target TOALTSTACK          // target to alt stack.
+        bsv.Opcode.OP_4,
+        bsv.Opcode.OP_PICK,
+
+        // Expand Target
+        bsv.Opcode.OP_SIZE,
+        bsv.Opcode.OP_4,
+        bsv.Opcode.OP_EQUALVERIFY,
+        bsv.Opcode.OP_3,
+        bsv.Opcode.OP_SPLIT,
+        bsv.Opcode.OP_DUP,
+        bsv.Opcode.OP_3,
+        bsv.Opcode.OP_GREATERTHANOREQUAL,
+        bsv.Opcode.OP_VERIFY,
+        bsv.Opcode.OP_DUP,
+        1,
+        32,
+        bsv.Opcode.OP_LESSTHANOREQUAL,
+        bsv.Opcode.OP_VERIFY,
+        bsv.Opcode.OP_TOALTSTACK,
+        Buffer.from('0000000000000000000000000000000000000000000000000000000000', 'hex'),
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_3,
+        bsv.Opcode.OP_SUB,
+        bsv.Opcode.OP_RSHIFT,
+       // Expand target end
+
+        bsv.Opcode.OP_TOALTSTACK,
+
+        // {7} ROLL SIZE {8} EQUALVERIFY              // check miner nonce size
+        bsv.Opcode.OP_7,
+        bsv.Opcode.OP_ROLL,
+        bsv.Opcode.OP_SIZE,
+        bsv.Opcode.OP_8,
+        bsv.Opcode.OP_EQUALVERIFY,
+
+        // {4} SPLIT TOALTSTACK                       // split miner nonce and keep half
+        bsv.Opcode.OP_4,
+        bsv.Opcode.OP_SPLIT,
+        bsv.Opcode.OP_TOALTSTACK,
+
+        // CAT ROT CAT CAT CAT HASH256                // create abstract page and hash it.
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_ROT,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_HASH256,
+
+        // SWAP CAT CAT CAT SWAP CAT                  // attach merkle_root and timestamp.
+        bsv.Opcode.OP_SWAP,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_SWAP,
+        bsv.Opcode.OP_CAT,
+
+        // FROMALTSTACK CAT FROMALTSTACK CAT          // attach target and nonce
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_CAT,
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_CAT,
+
+        // check that the hash of the title is less than the target
+        // HASH256 FROMALTSTACK LESSTHAN VERIFY
+        bsv.Opcode.OP_HASH256,
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_LESSTHAN,
+        bsv.Opcode.OP_VERIFY,
+
+        // check that the given address matches the pubkey and check signature.
+        // DUP HASH256 FROMALTSTACK EQUALVERIFY CHECKSIG
+        bsv.Opcode.OP_DUP,
+        bsv.Opcode.OP_HASH256,
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_EQUALVERIFY,
+        bsv.Opcode.OP_CHECKSIG,
+     ];
+
 }

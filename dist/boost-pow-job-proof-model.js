@@ -26,13 +26,13 @@ class BoostPowJobProofModel {
     getTime() {
         return this.time;
     }
-    updateTime(time) {
+    setTime(time) {
         this.time = boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(time, 4);
     }
     getMinerNonce() {
         return this.minerNonce;
     }
-    updateMinerNonce(minerNonce) {
+    setMinerNonce(minerNonce) {
         this.minerNonce = boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(minerNonce, 8);
     }
     getMinerAddress() {
