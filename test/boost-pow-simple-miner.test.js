@@ -2,10 +2,7 @@
 var expect = require('chai').expect;
 var index = require('../dist/index.js');
 
-const cryptoRandomString = require('crypto-random-string');
-
 describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours to finish depending on cpu speed', () => {
-   // Uncomment the following if you want to run a mining test
    /*
    it('mine hello general', async () => {
       const debugLevel = 1; // Whether to show logs
@@ -17,7 +14,7 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
          tag: '0000000000000000000000000000000000000001',
          metadata: '0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c',
          unique: '0000000000000001',
-     });
+      });
 
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '01',
@@ -31,7 +28,6 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
       // 7 MH/second is targetted for 10 minutes.
       // Typical CPU can do 20 to 50 KH/second
       const result = index.BoostPowSimpleMiner.startMining(job, jobProof, debugLevel);
-
       console.log('Found a Boost Header!');
       console.log('Boost Pow String: ', result.boostPowString);
       console.log('Boost Pow Job: ', result.boostPowJob);

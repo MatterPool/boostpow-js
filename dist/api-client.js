@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const defaultOptions = {
-    api_url: 'https://api.matterpool.io',
+    api_url: 'https://api.matterpool.net',
     network: 'bsv',
     version_path: 'api/v1',
 };

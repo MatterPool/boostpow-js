@@ -73,7 +73,8 @@
     "@types/node": "^13.7.7",
     "axios": "^0.18.0",
     "crypto-random-string": "^3.1.0",
-    "i": "^0.3.6"
+    "i": "^0.3.6",
+    "mattercloudjs": "^1.0.10"
   },
   "files": [
     "dist/*"

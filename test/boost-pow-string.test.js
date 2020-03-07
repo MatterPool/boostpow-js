@@ -159,19 +159,16 @@ describe('BoostPowString', () => {
          category: 1,
       });
 
-      // Little or Big endian options
       expect(boostPowString.contentHex()).to.eql('00000000000000000000000000000000000000000048656c6c6f20776f726c64');
       expect(boostPowString.contentBuffer().toString('hex')).to.eql('00000000000000000000000000000000000000000048656c6c6f20776f726c64');
       expect(boostPowString.contentString(false)).to.eql('\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000Hello world');
       expect(boostPowString.contentString()).to.eql('Hello world');
       expect(boostPowString.contentString(true)).to.eql('Hello world');
-
       expect(boostPowString.bits()).to.eql(486604799);
       expect(boostPowString.difficulty()).to.eql(1);
       expect(boostPowString.metadataHash()).to.eql('acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a');
       expect(boostPowString.time()).to.eql(1305200806);
       expect(boostPowString.nonce()).to.eql(3698479534);
       expect(boostPowString.category()).to.eql(1);
-
    });
 });

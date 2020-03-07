@@ -7,7 +7,7 @@ export interface BoostClientApiClientOptions {
 }
 
 const defaultOptions: BoostClientApiClientOptions = {
-    api_url: 'https://api.matterpool.io',   // api url
+    api_url: 'https://api.matterpool.net',   // api url
     network: 'bsv',                         // 'bsv'
     version_path: 'api/v1',                 // Leave as is
 }

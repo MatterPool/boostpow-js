@@ -31,6 +31,8 @@ class BoostPowJobModel {
     getUnique() {
         return this.unique;
     }
+    static build() {
+    }
     static fromObject(params) {
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.');
@@ -94,6 +96,9 @@ class BoostPowJobModel {
     }
     toHex() {
         let buildOut = bsv.Script();
+        // Add Boost identifier
+        buildOut.add(Buffer.from('boostv01').reverse());
+        buildOut.add(bsv.Opcode.OP_DROP);
         // Add category 4 bytes
         // buildOut.add(this.getNumberHexBuffer(this.category, 4));
         buildOut.add(this.category);
@@ -148,79 +153,79 @@ class BoostPowJobModel {
         return parseFloat(difficultyString);
     }
     static remainingOperationsMatchExactly(remainingChunks) {
-        if (72 !== remainingChunks.length) {
+        if (74 !== remainingChunks.length) {
             return false;
         }
-        return (remainingChunks[6].opcodenum === bsv.Opcode.OP_8 &&
-            remainingChunks[7].opcodenum === bsv.Opcode.OP_PICK &&
-            remainingChunks[8].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[9].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[10].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[11].opcodenum === bsv.Opcode.OP_6 &&
-            remainingChunks[12].opcodenum === bsv.Opcode.OP_ROLL &&
-            remainingChunks[13].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[14].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[15].opcodenum === bsv.Opcode.OP_ROT &&
-            remainingChunks[16].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[17].opcodenum === bsv.Opcode.OP_PICK &&
-            remainingChunks[18].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[19].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[20].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[21].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[22].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[23].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[24].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[25].opcodenum === bsv.Opcode.OP_GREATERTHANOREQUAL &&
-            remainingChunks[26].opcodenum === bsv.Opcode.OP_VERIFY &&
-            remainingChunks[27].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[28].buf &&
-            remainingChunks[28].buf.length === 1 &&
-            remainingChunks[28].buf.toString('hex') === '20' &&
-            remainingChunks[29].opcodenum === bsv.Opcode.OP_LESSTHANOREQUAL &&
-            remainingChunks[30].opcodenum === bsv.Opcode.OP_VERIFY &&
-            remainingChunks[31].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[32].buf &&
-            remainingChunks[32].buf.length === 29 &&
-            remainingChunks[32].buf.toString('hex') === '0000000000000000000000000000000000000000000000000000000000' &&
-            remainingChunks[33].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[34].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[35].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[36].opcodenum === bsv.Opcode.OP_SUB &&
-            remainingChunks[37].opcodenum === bsv.Opcode.OP_RSHIFT &&
-            remainingChunks[38].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[39].opcodenum === bsv.Opcode.OP_7 &&
-            remainingChunks[40].opcodenum === bsv.Opcode.OP_ROLL &&
-            remainingChunks[41].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[42].opcodenum === bsv.Opcode.OP_8 &&
-            remainingChunks[43].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[44].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[45].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[46].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[47].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[48].opcodenum === bsv.Opcode.OP_ROT &&
+        return (remainingChunks[8].opcodenum === bsv.Opcode.OP_8 &&
+            remainingChunks[9].opcodenum === bsv.Opcode.OP_PICK &&
+            remainingChunks[10].opcodenum === bsv.Opcode.OP_SIZE &&
+            remainingChunks[11].opcodenum === bsv.Opcode.OP_4 &&
+            remainingChunks[12].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
+            remainingChunks[13].opcodenum === bsv.Opcode.OP_6 &&
+            remainingChunks[14].opcodenum === bsv.Opcode.OP_ROLL &&
+            remainingChunks[15].opcodenum === bsv.Opcode.OP_DUP &&
+            remainingChunks[16].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
+            remainingChunks[17].opcodenum === bsv.Opcode.OP_ROT &&
+            remainingChunks[18].opcodenum === bsv.Opcode.OP_4 &&
+            remainingChunks[19].opcodenum === bsv.Opcode.OP_PICK &&
+            remainingChunks[20].opcodenum === bsv.Opcode.OP_SIZE &&
+            remainingChunks[21].opcodenum === bsv.Opcode.OP_4 &&
+            remainingChunks[22].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
+            remainingChunks[23].opcodenum === bsv.Opcode.OP_3 &&
+            remainingChunks[24].opcodenum === bsv.Opcode.OP_SPLIT &&
+            remainingChunks[25].opcodenum === bsv.Opcode.OP_DUP &&
+            remainingChunks[26].opcodenum === bsv.Opcode.OP_3 &&
+            remainingChunks[27].opcodenum === bsv.Opcode.OP_GREATERTHANOREQUAL &&
+            remainingChunks[28].opcodenum === bsv.Opcode.OP_VERIFY &&
+            remainingChunks[29].opcodenum === bsv.Opcode.OP_DUP &&
+            remainingChunks[30].buf &&
+            remainingChunks[30].buf.length === 1 &&
+            remainingChunks[30].buf.toString('hex') === '20' &&
+            remainingChunks[31].opcodenum === bsv.Opcode.OP_LESSTHANOREQUAL &&
+            remainingChunks[32].opcodenum === bsv.Opcode.OP_VERIFY &&
+            remainingChunks[33].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
+            remainingChunks[34].buf &&
+            remainingChunks[34].buf.length === 29 &&
+            remainingChunks[34].buf.toString('hex') === '0000000000000000000000000000000000000000000000000000000000' &&
+            remainingChunks[35].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[36].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
+            remainingChunks[37].opcodenum === bsv.Opcode.OP_3 &&
+            remainingChunks[38].opcodenum === bsv.Opcode.OP_SUB &&
+            remainingChunks[39].opcodenum === bsv.Opcode.OP_RSHIFT &&
+            remainingChunks[40].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
+            remainingChunks[41].opcodenum === bsv.Opcode.OP_7 &&
+            remainingChunks[42].opcodenum === bsv.Opcode.OP_ROLL &&
+            remainingChunks[43].opcodenum === bsv.Opcode.OP_SIZE &&
+            remainingChunks[44].opcodenum === bsv.Opcode.OP_8 &&
+            remainingChunks[45].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
+            remainingChunks[46].opcodenum === bsv.Opcode.OP_4 &&
+            remainingChunks[47].opcodenum === bsv.Opcode.OP_SPLIT &&
+            remainingChunks[48].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
             remainingChunks[49].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[50].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[50].opcodenum === bsv.Opcode.OP_ROT &&
             remainingChunks[51].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[52].opcodenum === bsv.Opcode.OP_HASH256 &&
-            remainingChunks[53].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[54].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[55].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[52].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[53].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[54].opcodenum === bsv.Opcode.OP_HASH256 &&
+            remainingChunks[55].opcodenum === bsv.Opcode.OP_SWAP &&
             remainingChunks[56].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[57].opcodenum === bsv.Opcode.OP_SWAP &&
+            remainingChunks[57].opcodenum === bsv.Opcode.OP_CAT &&
             remainingChunks[58].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[59].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
+            remainingChunks[59].opcodenum === bsv.Opcode.OP_SWAP &&
             remainingChunks[60].opcodenum === bsv.Opcode.OP_CAT &&
             remainingChunks[61].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
             remainingChunks[62].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[63].opcodenum === bsv.Opcode.OP_HASH256 &&
-            remainingChunks[64].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[65].opcodenum === bsv.Opcode.OP_LESSTHAN &&
-            remainingChunks[66].opcodenum === bsv.Opcode.OP_VERIFY &&
-            remainingChunks[67].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[68].opcodenum === bsv.Opcode.OP_HASH256 &&
-            remainingChunks[69].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[70].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[71].opcodenum === bsv.Opcode.OP_CHECKSIG);
+            remainingChunks[63].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
+            remainingChunks[64].opcodenum === bsv.Opcode.OP_CAT &&
+            remainingChunks[65].opcodenum === bsv.Opcode.OP_HASH256 &&
+            remainingChunks[66].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
+            remainingChunks[67].opcodenum === bsv.Opcode.OP_LESSTHAN &&
+            remainingChunks[68].opcodenum === bsv.Opcode.OP_VERIFY &&
+            remainingChunks[69].opcodenum === bsv.Opcode.OP_DUP &&
+            remainingChunks[70].opcodenum === bsv.Opcode.OP_HASH256 &&
+            remainingChunks[71].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
+            remainingChunks[72].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
+            remainingChunks[73].opcodenum === bsv.Opcode.OP_CHECKSIG);
     }
     static fromHex(asm) {
         const script = new bsv.Script(asm);
@@ -230,35 +235,41 @@ class BoostPowJobModel {
         let tag;
         let metadata;
         let unique;
+        // console.log('asm, asm.chunks', script.chunks, script.chunks[startIndex].buf.reverse().toString('utf8'));
         if (
-        // Category
-        script.chunks[0].buf &&
-            script.chunks[0].opcodenum === 4 &&
-            // Content
-            script.chunks[1].buf &&
-            script.chunks[1].len === 32 &&
-            // Target
+        // boostv01
+        script.chunks[0].buf.reverse().toString('utf8') === 'boostv01' &&
+            // Drop the identifier
+            script.chunks[1].opcodenum === bsv.Opcode.OP_DROP &&
+            // Category
             script.chunks[2].buf &&
-            script.chunks[2].len === 4 &&
-            // Tag
+            script.chunks[2].opcodenum === 4 &&
+            // Content
             script.chunks[3].buf &&
-            script.chunks[3].len === 20 &&
-            // Unique
+            script.chunks[3].len === 32 &&
+            // Target
             script.chunks[4].buf &&
-            script.chunks[4].len === 8 &&
-            // Metadata
+            script.chunks[4].len === 4 &&
+            // Tag
             script.chunks[5].buf &&
-            script.chunks[5].len === 32 &&
+            script.chunks[5].len === 20 &&
+            // Unique
+            script.chunks[6].buf &&
+            script.chunks[6].len === 8 &&
+            // Metadata
+            script.chunks[7].buf &&
+            script.chunks[7].len === 32 &&
             BoostPowJobModel.remainingOperationsMatchExactly(script.chunks)) {
-            category = script.chunks[0].buf;
-            content = script.chunks[1].buf;
-            let targetHex = (script.chunks[2].buf.toString('hex').match(/../g) || []).reverse().join('');
+            category = script.chunks[2].buf;
+            console.log('cate', category);
+            content = script.chunks[3].buf;
+            let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
             // let targetHex = script.chunks[2].buf.reverse().toString('hex');
             let targetInt = parseInt(targetHex, 16);
             diff = BoostPowJobModel.getDifficulty(targetInt);
-            tag = script.chunks[3].buf;
-            unique = script.chunks[4].buf;
-            metadata = script.chunks[5].buf;
+            tag = script.chunks[5].buf;
+            unique = script.chunks[6].buf;
+            metadata = script.chunks[7].buf;
             return new BoostPowJobModel(content, diff, category, tag, metadata, unique);
         }
         throw new Error('Not valid Boost Output');

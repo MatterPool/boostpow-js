@@ -16,13 +16,14 @@ export declare class BoostPowJobModel {
     getTag(): Buffer;
     getMetadata(): Buffer;
     getUnique(): Buffer;
+    static build(): void;
     static fromObject(params: {
         content: string;
         diff: number;
-        category: string;
-        tag: string;
-        metadata: string;
-        unique: string;
+        category?: string;
+        tag?: string;
+        metadata?: string;
+        unique?: string;
     }): BoostPowJobModel;
     toObject(): {
         content: string;
