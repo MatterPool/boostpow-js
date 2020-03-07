@@ -1,8 +1,8 @@
 import * as bsv from 'bsv';
-import { BoostPowJob } from '.';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
+import { BoostUtils } from './boost-utils';
 
 export class BoostPowJobModel {
     private constructor(
@@ -63,39 +63,13 @@ export class BoostPowJobModel {
             throw new Error('metadata too large. Max 32 bytes.')
         }
         return new BoostPowJobModel(
-            BoostPowJob.createBufferAndPad(params.content, 32),
+            BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,
-            BoostPowJob.createBufferAndPad(params.category, 4),
-            BoostPowJob.createBufferAndPad(params.tag, 20),
-            BoostPowJob.createBufferAndPad(params.metadata, 32),
-            BoostPowJob.createBufferAndPad(params.unique, 8)
+            BoostUtils.createBufferAndPad(params.category, 4),
+            BoostUtils.createBufferAndPad(params.tag, 20),
+            BoostUtils.createBufferAndPad(params.metadata, 32),
+            BoostUtils.createBufferAndPad(params.unique, 8)
         );
-    }
-
-    static createBufferAndPad(buf: any, length: number): any {
-        if (!buf) {
-            const emptyBuffer = new Buffer(length);
-            emptyBuffer.fill(0);
-            return emptyBuffer;
-        }
-        let paddedBuf;
-        if ((typeof buf).toString() === 'buffer') {
-            paddedBuf = buf;
-        } else {
-            var re = /^[0-9A-Fa-f]+$/g;
-            if (!re.test(buf)) {
-                paddedBuf = Buffer.from(buf)
-            } else {
-                paddedBuf = Buffer.from(buf, 'hex');
-            }
-        }
-        if (paddedBuf.byteLength < length) {
-            const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
-            emptyBuffer.fill(0);
-            return Buffer.concat([emptyBuffer, paddedBuf]).reverse();
-        } else {
-            return paddedBuf.reverse();
-        }
     }
 
     toObject () {
@@ -109,7 +83,7 @@ export class BoostPowJobModel {
         };
     }
 
-    static difficulty2bits(difficulty) {
+    private static difficulty2bits(difficulty) {
         if (difficulty < 0) throw 'difficulty cannot be negative';
         if (!isFinite(difficulty)) {
             throw 'difficulty cannot be infinite';

@@ -5,6 +5,7 @@ const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model");
+const boost_utils_1 = require("./boost-utils");
 const defaultOptions = {
     api_url: 'https://api.matterpool.io',
     network: 'bsv',
@@ -40,6 +41,7 @@ try {
             BoostPowJobProof: boost_pow_job_proof_model_1.BoostPowJobProofModel,
             BoostPowMetadata: boost_pow_metadata_model_1.BoostPowMetadataModel,
             BoostPowSimpleMiner: boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel,
+            BoostUtils: boost_utils_1.BoostUtils,
         };
     }
 }
@@ -51,3 +53,4 @@ exports.BoostPowJob = boost_pow_job_model_1.BoostPowJobModel;
 exports.BoostPowJobProof = boost_pow_job_proof_model_1.BoostPowJobProofModel;
 exports.BoostPowMetadata = boost_pow_metadata_model_1.BoostPowMetadataModel;
 exports.BoostPowSimpleMiner = boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
+exports.BoostUtilsHelper = boost_utils_1.BoostUtils;

@@ -24,7 +24,6 @@ export declare class BoostPowJobModel {
         metadata: string;
         unique: string;
     }): BoostPowJobModel;
-    static createBufferAndPad(buf: any, length: number): any;
     toObject(): {
         content: string;
         diff: number;
@@ -33,7 +32,7 @@ export declare class BoostPowJobModel {
         metadata: string;
         unique: string;
     };
-    static difficulty2bits(difficulty: any): number;
+    private static difficulty2bits;
     getTargetAsNumberBuffer(): any;
     toHex(): string;
     /**

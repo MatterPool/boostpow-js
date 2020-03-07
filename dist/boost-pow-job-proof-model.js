@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const bsv = require("bsv");
-const boost_pow_job_model_1 = require("./boost-pow-job-model");
+const boost_utils_1 = require("./boost-utils");
 /**
  * Responsible for redeem script proof that work was done.
  * This gets combined with BoostPowJobModel
@@ -15,7 +15,7 @@ class BoostPowJobProofModel {
         this.minerAddress = minerAddress;
     }
     static fromObject(params) {
-        return new BoostPowJobProofModel(boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.signature, 32), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.minerPubKey, 32), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.time, 4), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.minerNonce, 8), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.minerAddress, 20));
+        return new BoostPowJobProofModel(boost_utils_1.BoostUtils.createBufferAndPad(params.signature, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerNonce, 8), boost_utils_1.BoostUtils.createBufferAndPad(params.minerAddress, 20));
     }
     getSignature() {
         return this.signature;
@@ -27,13 +27,13 @@ class BoostPowJobProofModel {
         return this.time;
     }
     setTime(time) {
-        this.time = boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(time, 4);
+        this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4);
     }
     getMinerNonce() {
         return this.minerNonce;
     }
     setMinerNonce(minerNonce) {
-        this.minerNonce = boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(minerNonce, 8);
+        this.minerNonce = boost_utils_1.BoostUtils.createBufferAndPad(minerNonce, 8);
     }
     getMinerAddress() {
         return this.minerAddress;

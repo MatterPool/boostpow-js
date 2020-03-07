@@ -38,8 +38,8 @@ describe('boost #BoostPowJob create various getters and setters', () => {
          content: '00000000000000000000000000000000000000000068656c6c6f20776f726c64',
          diff: 157416.40184364,
          category: '000004d2',
-         tag: index.BoostPowJob.createBufferAndPad('animals', 20).reverse().toString('hex'),
-         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 32).reverse().toString('hex'),
+         tag: index.BoostUtilsHelper.createBufferAndPad('animals', 20).reverse().toString('hex'),
+         metadata: index.BoostUtilsHelper.createBufferAndPad('metadata here', 32).reverse().toString('hex'),
          unique: '00000000913914e3',
       });
 
@@ -65,11 +65,11 @@ describe('boost #BoostPowJob create various getters and setters', () => {
 
       const jobObj = job.toObject();
       expect(jobObj).to.eql({
-         content: index.BoostPowJob.createBufferAndPad('hello world', 32).reverse().toString('hex'),
+         content: index.BoostUtilsHelper.createBufferAndPad('hello world', 32).reverse().toString('hex'),
          diff: 157416.40184364,
          category: '000004d2',
-         tag: index.BoostPowJob.createBufferAndPad('animals', 20).reverse().toString('hex'),
-         metadata: index.BoostPowJob.createBufferAndPad('metadata here', 32).reverse().toString('hex'),
+         tag: index.BoostUtilsHelper.createBufferAndPad('animals', 20).reverse().toString('hex'),
+         metadata: index.BoostUtilsHelper.createBufferAndPad('metadata here', 32).reverse().toString('hex'),
          unique: '00000000913914e3',
       });
 

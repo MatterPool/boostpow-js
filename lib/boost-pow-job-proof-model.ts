@@ -1,5 +1,5 @@
 import * as bsv from 'bsv';
-import { BoostPowJobModel } from './boost-pow-job-model';
+import { BoostUtils } from './boost-utils';
 
 /**
  * Responsible for redeem script proof that work was done.
@@ -24,11 +24,11 @@ export class BoostPowJobProofModel {
         minerAddress: string
     }): BoostPowJobProofModel {
         return new BoostPowJobProofModel(
-            BoostPowJobModel.createBufferAndPad(params.signature, 32),
-            BoostPowJobModel.createBufferAndPad(params.minerPubKey, 32),
-            BoostPowJobModel.createBufferAndPad(params.time, 4),
-            BoostPowJobModel.createBufferAndPad(params.minerNonce, 8),
-            BoostPowJobModel.createBufferAndPad(params.minerAddress, 20),
+            BoostUtils.createBufferAndPad(params.signature, 32),
+            BoostUtils.createBufferAndPad(params.minerPubKey, 32),
+            BoostUtils.createBufferAndPad(params.time, 4),
+            BoostUtils.createBufferAndPad(params.minerNonce, 8),
+            BoostUtils.createBufferAndPad(params.minerAddress, 20),
         );
     }
 
@@ -42,13 +42,13 @@ export class BoostPowJobProofModel {
         return this.time;
     }
     setTime(time: string) {
-        this.time = BoostPowJobModel.createBufferAndPad(time, 4)
+        this.time = BoostUtils.createBufferAndPad(time, 4)
     }
     getMinerNonce(): Buffer {
         return this.minerNonce;
     }
     setMinerNonce(minerNonce: string) {
-        this.minerNonce = BoostPowJobModel.createBufferAndPad(minerNonce, 8)
+        this.minerNonce = BoostUtils.createBufferAndPad(minerNonce, 8)
     }
     getMinerAddress(): Buffer {
         return this.minerAddress;

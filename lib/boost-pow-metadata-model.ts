@@ -1,5 +1,5 @@
 import * as bsv from 'bsv';
-import { BoostPowJobModel } from './boost-pow-job-model';
+import { BoostUtils } from './boost-utils';
 
 export class BoostPowMetadataModel {
 
@@ -21,11 +21,11 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            BoostPowJobModel.createBufferAndPad(params.tag, 20),
-            BoostPowJobModel.createBufferAndPad(params.minerAddress, 20),
-            BoostPowJobModel.createBufferAndPad(params.unique, 8),
-            BoostPowJobModel.createBufferAndPad(params.minerNonce, 8),
-            BoostPowJobModel.createBufferAndPad(params.metadata, 32),
+            BoostUtils.createBufferAndPad(params.tag, 20),
+            BoostUtils.createBufferAndPad(params.minerAddress, 20),
+            BoostUtils.createBufferAndPad(params.unique, 8),
+            BoostUtils.createBufferAndPad(params.minerNonce, 8),
+            BoostUtils.createBufferAndPad(params.metadata, 32),
         );
     }
 

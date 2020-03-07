@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const bsv = require("bsv");
-const boost_pow_job_model_1 = require("./boost-pow-job-model");
+const boost_utils_1 = require("./boost-utils");
 class BoostPowMetadataModel {
     constructor(tag, minerAddress, unique, minerNonce, metadata) {
         this.tag = tag;
@@ -11,7 +11,7 @@ class BoostPowMetadataModel {
         this.metadata = metadata;
     }
     static fromObject(params) {
-        return new BoostPowMetadataModel(boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.tag, 20), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.minerAddress, 20), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.unique, 8), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.minerNonce, 8), boost_pow_job_model_1.BoostPowJobModel.createBufferAndPad(params.metadata, 32));
+        return new BoostPowMetadataModel(boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.minerAddress, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.unique, 8), boost_utils_1.BoostUtils.createBufferAndPad(params.minerNonce, 8), boost_utils_1.BoostUtils.createBufferAndPad(params.metadata, 32));
     }
     static fromBuffer(params) {
         return new BoostPowMetadataModel(params.tag, params.minerAddress, params.unique, params.minerNonce, params.metadata);

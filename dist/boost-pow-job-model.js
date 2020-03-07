@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const bsv = require("bsv");
-const _1 = require(".");
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
+const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
     constructor(content, diff, category, tag, metadata, unique) {
         this.content = content;
@@ -50,35 +50,7 @@ class BoostPowJobModel {
         if (params.metadata && params.metadata.length > 64) {
             throw new Error('metadata too large. Max 32 bytes.');
         }
-        return new BoostPowJobModel(_1.BoostPowJob.createBufferAndPad(params.content, 32), params.diff, _1.BoostPowJob.createBufferAndPad(params.category, 4), _1.BoostPowJob.createBufferAndPad(params.tag, 20), _1.BoostPowJob.createBufferAndPad(params.metadata, 32), _1.BoostPowJob.createBufferAndPad(params.unique, 8));
-    }
-    static createBufferAndPad(buf, length) {
-        if (!buf) {
-            const emptyBuffer = new Buffer(length);
-            emptyBuffer.fill(0);
-            return emptyBuffer;
-        }
-        let paddedBuf;
-        if ((typeof buf).toString() === 'buffer') {
-            paddedBuf = buf;
-        }
-        else {
-            var re = /^[0-9A-Fa-f]+$/g;
-            if (!re.test(buf)) {
-                paddedBuf = Buffer.from(buf);
-            }
-            else {
-                paddedBuf = Buffer.from(buf, 'hex');
-            }
-        }
-        if (paddedBuf.byteLength < length) {
-            const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
-            emptyBuffer.fill(0);
-            return Buffer.concat([emptyBuffer, paddedBuf]).reverse();
-        }
-        else {
-            return paddedBuf.reverse();
-        }
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.metadata, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.unique, 8));
     }
     toObject() {
         return {

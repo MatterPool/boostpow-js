@@ -3,6 +3,7 @@ import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
+import { BoostUtils } from './boost-utils';
 export declare class BoostClient {
     options: any;
     constructor(providedOptions?: any);
@@ -16,3 +17,4 @@ export declare var BoostPowJob: typeof BoostPowJobModel;
 export declare var BoostPowJobProof: typeof BoostPowJobProofModel;
 export declare var BoostPowMetadata: typeof BoostPowMetadataModel;
 export declare var BoostPowSimpleMiner: typeof BoostPowSimpleMinerModel;
+export declare var BoostUtilsHelper: typeof BoostUtils;
