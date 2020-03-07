@@ -141,6 +141,24 @@ export class BoostPowJobModel {
         unique: string,
     }): BoostPowJobModel {
 
+        if (params.content && params.content.length > 64) {
+            throw new Error('content too large. Max 32 bytes.')
+        }
+        if (params.diff <= 0 || isNaN(params.diff) || (typeof params.diff !== 'number')) {
+            throw new Error('diff must be a number starting at 1. Max 4 bytes.')
+        }
+        if (params.category && params.category.length > 8) {
+            throw new Error('category too large. Max 4 bytes.')
+        }
+        if (params.tag && params.tag.length > 40) {
+            throw new Error('tag too large. Max 20 bytes.')
+        }
+        if (params.unique && params.unique.length > 16) {
+            throw new Error('unique too large. Max 8 bytes.')
+        }
+        if (params.metadata && params.metadata.length > 64) {
+            throw new Error('metadata too large. Max 32 bytes.')
+        }
         return new BoostPowJobModel(
             BoostPowJob.createBufferAndPad(params.content, 32),
             params.diff,
@@ -458,7 +476,7 @@ export class BoostPowJobModel {
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: true): BoostPowStringModel | null {
         const abstractHash = BoostPowJobModel.createPowAbstract(boostPowJob, boostPowJobProof);
         if (debug) {
-            console.log('BoostPowString.validateProofOfWork')
+            console.log('BoostPowString.tryValidateJobProof')
             console.log('category', boostPowJob.getCategory().toString('hex'), boostPowJob.getCategory().byteLength);
             console.log('content', boostPowJob.getContent().toString('hex'), boostPowJob.getContent().byteLength);
             console.log('abstract', abstractHash, abstractHash.hash(),);
@@ -482,12 +500,12 @@ export class BoostPowJobModel {
         }
         if (blockHeader.validProofOfWork()) {
             if (debug) {
-                console.log('BoostPowString.validateProofOfWork is valid')
+                console.log('BoostPowString.tryValidateJobProof is valid')
             }
             return new BoostPowStringModel(blockHeader);
         }
         if (debug) {
-            console.log('BoostPowString.validateProofOfWork is invalid')
+            console.log('BoostPowString.tryValidateJobProof is invalid')
         }
         return null;
     }
