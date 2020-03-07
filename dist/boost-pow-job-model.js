@@ -235,7 +235,6 @@ class BoostPowJobModel {
         let tag;
         let metadata;
         let unique;
-        // console.log('asm, asm.chunks', script.chunks, script.chunks[startIndex].buf.reverse().toString('utf8'));
         if (
         // boostv01
         script.chunks[0].buf.reverse().toString('utf8') === 'boostv01' &&
@@ -295,7 +294,8 @@ class BoostPowJobModel {
     }
     static fromTransaction(tx) {
         for (const out of tx.outputs) {
-            if (out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
+            if (out.script && out.script.chunks && out.script.chunks.length &&
+                out.script.chunks.buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
                 return BoostPowJobModel.fromScript(out.script);
             }
         }

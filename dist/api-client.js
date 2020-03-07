@@ -24,23 +24,35 @@ class APIClient {
     }
     loadBoostJob(txid, callback) {
         return new Promise((resolve, reject) => {
-            if (!txid || /^(\s*)$/.test(txid)) {
+            const re = /^[0-9A-Fa-f]+$/;
+            if (!re.test(txid)) {
                 return this.rejectOrCallback(reject, this.formatErrorResponse({
                     code: 422,
-                    message: 'txid required'
+                    message: 'txid invalid',
+                    error: 'txid invalid'
+                }), callback);
+            }
+            if (txid && txid.length !== 64) {
+                return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    code: 422,
+                    message: 'txid invalid',
+                    error: 'txid invalid'
                 }), callback);
             }
             axios_1.default.get(this.fullUrl + `/tx/${txid}`, {
                 headers: this.getHeaders()
             }).then((response) => {
-                console.log('response', response);
                 const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
+                if (!job) {
+                    console.log('from raw', job);
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: 400,
+                        message: 'tx is not a valid boost output',
+                        error: 'tx is not a valid boost output'
+                    }), callback);
+                }
                 return this.resolveOrCallback(resolve, job, callback);
-                /*return this.rejectOrCallback(reject, this.formatErrorResponse({
-                    message: 'Invalid Boost Job'
-                }), callback)*/
             }).catch((ex) => {
-                console.log('ex', ex);
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
             });
         });
@@ -82,7 +94,7 @@ class APIClient {
         });
     }
     formatErrorResponse(r) {
-        let getMessage = r && r.response && r.response.data ? r.response.data : r.toString();
+        let getMessage = r && r.response && r.response.data ? r.response.data : r;
         return {
             success: getMessage.success ? getMessage.success : false,
             code: getMessage.code ? getMessage.code : -1,
