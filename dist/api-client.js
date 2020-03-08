@@ -29,14 +29,14 @@ class APIClient {
                 return this.rejectOrCallback(reject, this.formatErrorResponse({
                     code: 422,
                     message: 'txid invalid',
-                    error: 'txid invalid'
+                    error: 'TXID_INVALID'
                 }), callback);
             }
             if (txid && txid.length !== 64) {
                 return this.rejectOrCallback(reject, this.formatErrorResponse({
                     code: 422,
                     message: 'txid invalid',
-                    error: 'txid invalid'
+                    error: 'TXID_INVALID'
                 }), callback);
             }
             axios_1.default.get(this.fullUrl + `/tx/${txid}`, {
@@ -44,15 +44,22 @@ class APIClient {
             }).then((response) => {
                 const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
                 if (!job) {
-                    console.log('from raw', job);
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: 400,
                         message: 'tx is not a valid boost output',
-                        error: 'tx is not a valid boost output'
+                        error: 'TX_INVALID_BOOST_OUTPUT'
                     }), callback);
                 }
                 return this.resolveOrCallback(resolve, job, callback);
             }).catch((ex) => {
+                console.log('ex', ex);
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'tx not found',
+                        error: 'TX_NOT_FOUND'
+                    }), callback);
+                }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
             });
         });

@@ -310,10 +310,8 @@ export class BoostPowJobModel {
 
         ) {
             category = script.chunks[2].buf;
-            console.log('cate', category);
             content = script.chunks[3].buf;
             let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
-            // let targetHex = script.chunks[2].buf.reverse().toString('hex');
             let targetInt = parseInt(targetHex, 16);
             diff = BoostPowJobModel.getDifficulty(targetInt);
 
@@ -359,8 +357,7 @@ export class BoostPowJobModel {
 
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined {
         for (const out of tx.outputs) {
-            if (out.script && out.script.chunks && out.script.chunks.length &&
-                out.script.chunks.buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
+            if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
                 return BoostPowJobModel.fromScript(out.script);
             }
         }

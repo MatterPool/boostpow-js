@@ -25,7 +25,7 @@ describe('APIClient', () => {
          expect(ex).to.eql({
             success: false,
             code: 400,
-            error: 'tx is not a valid boost output',
+            error: 'TX_INVALID_BOOST_OUTPUT',
             message: 'tx is not a valid boost output',
          });
       }
@@ -39,7 +39,7 @@ describe('APIClient', () => {
          expect(ex).to.eql({
             success: false,
             code: 422,
-            error: 'txid invalid',
+            error: 'TXID_INVALID',
             message: 'txid invalid',
          });
       }
@@ -47,7 +47,6 @@ describe('APIClient', () => {
 
    it('loadBoostJob failure not found', async () => {
       try {
-         // not found
          await index.Client().loadBoostJob('deb2d830e80bdccf25d8659b98e8f77517fe0af4c5c161d645bf86a4e7fcd301');
          expect(true).to.eql(false);
       } catch(ex) {
