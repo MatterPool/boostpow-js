@@ -72,7 +72,6 @@ class APIClient {
                 }
                 return this.resolveOrCallback(resolve, job, callback);
             }).catch((ex) => {
-                console.log('ex', ex);
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.code,
