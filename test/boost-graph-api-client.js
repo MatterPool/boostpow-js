@@ -17,6 +17,7 @@ describe('APIClient', () => {
          expect(true).to.eql(false);
       }
    });
+
    it('loadBoostJob failure invalid boost output', async () => {
       try {
          await index.Client().loadBoostJob('2e791e480b24ee0c727619b37c692f83ca65fd49b280e869ae59df13cffdee97');
@@ -73,5 +74,24 @@ describe('APIClient', () => {
          });
          return;
       }
+   });
+
+   it('loadBoostJob and getScriptUtxos', async () => {
+      const job = await index.Client().loadBoostJob('dc36f3baa9b7e96827928760c07a160579b0a531814e3a3900c1c4112c4a92e7');
+      const utxos = await index.Client().getScriptUtxos(job.getScriptHash());
+      delete utxos.confirmations;
+      expect(utxos).to.eql([
+         {
+             "scripthash": "03b508a9da0879dd55619e06f5bd656696f77ba879aaa99e0eb22cedd7dd4846",
+             "txid": "dc36f3baa9b7e96827928760c07a160579b0a531814e3a3900c1c4112c4a92e7",
+             "vout": 0,
+             "amount": 0.00004363,
+             "satoshis": 4363,
+             "value": 4363,
+             "height": 625311,
+             // "confirmations": 63,
+             "outputIndex": 0
+         }
+     ]);
    });
 });

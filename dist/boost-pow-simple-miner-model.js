@@ -4,7 +4,7 @@ const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const randomBytes = require("randombytes");
 class BoostPowSimpleMinerModel {
     /**
-     *  Start mining the Boost Job
+     * Start mining the Boost Job
      * @param debug Whether to log output
      */
     static startMining(job, jobProof, debugLevel = 0, increment, cancel) {
@@ -14,7 +14,7 @@ class BoostPowSimpleMinerModel {
             jobProof.setMinerNonce(randomBytes(16));
             jobProof.setTime(Math.round((new Date()).getTime() / 1000).toString(16));
             boostPowString = boost_pow_job_model_1.BoostPowJobModel.tryValidateJobProof(job, jobProof, debugLevel == 2 ? true : false);
-            if (counter++ % 1000000 === 0) {
+            if (counter++ % 500000 === 0) {
                 if (debugLevel >= 1) {
                     console.log('Hashes checked: ', counter);
                 }

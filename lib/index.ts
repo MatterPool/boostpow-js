@@ -4,15 +4,17 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
 import { BoostUtils } from './boost-utils';
-import { APIClient } from './api-client';
+import { BoostGraphApiClient } from './boost-graph-api-client';
 
 const defaultOptions: any = {
+  // boost_graph_api_url: 'https://graph.boostpow.com',
   api_url: 'https://api.mattercloud.net',
+  // api_url: 'http://localhost:3000',
   network: 'main',          // 'bsv'
   version_path: 'api/v3',  // Do not change
 }
 
-export class BoostClient {
+export class BoostGraphApi {
   options;
   constructor(providedOptions?: any) {
     this.options = Object.assign({}, defaultOptions, providedOptions);
@@ -39,29 +41,39 @@ export class BoostClient {
   }
 
   loadBoostJob(txid: string, callback?: Function): Promise<any> {
-    const apiClient = new APIClient(this.options);
+    const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.loadBoostJob(txid, callback);
+  }
+
+  getScriptUtxos(scriptHash: string, callback?: Function): Promise<any> {
+    const apiClient = new BoostGraphApiClient(this.options);
+    return apiClient.getScriptUtxos(scriptHash, callback);
   }
 
   setOptions(newOptions) {
     this.options = Object.assign({}, this.options, newOptions);
   }
 
-  static instance(newOptions?: any): BoostClient {
+  static instance(newOptions?: any): BoostGraphApi {
     const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-    return new BoostClient(mergedOptions);
+    return new BoostGraphApi(mergedOptions);
   }
 }
 
-export function Client(newOptions?: any): BoostClient {
+export function Client(newOptions?: any): BoostGraphApi {
   const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-  return new BoostClient(mergedOptions);
+  return new BoostGraphApi(mergedOptions);
+}
+
+export function instance(newOptions?: any): BoostGraphApi {
+  const mergedOptions = Object.assign({}, defaultOptions, newOptions);
+  return new BoostGraphApi(mergedOptions);
 }
 
 try {
   if (window) {
     window['Boost'] = {
-      Client: new BoostClient(),
+      BoostGraphApi: new BoostGraphApi(),
       BoostPowString: BoostPowStringModel,
       BoostPowJob: BoostPowJobModel,
       BoostPowJobProof: BoostPowJobProofModel,

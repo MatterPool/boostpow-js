@@ -83,6 +83,7 @@ export declare class BoostPowJobModel {
     getTxid(): string | undefined;
     getVout(): number | undefined;
     getValue(): number | undefined;
+    getScriptHash(): string;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;

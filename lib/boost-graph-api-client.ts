@@ -3,6 +3,7 @@ import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
 
 export interface BoostClientApiClientOptions {
+    boost_graph_api_url: string;
     api_url: string;
     api_key?: string;
     network: string;
@@ -10,11 +11,12 @@ export interface BoostClientApiClientOptions {
 }
 
 const defaultOptions: BoostClientApiClientOptions = {
+    boost_graph_api_url: 'https://graph.boostpow.com',
     api_url: 'https://api.mattercloud.net',   // api url
     network: 'main',                          // 'bsv'
     version_path: 'api/v3',                   // Leave as is
 }
-export class APIClient {
+export class BoostGraphApiClient {
     options = defaultOptions;
     fullUrl;
     constructor(options: any) {
@@ -55,6 +57,75 @@ export class APIClient {
                     }), callback)
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+
+    findAllByContent(content: string,fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            if (content && content.length > 32) {
+                return this.rejectOrCallback(reject, this.formatErrorResponse({
+                    code: 422,
+                    message: 'query content too long',
+                    error: 'QUERY_CONTENT_TOO_LONG'
+                }), callback)
+            }
+            let params = `/v3/bsv/boost/search?content=${content}`;
+
+            if (fromTime === undefined || fromTime === null) {
+            } else {
+                params += `&fromTime=${fromTime}`;
+            }
+            if (toTime === undefined || toTime === null) {
+            } else {
+                params += `&toTime=${toTime}`;
+            }
+            axios.get(this.options.boost_graph_api_url + params,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                const job = BoostPowJobModel.fromRawTransaction(response.data.rawtx);
+                if (!job){
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: 400,
+                        message: 'tx is not a valid boost output',
+                        error: 'TX_INVALID_BOOST_OUTPUT'
+                    }), callback)
+                }
+                return this.resolveOrCallback(resolve, job, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'tx not found',
+                        error: 'TX_NOT_FOUND'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+
+            })
+        });
+    }
+
+    getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            axios.get(this.fullUrl + `/scripts/${scriptHash}/utxo`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.rejectOrCallback(reject, response.data, callback)
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'scripthash not found',
+                        error: 'SCRIPT_NOT_FOUND'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+
             })
         });
     }

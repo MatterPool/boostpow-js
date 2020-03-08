@@ -4,7 +4,6 @@ const bsv = require("bsv");
 class BoostPowStringModel {
     constructor(blockheader) {
         this._blockheader = blockheader;
-        console.log('this._blockheader', this._blockheader, this._blockheader.hash);
         if (!this._blockheader.validProofOfWork()) {
             throw new Error('INVALID_POW');
         }
@@ -82,6 +81,23 @@ class BoostPowStringModel {
         }
         return false;
     }
+    /**
+     * Check whether each element is a valid BoostPowString (POW!)
+     *
+     * If even a single entry is not valid, then an exception will be thrown and parsing of everything fails.
+     *
+     * Initially we can be strict because we should expect careful usage and passing of data.
+     *
+     * @param arrayOfPotentialBoostPowStrings Array of objects that have toString() defined
+     */
+    static fromStringArray(arrayOfPotentialBoostPowStrings) {
+        // How cool is that!?
+        const boostPowStrings = [];
+        for (const candidate of arrayOfPotentialBoostPowStrings) {
+            boostPowStrings.push(BoostPowStringModel.fromString(candidate));
+        }
+        return boostPowStrings;
+    }
     static fromBuffer(buf) {
         return new BoostPowStringModel(bsv.BlockHeader.fromBuffer(buf));
     }
@@ -103,6 +119,10 @@ class BoostPowStringModel {
             nonce: obj.nonce,
         };
         return new BoostPowStringModel(bsv.BlockHeader.fromObject(spoofedObj));
+    }
+    static from(str) {
+        var buf = Buffer.from(str, 'hex');
+        return new BoostPowStringModel(bsv.BlockHeader.fromBuffer(buf));
     }
     toBuffer() {
         return this._blockheader.toBufferWriter().concat();
