@@ -37,6 +37,10 @@ export class BoostPowJobModel {
         return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }
 
+    getContentHex(): string {
+        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+    }
+
     getDiff(): number {
         return this.difficulty;
     }
@@ -44,11 +48,20 @@ export class BoostPowJobModel {
     getCategoryBuffer(): Buffer {
         return this.category;
     }
+
+    getCategoryHex(): string {
+        return (this.category.toString('hex').match(/../g) || []).reverse().join('');
+    }
+
     getCategoryString(trimLeadingNulls = true): string {
         return this.trimBufferString(this.toObject().category, trimLeadingNulls);
     }
+
     getTagString(trimLeadingNulls = true): string {
         return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+    }
+    getTagHex(): string {
+        return (this.tag.toString('hex').match(/../g) || []).reverse().join('');
     }
     getTagBuffer(): Buffer {
         return this.tag;
@@ -56,15 +69,20 @@ export class BoostPowJobModel {
     getMetadataString(trimLeadingNulls = true): string {
         return this.trimBufferString(this.toObject().metadata, trimLeadingNulls);
     }
+    getMetadataHex(): string {
+        return (this.metadata.toString('hex').match(/../g) || []).reverse().join('');
+    }
     getMetadataBuffer(): Buffer {
         return this.metadata;
     }
-
     getUnique(): number {
         return parseInt(this.toObject().unique, 16);
     }
     getUniqueBuffer(): Buffer {
         return this.unique;
+    }
+    getUniqueHex(): string {
+        return (this.unique.toString('hex').match(/../g) || []).reverse().join('');
     }
 
     static fromObject(params: {

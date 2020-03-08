@@ -16,15 +16,20 @@ export declare class BoostPowJobModel {
     private trimBufferString;
     getContentBuffer(): Buffer;
     getContentString(trimLeadingNulls?: boolean): string;
+    getContentHex(): string;
     getDiff(): number;
     getCategoryBuffer(): Buffer;
+    getCategoryHex(): string;
     getCategoryString(trimLeadingNulls?: boolean): string;
     getTagString(trimLeadingNulls?: boolean): string;
+    getTagHex(): string;
     getTagBuffer(): Buffer;
     getMetadataString(trimLeadingNulls?: boolean): string;
+    getMetadataHex(): string;
     getMetadataBuffer(): Buffer;
     getUnique(): number;
     getUniqueBuffer(): Buffer;
+    getUniqueHex(): string;
     static fromObject(params: {
         content: string;
         diff: number;

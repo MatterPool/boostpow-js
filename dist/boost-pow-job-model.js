@@ -32,11 +32,17 @@ class BoostPowJobModel {
     getContentString(trimLeadingNulls = true) {
         return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }
+    getContentHex() {
+        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+    }
     getDiff() {
         return this.difficulty;
     }
     getCategoryBuffer() {
         return this.category;
+    }
+    getCategoryHex() {
+        return (this.category.toString('hex').match(/../g) || []).reverse().join('');
     }
     getCategoryString(trimLeadingNulls = true) {
         return this.trimBufferString(this.toObject().category, trimLeadingNulls);
@@ -44,11 +50,17 @@ class BoostPowJobModel {
     getTagString(trimLeadingNulls = true) {
         return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
     }
+    getTagHex() {
+        return (this.tag.toString('hex').match(/../g) || []).reverse().join('');
+    }
     getTagBuffer() {
         return this.tag;
     }
     getMetadataString(trimLeadingNulls = true) {
         return this.trimBufferString(this.toObject().metadata, trimLeadingNulls);
+    }
+    getMetadataHex() {
+        return (this.metadata.toString('hex').match(/../g) || []).reverse().join('');
     }
     getMetadataBuffer() {
         return this.metadata;
@@ -58,6 +70,9 @@ class BoostPowJobModel {
     }
     getUniqueBuffer() {
         return this.unique;
+    }
+    getUniqueHex() {
+        return (this.unique.toString('hex').match(/../g) || []).reverse().join('');
     }
     static fromObject(params) {
         if (params.content && params.content.length > 64) {
