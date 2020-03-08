@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { BoostPowJobModel } from './boost-pow-job-model';
+import * as bsv from 'bsv';
+
 export interface BoostClientApiClientOptions {
     api_url: string;
     api_key?: string;
@@ -28,6 +30,33 @@ export class APIClient {
             };
         }
         return {};
+    }
+
+    broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            const boostJobProof = BoostPowJobModel.fromTransaction(tx);
+
+            axios.post(this.fullUrl + `/merchants/tx/broadcast`,
+                { rawtx: boostJobProof},
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+
+
+                return this.resolveOrCallback(resolve, response, callback);
+            }).catch((ex) => {
+                console.log('ex', ex);
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'tx not found',
+                        error: 'TX_NOT_FOUND'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
     }
 
     loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
@@ -63,7 +92,6 @@ export class APIClient {
                 }
                 return this.resolveOrCallback(resolve, job, callback);
             }).catch((ex) => {
-                console.log('ex', ex);
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.code,

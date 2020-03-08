@@ -4,8 +4,14 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
 
+/**
+ * Responsible for a Boost Job Proof.
+ *
+ * The Boost Pow String (also known as Boost Header) is derived from the locking and redeem transactions
+ * BoostPowString = combined(BoostJob + BoostJobProof)
+ *
+ */
 export class BoostPowJobModel {
-
 
     private constructor(
         private content: Buffer,
@@ -16,7 +22,8 @@ export class BoostPowJobModel {
         private unique: Buffer,
         // Optional tx information attached or not
         private txid?: string,
-        private vout?: number
+        private vout?: number,
+        private value?: number,
     ) {
     }
 
@@ -314,7 +321,7 @@ export class BoostPowJobModel {
         );
     }
 
-    static fromHex(asm: string, txid?: string, vout?: number): BoostPowJobModel {
+    static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
         const script = new bsv.Script(asm);
         let category;
         let content;
@@ -374,7 +381,8 @@ export class BoostPowJobModel {
                 metadata,
                 unique,
                 txid,
-                vout
+                vout,
+                value
             );
         }
         throw new Error('Not valid Boost Output');
@@ -386,8 +394,8 @@ export class BoostPowJobModel {
         return makeAsm.toASM();
     }
 
-    static fromASM(str: string, txid?: string, vout?: number): BoostPowJobModel {
-        return BoostPowJobModel.fromHex(str, txid, vout);
+    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+        return BoostPowJobModel.fromHex(str, txid, vout, value);
     }
 
     toString(): string {
@@ -396,19 +404,20 @@ export class BoostPowJobModel {
         return makeAsm.toString();
     }
 
-    static fromString(str: string, txid?: string, vout?: number): BoostPowJobModel {
-        return BoostPowJobModel.fromHex(str, txid, vout);
+    static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+        return BoostPowJobModel.fromHex(str, txid, vout, value);
     }
 
-    static fromScript(script: bsv.Script, txid?: string, vout?: number): BoostPowJobModel {
-        return BoostPowJobModel.fromHex(script, txid, vout);
+    static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+        return BoostPowJobModel.fromHex(script, txid, vout, value);
     }
 
     // Optional attached information if available
-    getTxOutpoint(): {txid?: string, vout?: number} {
+    getTxOutpoint(): {txid?: string, vout?: number, value?: number} {
         return {
             txid: this.txid,
             vout: this.vout,
+            value: this.value,
         }
     }
     // Optional attached information if available
@@ -420,6 +429,11 @@ export class BoostPowJobModel {
         return this.vout;
     }
 
+    // Optional attached information if available
+    getValue(): number | undefined {
+        return this.value;
+    }
+
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined {
         if (!tx) {
             return undefined;
@@ -427,7 +441,7 @@ export class BoostPowJobModel {
         let o = 0;
         for (const out of tx.outputs) {
             if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
-                return BoostPowJobModel.fromScript(out.script, tx.hash, o);
+                return BoostPowJobModel.fromScript(out.script, tx.hash, o, out.value);
             }
             o++;
         }

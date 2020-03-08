@@ -22,6 +22,26 @@ class APIClient {
         }
         return {};
     }
+    broadcastBoostJobProof(tx, callback) {
+        return new Promise((resolve, reject) => {
+            const boostJobProof = boost_pow_job_model_1.BoostPowJobModel.fromTransaction(tx);
+            axios_1.default.post(this.fullUrl + `/merchants/tx/broadcast`, { rawtx: boostJobProof }, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response, callback);
+            }).catch((ex) => {
+                console.log('ex', ex);
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'tx not found',
+                        error: 'TX_NOT_FOUND'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
     loadBoostJob(txid, callback) {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;

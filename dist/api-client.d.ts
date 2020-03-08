@@ -1,4 +1,5 @@
 import { BoostPowJobModel } from './boost-pow-job-model';
+import * as bsv from 'bsv';
 export interface BoostClientApiClientOptions {
     api_url: string;
     api_key?: string;
@@ -10,6 +11,7 @@ export declare class APIClient {
     fullUrl: any;
     constructor(options: any);
     getHeaders(): any;
+    broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel>;
     loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel>;
     /**
      * Resolve a promise and/or invoke a callback

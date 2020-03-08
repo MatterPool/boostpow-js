@@ -1,7 +1,12 @@
-# Boost Pow Javascript Library
-> Create Boost Pow Strings
+# Boost POW Javascript Library
+> Boost Proof of Work Protocol
 > boostpow.com
+>
+> Built by MatterPool Inc. (www.matterpool.io)
 
+Boost is a new type of content ranking system that enables users to increase the amount of energy required to mine or process their content. Users will boost their post as a way to signal to the network that they believe their information is valuable. Boosted posts will appear in the boost feed – ordered by the amount of energy requested for their information.
+
+Example Boost Job: https://boostpow.com/job/f2f61baa9b8567b6bad79f6d5d2d627bbc3137d004f7fe4d8d13c2598e5270e1
 
 See usage examples at: https://github.com/MatterPool/boostpow-js/blob/master/test/boost-magic-string.test.js
 

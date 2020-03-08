@@ -12,7 +12,11 @@ export class BoostPowJobProofModel {
         private minerPubKey: Buffer,
         private time: Buffer,
         private minerNonce: Buffer,
-        private minerAddress: Buffer
+        private minerAddress: Buffer,
+        // Optional tx information attached or not
+        private txid?: string,
+        private vout?: number,
+        private value?: number,
     ) {
     }
 
@@ -91,7 +95,34 @@ export class BoostPowJobProofModel {
         return hexIso;
     }
 
-    static fromHex(asm: string): BoostPowJobProofModel {
+    static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined {
+        if (!tx) {
+            return undefined;
+        }
+        let o = 0;
+        for (const out of tx.outputs) {
+            try {
+                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o);
+            } catch (ex) {
+                // Skip and try another output
+            }
+        }
+        return undefined;
+    }
+
+    static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined {
+        if (!rawtx || rawtx === '') {
+            return undefined;
+        }
+        const tx = new bsv.Transaction(rawtx);
+        return BoostPowJobProofModel.fromTransaction(tx);
+    }
+
+    static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
+        return BoostPowJobProofModel.fromHex(script, txid, vout, value);
+    }
+
+    static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
         const script = new bsv.Script(asm);
         let signature;
         let minerPubKey;
@@ -133,10 +164,35 @@ export class BoostPowJobProofModel {
                 minerPubKey,
                 time,
                 minerNonce,
-                minerAddress
+                minerAddress,
+                txid,
+                vout,
+                value
             );
         }
         throw new Error('Not valid Boost Proof');
+    }
+
+    // Optional attached information if available
+    getTxOutpoint(): {txid?: string, vout?: number, value?: number} {
+        return {
+            txid: this.txid,
+            vout: this.vout,
+            value: this.value,
+        }
+    }
+    // Optional attached information if available
+    getTxid(): string | undefined {
+        return this.txid;
+    }
+    // Optional attached information if available
+    getVout(): number | undefined {
+        return this.vout;
+    }
+
+    // Optional attached information if available
+    getValue(): number | undefined {
+        return this.value;
     }
 
     toASM(): string {
@@ -145,8 +201,8 @@ export class BoostPowJobProofModel {
         return makeAsm.toASM();
     }
 
-    static fromASM(str: string): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str);
+    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
+        return BoostPowJobProofModel.fromHex(str, txid, vout, value);
     }
 
     toString(): string {
@@ -155,7 +211,7 @@ export class BoostPowJobProofModel {
         return makeAsm.toString();
     }
 
-    static fromString(str: string): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str);
+    static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
+        return BoostPowJobProofModel.fromHex(str, txid, vout, value);
     }
 }

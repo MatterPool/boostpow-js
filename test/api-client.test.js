@@ -59,4 +59,19 @@ describe('APIClient', () => {
          return;
       }
    });
+
+   it('loadBoostJob failure not found', async () => {
+      try {
+         await index.Client().loadBoostJob('deb2d830e80bdccf25d8659b98e8f77517fe0af4c5c161d645bf86a4e7fcd301');
+         expect(true).to.eql(false);
+      } catch(ex) {
+         expect(ex).to.eql({
+            success: false,
+            code: 404,
+            error: '',
+            message: ''
+         });
+         return;
+      }
+   });
 });

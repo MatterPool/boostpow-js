@@ -3,6 +3,13 @@ import * as bsv from 'bsv';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
+/**
+ * Responsible for a Boost Job Proof.
+ *
+ * The Boost Pow String (also known as Boost Header) is derived from the locking and redeem transactions
+ * BoostPowString = combined(BoostJob + BoostJobProof)
+ *
+ */
 export declare class BoostPowJobModel {
     private content;
     private difficulty;
@@ -12,6 +19,7 @@ export declare class BoostPowJobModel {
     private unique;
     private txid?;
     private vout?;
+    private value?;
     private constructor();
     private trimBufferString;
     getContentBuffer(): Buffer;
@@ -61,18 +69,20 @@ export declare class BoostPowJobModel {
      */
     static getDifficulty(bits: any): number;
     static remainingOperationsMatchExactly(remainingChunks: any): boolean;
-    static fromHex(asm: string, txid?: string, vout?: number): BoostPowJobModel;
+    static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toASM(): string;
-    static fromASM(str: string, txid?: string, vout?: number): BoostPowJobModel;
+    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toString(): string;
-    static fromString(str: string, txid?: string, vout?: number): BoostPowJobModel;
-    static fromScript(script: bsv.Script, txid?: string, vout?: number): BoostPowJobModel;
+    static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
+    static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     getTxOutpoint(): {
         txid?: string;
         vout?: number;
+        value?: number;
     };
     getTxid(): string | undefined;
     getVout(): number | undefined;
+    getValue(): number | undefined;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
