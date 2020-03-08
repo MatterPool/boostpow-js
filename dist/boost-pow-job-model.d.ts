@@ -10,6 +10,8 @@ export declare class BoostPowJobModel {
     private tag;
     private metadata;
     private unique;
+    private txid?;
+    private vout?;
     private constructor();
     getContent(): Buffer;
     getDiff(): number;
@@ -17,7 +19,6 @@ export declare class BoostPowJobModel {
     getTag(): Buffer;
     getMetadata(): Buffer;
     getUnique(): Buffer;
-    static build(): void;
     static fromObject(params: {
         content: string;
         diff: number;
@@ -49,12 +50,18 @@ export declare class BoostPowJobModel {
      */
     static getDifficulty(bits: any): number;
     static remainingOperationsMatchExactly(remainingChunks: any): boolean;
-    static fromHex(asm: string): BoostPowJobModel;
+    static fromHex(asm: string, txid?: string, vout?: number): BoostPowJobModel;
     toASM(): string;
-    static fromASM(str: string): BoostPowJobModel;
+    static fromASM(str: string, txid?: string, vout?: number): BoostPowJobModel;
     toString(): string;
-    static fromString(str: string): BoostPowJobModel;
-    static fromScript(script: bsv.Script): BoostPowJobModel;
+    static fromString(str: string, txid?: string, vout?: number): BoostPowJobModel;
+    static fromScript(script: bsv.Script, txid?: string, vout?: number): BoostPowJobModel;
+    getTxOutpoint(): {
+        txid?: string;
+        vout?: number;
+    };
+    getTxid(): string | undefined;
+    getVout(): number | undefined;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
