@@ -102,8 +102,7 @@ export class BoostPowJobProofModel {
         let o = 0;
         for (const out of tx.outputs) {
             try {
-                console.log('out proof', out);
-                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o, out.value);
+                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o, out.satoshis);
             } catch (ex) {
                 // Skip and try another output
             }
