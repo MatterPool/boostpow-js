@@ -440,6 +440,7 @@ export class BoostPowJobModel {
         }
         let o = 0;
         for (const out of tx.outputs) {
+            console.log('out', out);
             if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
                 return BoostPowJobModel.fromScript(out.script, tx.hash, o, out.value);
             }
