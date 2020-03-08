@@ -450,4 +450,34 @@ describe('BoostPowJob', () => {
       expect(job.getVout()).to.eql(undefined);
 
    });
+
+   it('should correctly get content and buffers as appropriate', async () => {
+      const job = index.BoostPowJob.fromObject({
+         content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
+         diff: 21,
+         category: index.BoostUtilsHelper.createBufferAndPad('bill', 4).reverse().toString('hex'),
+         tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+         metadata: index.BoostUtilsHelper.createBufferAndPad('this is more metadata', 32).reverse().toString('hex'),
+         unique: index.BoostUtilsHelper.createBufferAndPad('01c8', 8).reverse().toString('hex')
+      });
+
+      expect(job.getDiff()).to.eql(21);
+      expect(job.getUniqueBuffer().toString('hex')).to.eql('c801000000000000');
+      expect(job.getUnique()).to.eql(456);
+
+      expect(job.getContentString()).to.eql('hello animal');
+      expect(job.getContentBuffer().toString('hex')).to.eql('6c616d696e61206f6c6c65680000000000000000000000000000000000000000');
+
+      expect(job.getTagString()).to.eql('this is a tag');
+      expect(job.getTagBuffer().toString('hex')).to.eql('6761742061207369207369687400000000000000');
+
+      expect(job.getCategoryString()).to.eql('bill');
+      expect(job.getCategoryBuffer().toString('hex')).to.eql('6c6c6962');
+
+      expect(job.getMetadataString()).to.eql('this is more metadata');
+      expect(job.getMetadataBuffer().toString('hex')).to.eql('617461646174656d2065726f6d20736920736968740000000000000000000000');
+
+      expect(job.toString()).to.eql('8 0x31307674736f6f62 OP_DROP 4 0x6c6c6962 32 0x6c616d696e61206f6c6c65680000000000000000000000000000000000000000 4 0xb6300c1c 20 0x6761742061207369207369687400000000000000 8 0xc801000000000000 32 0x617461646174656d2065726f6d20736920736968740000000000000000000000 OP_8 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_6 OP_ROLL OP_DUP OP_TOALTSTACK OP_ROT OP_4 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_3 OP_GREATERTHANOREQUAL OP_VERIFY OP_DUP 1 0x20 OP_LESSTHANOREQUAL OP_VERIFY OP_TOALTSTACK 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_RSHIFT OP_TOALTSTACK OP_7 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_4 OP_SPLIT OP_TOALTSTACK OP_CAT OP_ROT OP_CAT OP_CAT OP_CAT OP_HASH256 OP_SWAP OP_CAT OP_CAT OP_CAT OP_SWAP OP_CAT OP_FROMALTSTACK OP_CAT OP_FROMALTSTACK OP_CAT OP_HASH256 OP_FROMALTSTACK OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH256 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
+
+   });
 });

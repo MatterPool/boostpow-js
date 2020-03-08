@@ -25,14 +25,17 @@ class BoostPowStringModel {
     contentBuffer() {
         return this.toObject().content;
     }
-    contentString(trimLeadingNulls = true) {
-        const content = Buffer.from(this.toObject().content, 'hex').toString('utf8');
+    trimBufferString(str, trimLeadingNulls = true) {
+        const content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
             return content.replace(/\0/g, '');
         }
         else {
             return content;
         }
+    }
+    contentString(trimLeadingNulls = true) {
+        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }
     bits() {
         return this.toObject().bits;

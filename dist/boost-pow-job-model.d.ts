@@ -5,7 +5,7 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
     private content;
-    private diff;
+    private difficulty;
     private category;
     private tag;
     private metadata;
@@ -13,12 +13,18 @@ export declare class BoostPowJobModel {
     private txid?;
     private vout?;
     private constructor();
-    getContent(): Buffer;
+    private trimBufferString;
+    getContentBuffer(): Buffer;
+    getContentString(trimLeadingNulls?: boolean): string;
     getDiff(): number;
-    getCategory(): Buffer;
-    getTag(): Buffer;
-    getMetadata(): Buffer;
-    getUnique(): Buffer;
+    getCategoryBuffer(): Buffer;
+    getCategoryString(trimLeadingNulls?: boolean): string;
+    getTagString(trimLeadingNulls?: boolean): string;
+    getTagBuffer(): Buffer;
+    getMetadataString(trimLeadingNulls?: boolean): string;
+    getMetadataBuffer(): Buffer;
+    getUnique(): number;
+    getUniqueBuffer(): Buffer;
     static fromObject(params: {
         content: string;
         diff: number;

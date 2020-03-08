@@ -9,7 +9,7 @@ export class BoostPowJobModel {
 
     private constructor(
         private content: Buffer,
-        private diff: number,
+        private difficulty: number,
         private category: Buffer,
         private tag: Buffer,
         private metadata: Buffer,
@@ -20,22 +20,50 @@ export class BoostPowJobModel {
     ) {
     }
 
-    getContent(): Buffer {
+    private trimBufferString(str: string, trimLeadingNulls = true): string {
+        const content = Buffer.from(str, 'hex').toString('utf8');
+        if (trimLeadingNulls) {
+            return content.replace(/\0/g, '');
+        } else {
+            return content;
+        }
+    }
+
+    getContentBuffer(): Buffer {
         return this.content;
     }
-    getDiff(): number {
-        return this.diff;
+
+    getContentString(trimLeadingNulls = true): string {
+        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }
-    getCategory(): Buffer {
+
+    getDiff(): number {
+        return this.difficulty;
+    }
+
+    getCategoryBuffer(): Buffer {
         return this.category;
     }
-    getTag(): Buffer {
+    getCategoryString(trimLeadingNulls = true): string {
+        return this.trimBufferString(this.toObject().category, trimLeadingNulls);
+    }
+    getTagString(trimLeadingNulls = true): string {
+        return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+    }
+    getTagBuffer(): Buffer {
         return this.tag;
     }
-    getMetadata(): Buffer {
+    getMetadataString(trimLeadingNulls = true): string {
+        return this.trimBufferString(this.toObject().metadata, trimLeadingNulls);
+    }
+    getMetadataBuffer(): Buffer {
         return this.metadata;
     }
-    getUnique(): Buffer {
+
+    getUnique(): number {
+        return parseInt(this.toObject().unique, 16);
+    }
+    getUniqueBuffer(): Buffer {
         return this.unique;
     }
 
@@ -79,7 +107,7 @@ export class BoostPowJobModel {
     toObject () {
         return {
             content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
-            diff: this.diff,
+            diff: this.difficulty,
             category: (this.category.toString('hex').match(/../g) || []).reverse().join(''),
             tag: (this.tag.toString('hex').match(/../g) || []).reverse().join(''),
             metadata: (this.metadata.toString('hex').match(/../g) || []).reverse().join(''),
@@ -111,7 +139,7 @@ export class BoostPowJobModel {
     }
 
     getTargetAsNumberBuffer(): any {
-        const i = BoostPowJobModel.difficulty2bits(this.diff);
+        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
 
@@ -399,11 +427,11 @@ export class BoostPowJobModel {
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
         const takeSecondHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(8, 16);
         return BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.getTag(),
+            tag: boostPowJob.getTagBuffer(),
             minerAddress: boostPowJobProof.getMinerAddress(),
-            unique: boostPowJob.getUnique(),
+            unique: boostPowJob.getUniqueBuffer(),
             minerNonce: Buffer.from(takeSecondHalf, 'hex'), // boostPowJobProof.getMinerNonce(),
-            metadata: boostPowJob.getMetadata(),
+            metadata: boostPowJob.getMetadataBuffer(),
         });
     }
 
@@ -411,18 +439,18 @@ export class BoostPowJobModel {
         const metadataHash = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof')
-            console.log('category', boostPowJob.getCategory().toString('hex'), boostPowJob.getCategory().byteLength);
-            console.log('content', boostPowJob.getContent().toString('hex'), boostPowJob.getContent().byteLength);
+            console.log('category', boostPowJob.getCategoryBuffer().toString('hex'), boostPowJob.getCategoryBuffer().byteLength);
+            console.log('content', boostPowJob.getContentBuffer().toString('hex'), boostPowJob.getContentBuffer().byteLength);
             console.log('metadataHash', metadataHash, metadataHash.hash(),);
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('minerNonce', boostPowJobProof.getMinerNonce().toString('hex'), boostPowJobProof.getMinerNonce().byteLength)
-            console.log('unique', boostPowJob.getUnique().toString('hex'), boostPowJob.getUnique().byteLength);
+            console.log('unique', boostPowJob.getUniqueBuffer().toString('hex'), boostPowJob.getUniqueBuffer().byteLength);
         }
         const takeFirstHalf = boostPowJobProof.getMinerNonce().toString('hex').substr(0, 8);
         const headerBuf = Buffer.concat([
-            boostPowJob.getCategory(),
-            boostPowJob.getContent(),
+            boostPowJob.getCategoryBuffer(),
+            boostPowJob.getContentBuffer(),
             metadataHash.hashAsBuffer(),
             // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // metadataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),

@@ -7,6 +7,7 @@ export declare class BoostPowStringModel {
     id(): string;
     contentHex(): string;
     contentBuffer(): string;
+    private trimBufferString;
     contentString(trimLeadingNulls?: boolean): string;
     bits(): number;
     metadataHash(): string;

@@ -28,18 +28,21 @@ export class BoostPowStringModel {
         return this.toObject().content;
     }
 
-
     contentBuffer(): string {
         return this.toObject().content;
     }
 
-    contentString(trimLeadingNulls = true): string {
-        const content = Buffer.from(this.toObject().content, 'hex').toString('utf8');
+    private trimBufferString(str: string, trimLeadingNulls = true): string {
+        const content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
             return content.replace(/\0/g, '');
         } else {
             return content;
         }
+    }
+
+    contentString(trimLeadingNulls = true): string {
+        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }
 
     bits(): number {
