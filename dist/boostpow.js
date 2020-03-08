@@ -1,6 +1,6 @@
 /**
  * boostpow-js - BoostPow Javascript SDK - matterpool.io
- * @version v1.0.18
+ * @version v1.0.19
  * @link https://github.com/MatterPool/boostpow-js#readme
  *
  * Copyright (c) 2020 MatterPool Inc.
