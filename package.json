@@ -1,6 +1,6 @@
 {
   "name": "boostpow-js",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,9 +25,11 @@
     "bsv",
     "bitcoin-sv",
     "metanet",
-    "boost pow",
+    "boost",
     "proof-of-work",
     "pow",
+    "boost-pow",
+    "boost-protocal",
     "hashcash",
     "blockchain",
     "matterpool",
@@ -75,7 +77,8 @@
     "axios": "^0.18.0",
     "crypto-random-string": "^3.1.0",
     "i": "^0.3.6",
-    "mattercloudjs": "^1.0.10"
+    "mattercloudjs": "^1.0.10",
+    "randombytes": "^2.1.0"
   },
   "files": [
     "dist/*"

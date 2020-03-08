@@ -22,7 +22,7 @@ npm install boostpow-js --save
 **Include**
 ```javascript
 // Node
-var boostpow = require('boostpow-js');
+var boost = require('boostpow-js');
 
 ```
 
@@ -80,18 +80,18 @@ console.log(obj.toString());
 
 
 // Construct and validate a Boost Pow String and then get the difficulty
-const boostPowString = boostpow.BoostPowString.fromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
+const boostPowString = boost.BoostPowString.fromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
 const diff = boostPowString.difficulty();
 console.log(diff);
 // 157416.40184364
 
 
 // Attempt to just validate proof of work for a Boost Pow String (or Bitcoin Block Header!)
- const isValidPow = boostpow.BoostPowString.validProofOfWorkFromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
+ const isValidPow = boost.BoostPowString.validProofOfWorkFromString('010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
 console.log(isValidPow);
 // true
 
- const isValidPow = boostpow.BoostPowString.validProofOfWorkFromString('a10000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
+ const isValidPow = boost.BoostPowString.validProofOfWorkFromString('a10000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991');
 console.log(isValidPow);
 // false
 

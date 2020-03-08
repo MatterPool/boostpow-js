@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 var index = require('../dist/index.js');
 
 describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours to finish depending on cpu speed', () => {
-   /*
+
    it('mine hello general', async () => {
       const debugLevel = 1; // Whether to show logs
 
@@ -27,12 +27,12 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
       // This can take hours (3 to 20 hours) on a single core CPU at difficulty=1
       // 7 MH/second is targetted for 10 minutes.
       // Typical CPU can do 20 to 50 KH/second
-      const result = index.BoostPowSimpleMiner.startMining(job, jobProof, debugLevel);
-      console.log('Found a Boost Header!');
+      const result = index.BoostPowSimpleMiner.startMining(job, jobProof, debugLevel, function(c) {
+         console.log('increment here', c);
+      });
       console.log('Boost Pow String: ', result.boostPowString);
       console.log('Boost Pow Job: ', result.boostPowJob);
       console.log('Boost Pow Job Proof: ', result.boostPowJobProof);
    });
-   */
 
 });

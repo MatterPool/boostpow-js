@@ -5,7 +5,7 @@ export class BoostPowStringModel {
 
     constructor(blockheader: bsv.BlockHeader) {
         this._blockheader = blockheader;
-
+        console.log('this._blockheader', this._blockheader, this._blockheader.hash)
         if (!this._blockheader.validProofOfWork()) {
             throw new Error('INVALID_POW');
         }

@@ -31,8 +31,17 @@ class BoostPowJobProofModel {
     getTime() {
         return this.time;
     }
+    getTimeNumber() {
+        return parseInt((this.time.toString('hex').match(/../g) || []).reverse().join(''), 16);
+    }
+    getTimeBuffer() {
+        return this.time;
+    }
     setTime(time) {
         this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4);
+    }
+    getMinerNonceNumber() {
+        return parseInt((this.minerNonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
     }
     getMinerNonce() {
         return this.minerNonce;
@@ -40,6 +49,7 @@ class BoostPowJobProofModel {
     setMinerNonce(minerNonce) {
         this.minerNonce = boost_utils_1.BoostUtils.createBufferAndPad(minerNonce, 8);
     }
+    // Should add bsv.Address version and string version too
     getMinerAddress() {
         return this.minerAddress;
     }

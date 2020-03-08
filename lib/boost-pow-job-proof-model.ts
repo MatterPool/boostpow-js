@@ -45,8 +45,17 @@ export class BoostPowJobProofModel {
     getTime(): Buffer {
         return this.time;
     }
+    getTimeNumber(): number {
+        return parseInt((this.time.toString('hex').match(/../g) || []).reverse().join(''), 16);
+    }
+    getTimeBuffer(): Buffer {
+        return this.time;
+    }
     setTime(time: string) {
         this.time = BoostUtils.createBufferAndPad(time, 4)
+    }
+    getMinerNonceNumber(): number {
+        return parseInt((this.minerNonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
     }
     getMinerNonce(): Buffer {
         return this.minerNonce;
@@ -54,6 +63,7 @@ export class BoostPowJobProofModel {
     setMinerNonce(minerNonce: string) {
         this.minerNonce = BoostUtils.createBufferAndPad(minerNonce, 8)
     }
+    // Should add bsv.Address version and string version too
     getMinerAddress(): Buffer {
         return this.minerAddress;
     }

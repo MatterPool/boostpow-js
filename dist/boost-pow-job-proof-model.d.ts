@@ -24,7 +24,10 @@ export declare class BoostPowJobProofModel {
     getSignature(): Buffer;
     getMinerPubKey(): Buffer;
     getTime(): Buffer;
+    getTimeNumber(): number;
+    getTimeBuffer(): Buffer;
     setTime(time: string): void;
+    getMinerNonceNumber(): number;
     getMinerNonce(): Buffer;
     setMinerNonce(minerNonce: string): void;
     getMinerAddress(): Buffer;
