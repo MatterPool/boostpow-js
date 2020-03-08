@@ -39,6 +39,9 @@ class BoostUtils {
         }
         let paddedBuf;
         if ((typeof buf).toString() === 'buffer') {
+            if (buf.byteLength > length) {
+                throw new Error('The buffer is out of bounds: ' + length + ' bytes or small expected');
+            }
             paddedBuf = buf;
         }
         else {

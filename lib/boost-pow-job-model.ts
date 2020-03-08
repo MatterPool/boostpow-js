@@ -494,7 +494,6 @@ export class BoostPowJobModel {
             console.log('boostHeader candidate', headerBuf.toString('hex'), blockHeader);
         }
         if (blockHeader.validProofOfWork()) {
-            console.log('valid proof of work', blockHeader);
             if (debug) {
                 console.log('BoostPowString.tryValidateJobProof is valid')
             }
