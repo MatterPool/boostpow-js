@@ -80,7 +80,7 @@ class BoostPowJobProofModel {
         let o = 0;
         for (const out of tx.outputs) {
             try {
-                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o);
+                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o, out.value);
             }
             catch (ex) {
                 // Skip and try another output
