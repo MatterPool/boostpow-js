@@ -1,9 +1,10 @@
 {
   "name": "boostpow-js",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && gulp build",
     "test": "mocha --reporter spec",
