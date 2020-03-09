@@ -94,4 +94,24 @@ describe('APIClient', () => {
          }
      ]);
    });
+
+   it('loadBoostJob and getBoostJobUnspentOutputs Capitalism quote', async () => {
+      const job = await index.Graph().loadBoostJob('afe7bd76c5b4af66702368a5b08d36d8d546ee737cda636e3d7965ddc38feaed');
+      const utxos = await index.Graph().getBoostJobUtxos(job.getScriptHash());
+      delete utxos[0].confirmations;
+      expect(utxos).to.eql([
+         {
+             "scripthash": "9d4294f7ab5b060180429f521e9ef1b9dd5d12ab214301e5b353105d8f0c25a7",
+             "txid": "afe7bd76c5b4af66702368a5b08d36d8d546ee737cda636e3d7965ddc38feaed",
+             "vout": 0,
+             "amount": 0.00005077,
+             "satoshis": 5077,
+             "value": 5077,
+             "height": 625396,
+             // "confirmations": 63,
+             "outputIndex": 0
+         }
+     ]);
+   });
+
 });

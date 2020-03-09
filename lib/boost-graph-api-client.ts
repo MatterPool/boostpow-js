@@ -147,7 +147,6 @@ export class BoostGraphApiClient {
                     error: 'TXID_INVALID'
                 }), callback)
             }
-
             axios.get(this.fullUrl + `/tx/${txid}`,
                 {
                     headers: this.getHeaders()
