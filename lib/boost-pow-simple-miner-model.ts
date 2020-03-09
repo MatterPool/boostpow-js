@@ -24,7 +24,6 @@ export class BoostPowSimpleMinerModel {
                     increment(counter);
                 }
             }
-
             if (cancel) {
                 if (cancel()) {
                     return;
