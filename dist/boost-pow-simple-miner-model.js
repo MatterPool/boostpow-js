@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
-const randomBytes = require("randombytes");
+const cryptoRandomString = require("crypto-random-string");
 class BoostPowSimpleMinerModel {
     /**
      * Start mining the Boost Job
@@ -11,7 +11,7 @@ class BoostPowSimpleMinerModel {
         let boostPowString;
         let counter = 0;
         while (!boostPowString) {
-            jobProof.setMinerNonce(randomBytes(16));
+            jobProof.setMinerNonce(cryptoRandomString({ length: 16 }));
             jobProof.setTime(Math.round((new Date()).getTime() / 1000).toString(16));
             boostPowString = boost_pow_job_model_1.BoostPowJobModel.tryValidateJobProof(job, jobProof, debugLevel == 2 ? true : false);
             if (counter++ % 500000 === 0) {

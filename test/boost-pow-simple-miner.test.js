@@ -4,12 +4,15 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours to finish depending on cpu speed', () => {
-   /*
+
    it('mine hello world', async () => {
       const debugLevel = 1; // Whether to show logs
-      const job = await index.BoostGraphApi.instance().loadBoostJob('dc36f3baa9b7e96827928760c07a160579b0a531814e3a3900c1c4112c4a92e7');
+      const job = await index.Graph().loadBoostJob('afe7bd76c5b4af66702368a5b08d36d8d546ee737cda636e3d7965ddc38feaed');
       const privKey = bsv.PrivateKey.fromRandom();
+      const capital = Buffer.from('Capitalists can spend more energy than socialists.', 'utf8');
+      console.log('sha256', bsv.crypto.Hash.sha256(capital).toString('hex'));
       const address = privKey.toAddress();
+      console.log('job', job.toObject());
       console.log('Private key and address', privKey, privKey.toPublicKey().toBuffer(), address, address.toBuffer());
       // const jobProof = index.BoostPowJobProof.fromObject({
       //   signature: '01',
@@ -36,6 +39,6 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
       console.log('Boost Pow String: ', result.boostPowString);
       console.log('Boost Pow Job: ', result.boostPowJob);
       console.log('Boost Pow Job Proof: ', result.boostPowJobProof);
-   });*/
+   });
 
 });

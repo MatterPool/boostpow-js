@@ -1,6 +1,7 @@
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import * as randomBytes from 'randombytes';
+import * as cryptoRandomString from 'crypto-random-string';
 
 export class BoostPowSimpleMinerModel {
     /**
@@ -12,7 +13,7 @@ export class BoostPowSimpleMinerModel {
         let counter = 0;
 
         while (!boostPowString) {
-            jobProof.setMinerNonce(randomBytes(16));
+            jobProof.setMinerNonce(cryptoRandomString({length: 16}));
             jobProof.setTime(Math.round((new Date()).getTime() / 1000).toString(16));
             boostPowString = BoostPowJobModel.tryValidateJobProof(job, jobProof, debugLevel == 2 ? true : false);
             if (counter++ % 500000 === 0 ) {
