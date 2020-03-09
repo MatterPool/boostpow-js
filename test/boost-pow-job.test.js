@@ -467,7 +467,7 @@ describe('BoostPowJob', () => {
          unique: index.BoostUtilsHelper.createBufferAndPad('01c8', 8).reverse().toString('hex')
       });
 
-      expect(job.getScriptHash()).to.eql('a67623433259a10456e54cd7f5c28371c2095ffa0c6cd426d85ff67698e0f768');
+      expect(job.getScriptHash()).to.eql('68f7e09876f65fd826d46c0cfa5f09c27183c2f5d74ce55604a15932432376a6');
       expect(job.getDiff()).to.eql(21);
       expect(job.getUniqueBuffer().toString('hex')).to.eql('c801000000000000');
       expect(job.getUniqueHex()).to.eql('00000000000001c8');

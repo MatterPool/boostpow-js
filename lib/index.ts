@@ -14,7 +14,7 @@ const defaultOptions: any = {
   version_path: 'api/v3',  // Do not change
 }
 
-export class BoostGraphApi {
+export class BoostGraphClient {
   options;
   constructor(providedOptions?: any) {
     this.options = Object.assign({}, defaultOptions, providedOptions);
@@ -42,10 +42,10 @@ export class BoostGraphApi {
 
   loadBoostJob(txid: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
-    return apiClient.loadBoostJob(txid, callback);
+    return apiClient.loadBoostJobByTxid(txid, callback);
   }
 
-  getScriptUtxos(scriptHash: string, callback?: Function): Promise<any> {
+  getBoostJobUtxos(scriptHash: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.getScriptUtxos(scriptHash, callback);
   }
@@ -54,26 +54,26 @@ export class BoostGraphApi {
     this.options = Object.assign({}, this.options, newOptions);
   }
 
-  static instance(newOptions?: any): BoostGraphApi {
+  static instance(newOptions?: any): BoostGraphClient {
     const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-    return new BoostGraphApi(mergedOptions);
+    return new BoostGraphClient(mergedOptions);
   }
 }
 
-export function Client(newOptions?: any): BoostGraphApi {
+export function Graph(newOptions?: any): BoostGraphClient {
   const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-  return new BoostGraphApi(mergedOptions);
+  return new BoostGraphClient(mergedOptions);
 }
 
-export function instance(newOptions?: any): BoostGraphApi {
+export function instance(newOptions?: any): BoostGraphClient {
   const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-  return new BoostGraphApi(mergedOptions);
+  return new BoostGraphClient(mergedOptions);
 }
 
 try {
   if (window) {
     window['Boost'] = {
-      BoostGraphApi: new BoostGraphApi(),
+      BoostGraph: new BoostGraphClient(),
       BoostPowString: BoostPowStringModel,
       BoostPowJob: BoostPowJobModel,
       BoostPowJobProof: BoostPowJobProofModel,

@@ -145,7 +145,6 @@ class BoostPowJobModel {
     }
     toHex() {
         let buildOut = bsv.Script();
-        buildOut
         // Add Boost identifier
         buildOut.add(Buffer.from('boostv01').reverse());
         buildOut.add(bsv.Opcode.OP_DROP);
@@ -361,13 +360,9 @@ class BoostPowJobModel {
         return this.value;
     }
     getScriptHash() {
-        console.log('scriptHash');
         const hex = this.toHex();
         const buffer = Buffer.from(hex, 'hex');
-        const r = bsv.crypto.Hash.sha256(buffer).reverse().toString('hex');
-        const r2 = bsv.crypto.Hash.sha256(buffer).toString('hex');
-        console.log('get script', r, r2);
-        return r;
+        return bsv.crypto.Hash.sha256(buffer).reverse().toString('hex');
     }
     static fromTransaction(tx) {
         if (!tx) {

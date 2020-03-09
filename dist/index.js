@@ -14,7 +14,7 @@ const defaultOptions = {
     network: 'main',
     version_path: 'api/v3',
 };
-class BoostGraphApi {
+class BoostGraphClient {
     constructor(providedOptions) {
         this.options = Object.assign({}, defaultOptions, providedOptions);
     }
@@ -35,9 +35,9 @@ class BoostGraphApi {
     }
     loadBoostJob(txid, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
-        return apiClient.loadBoostJob(txid, callback);
+        return apiClient.loadBoostJobByTxid(txid, callback);
     }
-    getScriptUtxos(scriptHash, callback) {
+    getBoostJobUtxos(scriptHash, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.getScriptUtxos(scriptHash, callback);
     }
@@ -46,24 +46,24 @@ class BoostGraphApi {
     }
     static instance(newOptions) {
         const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-        return new BoostGraphApi(mergedOptions);
+        return new BoostGraphClient(mergedOptions);
     }
 }
-exports.BoostGraphApi = BoostGraphApi;
-function Client(newOptions) {
+exports.BoostGraphClient = BoostGraphClient;
+function Graph(newOptions) {
     const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-    return new BoostGraphApi(mergedOptions);
+    return new BoostGraphClient(mergedOptions);
 }
-exports.Client = Client;
+exports.Graph = Graph;
 function instance(newOptions) {
     const mergedOptions = Object.assign({}, defaultOptions, newOptions);
-    return new BoostGraphApi(mergedOptions);
+    return new BoostGraphClient(mergedOptions);
 }
 exports.instance = instance;
 try {
     if (window) {
         window['Boost'] = {
-            BoostGraphApi: new BoostGraphApi(),
+            BoostGraph: new BoostGraphClient(),
             BoostPowString: boost_pow_string_model_1.BoostPowStringModel,
             BoostPowJob: boost_pow_job_model_1.BoostPowJobModel,
             BoostPowJobProof: boost_pow_job_proof_model_1.BoostPowJobProofModel,

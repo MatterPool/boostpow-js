@@ -110,12 +110,12 @@ export class BoostGraphApiClient {
 
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
-            axios.get(this.fullUrl + `/scripts/${scriptHash}/utxo`,
+            axios.get(this.fullUrl + `/scripthash/${scriptHash}/utxo`,
                 {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.rejectOrCallback(reject, response.data, callback)
+                return this.rejectOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -130,7 +130,7 @@ export class BoostGraphApiClient {
         });
     }
 
-    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
+    loadBoostJobByTxid(txid: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;
             if (!re.test(txid)) {
