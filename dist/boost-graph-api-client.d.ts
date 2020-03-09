@@ -15,7 +15,7 @@ export declare class BoostGraphApiClient {
     broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel>;
     findAllByContent(content: string, fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel>;
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel>;
-    loadBoostJobByTxid(txid: string, callback?: Function): Promise<BoostPowJobModel>;
+    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel>;
     /**
      * Resolve a promise and/or invoke a callback
      * @param resolve Resolve function to call when done

@@ -35,7 +35,7 @@ class BoostGraphClient {
     }
     loadBoostJob(txid, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
-        return apiClient.loadBoostJobByTxid(txid, callback);
+        return apiClient.loadBoostJob(txid, callback);
     }
     getBoostJobUtxos(scriptHash, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);

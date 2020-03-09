@@ -4,7 +4,7 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours to finish depending on cpu speed', () => {
-
+   /*
    it('mine hello world', async () => {
       const debugLevel = 1; // Whether to show logs
       const job = await index.Graph().loadBoostJob('afe7bd76c5b4af66702368a5b08d36d8d546ee737cda636e3d7965ddc38feaed');
@@ -40,5 +40,6 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
       console.log('Boost Pow Job: ', result.boostPowJob);
       console.log('Boost Pow Job Proof: ', result.boostPowJobProof);
    });
+   */
 
 });

@@ -130,7 +130,7 @@ export class BoostGraphApiClient {
         });
     }
 
-    loadBoostJobByTxid(txid: string, callback?: Function): Promise<BoostPowJobModel> {
+    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;
             if (!re.test(txid)) {

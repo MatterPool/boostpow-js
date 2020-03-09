@@ -105,7 +105,7 @@ class BoostGraphApiClient {
             });
         });
     }
-    loadBoostJobByTxid(txid, callback) {
+    loadBoostJob(txid, callback) {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;
             if (!re.test(txid)) {

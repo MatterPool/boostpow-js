@@ -42,7 +42,7 @@ export class BoostGraphClient {
 
   loadBoostJob(txid: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
-    return apiClient.loadBoostJobByTxid(txid, callback);
+    return apiClient.loadBoostJob(txid, callback);
   }
 
   getBoostJobUtxos(scriptHash: string, callback?: Function): Promise<any> {
