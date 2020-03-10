@@ -118,5 +118,6 @@ export var BoostPowJobProof = BoostPowJobProofModel;
 export var BoostPowMetadata = BoostPowMetadataModel;
 export var BoostPowSimpleMiner = BoostPowSimpleMinerModel;
 export var BoostUtilsHelper = BoostUtils;
+export var BoostGraph = BoostGraphClient;
 
 

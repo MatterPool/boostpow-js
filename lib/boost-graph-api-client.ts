@@ -150,7 +150,6 @@ export class BoostGraphApiClient {
                     }), callback)
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
-
             })
         });
     }

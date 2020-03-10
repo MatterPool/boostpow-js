@@ -106,3 +106,4 @@ exports.BoostPowJobProof = boost_pow_job_proof_model_1.BoostPowJobProofModel;
 exports.BoostPowMetadata = boost_pow_metadata_model_1.BoostPowMetadataModel;
 exports.BoostPowSimpleMiner = boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
 exports.BoostUtilsHelper = boost_utils_1.BoostUtils;
+exports.BoostGraph = BoostGraphClient;

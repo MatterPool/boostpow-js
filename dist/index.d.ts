@@ -26,3 +26,4 @@ export declare var BoostPowJobProof: typeof BoostPowJobProofModel;
 export declare var BoostPowMetadata: typeof BoostPowMetadataModel;
 export declare var BoostPowSimpleMiner: typeof BoostPowSimpleMinerModel;
 export declare var BoostUtilsHelper: typeof BoostUtils;
+export declare var BoostGraph: typeof BoostGraphClient;
