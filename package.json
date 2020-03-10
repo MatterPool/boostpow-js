@@ -1,6 +1,6 @@
 {
   "name": "boostpow-js",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -76,6 +76,7 @@
     "@types/node": "^13.7.7",
     "axios": "^0.18.0",
     "crypto-random-string": "^3.1.0",
+    "filepay": "^1.0.24",
     "i": "^0.3.6",
     "mattercloudjs": "^1.0.12",
     "randombytes": "^2.1.0"

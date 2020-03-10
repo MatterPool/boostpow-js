@@ -1,4 +1,12 @@
+ import * as bsv from 'bsv';
+
  export class BoostUtils {
+
+    static getSha256(str, encoding: 'utf8' | 'hex' = 'utf8') {
+        const hashed = Buffer.from(str, encoding);
+        const h = bsv.crypto.Hash.sha256(hashed).toString('hex');
+        return h;
+    }
 
     static difficulty2bits(difficulty) {
         if (difficulty < 0) throw 'difficulty cannot be negative';

@@ -56,8 +56,9 @@ export declare class BoostPowJobModel {
     };
     private static difficulty2bits;
     getTargetAsNumberBuffer(): any;
+    getId(): string;
     toHex(): string;
-    toScript(): bsv.Script;
+    toScript(isHex?: boolean): bsv.Script;
     /**
      * Returns the target difficulty for this block
      * @param {Number} bits

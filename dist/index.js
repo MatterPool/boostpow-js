@@ -8,7 +8,8 @@ const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model")
 const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const defaultOptions = {
-    // boost_graph_api_url: 'https://graph.boostpow.com',
+    graph_api_url: 'https://api.matterpool.io',
+    // graph_api_url: 'http://localhost:3000',
     api_url: 'https://api.mattercloud.net',
     // api_url: 'http://localhost:3000',
     network: 'main',
@@ -33,6 +34,29 @@ class BoostGraphClient {
     get BoostPowSimpleMiner() {
         return boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
     }
+    submitBoostJob(rawtx, callback) {
+        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
+        return apiClient.submitBoostJob(rawtx, callback);
+    }
+    /*
+      createBoostJob(params: { boost: {
+        content: string,
+        diff: number,
+        // optional
+        tag: string,
+        type: string,
+        metadata: string,
+        unique: number,
+     },
+     pay: {
+        rawtx: string, // paying tx
+        // key: privateKey,
+        // value: 40000,
+        // currency: 'satoshi'
+     }}, callback?: Function): Promise<any> {
+        const apiClient = new BoostGraphApiClient(this.options);
+        return apiClient.createBoostJob(params, callback);
+      }*/
     loadBoostJob(txid, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.loadBoostJob(txid, callback);

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = require("axios");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const defaultOptions = {
-    boost_graph_api_url: 'https://graph.boostpow.com',
+    graph_api_url: 'https://graph.boostpow.com',
     api_url: 'https://api.mattercloud.net',
     network: 'main',
     version_path: 'api/v3',
@@ -52,7 +52,7 @@ class BoostGraphApiClient {
                     error: 'QUERY_CONTENT_TOO_LONG'
                 }), callback);
             }
-            let params = `/v3/bsv/boost/search?content=${content}`;
+            let params = `/v1/bsv/boost/search?content=${content}`;
             if (fromTime === undefined || fromTime === null) {
             }
             else {
@@ -63,7 +63,7 @@ class BoostGraphApiClient {
             else {
                 params += `&toTime=${toTime}`;
             }
-            axios_1.default.get(this.options.boost_graph_api_url + params, {
+            axios_1.default.get(this.options.graph_api_url + params, {
                 headers: this.getHeaders()
             }).then((response) => {
                 const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
@@ -99,6 +99,47 @@ class BoostGraphApiClient {
                         code: ex.code,
                         message: 'scripthash not found',
                         error: 'SCRIPT_NOT_FOUND'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
+    submitBoostJob(rawtx, callback) {
+        return new Promise((resolve, reject) => {
+            axios_1.default.post(this.options.graph_api_url + `/api/v1/main/boost/jobs`, {
+                rawtx: rawtx,
+            }, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
+    createBoostJob(params, callback) {
+        return new Promise((resolve, reject) => {
+            const re = /^[0-9A-Fa-f]+$/;
+            axios_1.default.post(this.fullUrl + `/boost/jobs`, {
+                hex: 'adsf'
+            }, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
                     }), callback);
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);

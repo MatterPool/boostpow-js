@@ -143,38 +143,13 @@ class BoostPowJobModel {
         const i = BoostPowJobModel.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
-    toHex() {
-        let buildOut = bsv.Script();
-        // Add Boost identifier
-        buildOut.add(Buffer.from('boostv01').reverse());
-        buildOut.add(bsv.Opcode.OP_DROP);
-        // Add category 4 bytes
-        // buildOut.add(this.getNumberHexBuffer(this.category, 4));
-        buildOut.add(this.category);
-        // Add content 32 bytes
-        buildOut.add(this.content);
-        // Add target bits
-        buildOut.add(this.getTargetAsNumberBuffer());
-        // Add tag 20 bytes
-        buildOut.add(this.tag);
-        // Add unique nonce 8 bytes
-        // buildOut.add(this.getNumberHexBuffer(this.unique, 8));
-        buildOut.add(this.unique);
-        // Add 32 byte metadata
-        buildOut.add(this.metadata);
-        // Add the rest of the script
-        for (const op of BoostPowJobModel.operations) {
-            buildOut.add(op);
-        }
-        const hex = buildOut.toHex();
-        const fromhex = bsv.Script.fromHex(hex);
-        const hexIso = fromhex.toHex();
-        if (hex != hexIso) {
-            throw new Error('Not isomorphic');
-        }
-        return hexIso;
+    getId() {
+        return this.getScriptHash();
     }
-    toScript() {
+    toHex() {
+        return this.toScript(true);
+    }
+    toScript(isHex = false) {
         let buildOut = bsv.Script();
         // Add Boost identifier
         buildOut.add(Buffer.from('boostv01').reverse());
@@ -202,6 +177,9 @@ class BoostPowJobModel {
         const hexIso = fromhex.toHex();
         if (hex != hexIso) {
             throw new Error('Not isomorphic');
+        }
+        if (isHex) {
+            return hexIso;
         }
         // Return script
         return buildOut;

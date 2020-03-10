@@ -1,7 +1,7 @@
 import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
 export interface BoostClientApiClientOptions {
-    boost_graph_api_url: string;
+    graph_api_url: string;
     api_url: string;
     api_key?: string;
     network: string;
@@ -15,6 +15,22 @@ export declare class BoostGraphApiClient {
     broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel>;
     findAllByContent(content: string, fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel>;
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel>;
+    submitBoostJob(rawtx: string, callback?: Function): Promise<BoostPowJobModel>;
+    createBoostJob(params: {
+        boost: {
+            content: string;
+            diff: number;
+            tag: string;
+            type: string;
+            metadata: string;
+            unique: number;
+        };
+        pay: {
+            key: string;
+            value: number;
+            currency: 'satoshi' | undefined;
+        };
+    }, callback?: Function): Promise<BoostPowJobModel>;
     loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel>;
     /**
      * Resolve a promise and/or invoke a callback
