@@ -496,7 +496,7 @@ describe('BoostPowJob', () => {
    });
 
    it('should correctly get bits and target and category number', async () => {
-      const job = index.BoostPowJob.fromObject({
+      let job = index.BoostPowJob.fromObject({
          content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
          diff: 1,
          category: Number(123).toString(16),
@@ -508,7 +508,21 @@ describe('BoostPowJob', () => {
       expect(job.getBits()).to.eql(486604799);
       expect(job.getCategoryNumber()).to.eql(123);
       expect(job.getUniqueNumber()).to.eql(456);
+
+      job = index.BoostPowJob.fromObject({
+         content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
+         diff: 409786762471.9213,
+         category: Number(123).toString(16),
+         tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+         metadata: index.BoostUtilsHelper.createBufferAndPad('this is more metadata', 32).reverse().toString('hex'),
+         unique: index.BoostUtilsHelper.createBufferAndPad('01c8', 8).reverse().toString('hex')
+      });
+      // 1802b20b
+      expect(job.getDiff()).to.eql(409786762471.9213);
+      expect(job.getBits()).to.eql(402829022);
+      expect(job.getBitsHex()).to.eql('1802aede');
    });
+
 
    it('should correctly get content and buffers as appropriate capitalists', async () => {
       const hashed = index.BoostUtilsHelper.getSha256('Capitalists can spend more energy than socialists.');

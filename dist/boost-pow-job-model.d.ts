@@ -49,6 +49,7 @@ export declare class BoostPowJobModel {
         unique?: string;
     }): BoostPowJobModel;
     getBits(): number;
+    getBitsHex(): string;
     toObject(): {
         content: string;
         diff: number;
@@ -58,6 +59,7 @@ export declare class BoostPowJobModel {
         unique: string;
     };
     private static difficulty2bits;
+    getTargetAsNumberHex(): any;
     getTargetAsNumberBuffer(): any;
     getId(): string;
     toHex(): string;

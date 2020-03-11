@@ -112,6 +112,9 @@ class BoostPowJobModel {
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
+    getBitsHex() {
+        return this.getTargetAsNumberHex();
+    }
     toObject() {
         return {
             content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
@@ -147,6 +150,10 @@ class BoostPowJobModel {
             throw 'the \'bits\' \'size\' is out of bounds';
         var bits = (size << 24) | word;
         return bits;
+    }
+    getTargetAsNumberHex() {
+        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        return Buffer.from(i.toString(16), 'hex').toString('hex');
     }
     getTargetAsNumberBuffer() {
         const i = BoostPowJobModel.difficulty2bits(this.difficulty);
