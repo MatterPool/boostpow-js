@@ -506,6 +506,7 @@ describe('BoostPowJob', () => {
       });
 
       expect(job.getBits()).to.eql(486604799);
+      expect(job.getBitsHex()).to.eql('1d00ffff');
       expect(job.getCategoryNumber()).to.eql(123);
       expect(job.getUniqueNumber()).to.eql(456);
 
