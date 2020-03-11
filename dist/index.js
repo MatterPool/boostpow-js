@@ -8,7 +8,7 @@ const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model")
 const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const defaultOptions = {
-    graph_api_url: 'https://api.boostpow.com',
+    graph_api_url: 'https://graph2.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
     api_url: 'https://api.mattercloud.net',
     // api_url: 'http://localhost:3000',
