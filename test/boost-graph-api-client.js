@@ -5,7 +5,7 @@ var bsv = require('bsv');
 
 var privateKey = 'KxPpaGmowYWcSuGSLdt6fCLiRAJRcWCpke4B8Gsf59hghQ6AKvwV'; //for testing
 var options = {
-   graph_api_url: 'http://localhost:3000'
+   // graph_api_url: 'http://localhost:3000'
 }
 describe('APIClient', () => {
    it('loadBoostJob success', async () => {
