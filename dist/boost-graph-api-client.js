@@ -143,9 +143,13 @@ class BoostGraphApiClient {
             });
         });
     }
-    search(q, callback) {
+    search(q, options, callback) {
         return new Promise((resolve, reject) => {
-            axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search?q=${q}`, {
+            let opts = '?';
+            if (q.contentutf8) {
+                opts += 'contentutf8=' + q.contentutf8;
+            }
+            axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`, {
                 headers: this.getHeaders()
             }).then((response) => {
                 return this.resolveOrCallback(resolve, response.data, callback);

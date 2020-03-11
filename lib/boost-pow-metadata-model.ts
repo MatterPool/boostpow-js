@@ -5,61 +5,69 @@ export class BoostPowMetadataModel {
 
     private constructor(
         private tag: Buffer,
-        private minerAddress: Buffer,
-        private unique: Buffer,
-        private minerNonce: Buffer,
-        private metadata: Buffer
+        private minerPubKeyHash: Buffer,
+        private extraNonce1: Buffer,
+        private extraNonce2: Buffer,
+        private userNonce: Buffer,
+        private additionalData: Buffer
     ) {
     }
 
     static fromObject(params: {
         tag: string,
-        minerAddress: string,
-        unique: string,
-        minerNonce: string,
-        metadata: string
+        minerPubKeyHash: string,
+        extraNonce1: string,
+        extraNonce2: string,
+        userNonce: string,
+        additionalData: string
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
             BoostUtils.createBufferAndPad(params.tag, 20),
-            BoostUtils.createBufferAndPad(params.minerAddress, 20),
-            BoostUtils.createBufferAndPad(params.unique, 8),
-            BoostUtils.createBufferAndPad(params.minerNonce, 8),
-            BoostUtils.createBufferAndPad(params.metadata, 32),
+            BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20),
+            BoostUtils.createBufferAndPad(params.extraNonce1, 4),
+            BoostUtils.createBufferAndPad(params.extraNonce2, 4),
+            BoostUtils.createBufferAndPad(params.userNonce, 4),
+            BoostUtils.createBufferAndPad(params.additionalData, 32),
         );
     }
 
     static fromBuffer(params: {
         tag: Buffer,
-        minerAddress: Buffer,
-        unique: Buffer,
-        minerNonce: Buffer,
-        metadata: Buffer
+        minerPubKeyHash: Buffer,
+        extraNonce1: Buffer,
+        extraNonce2: Buffer,
+        userNonce: Buffer,
+        additionalData: Buffer
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
             params.tag,
-            params.minerAddress,
-            params.unique,
-            params.minerNonce,
-            params.metadata,
+            params.minerPubKeyHash,
+            params.extraNonce1,
+            params.extraNonce2,
+            params.userNonce,
+            params.additionalData,
         );
     }
 
     getTag(): Buffer {
         return this.tag;
     }
-    getMinerAddress(): Buffer {
-        return this.minerAddress;
+    getMinerPubKeyHash(): Buffer {
+        return this.minerPubKeyHash;
     }
-    getUnique(): Buffer {
-        return this.unique;
+    getUserNonce(): Buffer {
+        return this.userNonce;
     }
-    getMinerNonce(): Buffer {
-        return this.minerNonce;
+    getExtraNonce1(): Buffer {
+        return this.extraNonce1;
     }
-    getMetadata(): Buffer {
-        return this.metadata;
+    getExtraNonce2(): Buffer {
+        return this.extraNonce2;
+    }
+    getAdditionalData(): Buffer {
+        return this.additionalData;
     }
 
     hash() {
@@ -73,43 +81,40 @@ export class BoostPowMetadataModel {
     toObject () {
         return {
             tag: (this.tag.toString('hex').match(/../g) || []).reverse().join(''),
-            minerAddress: (this.minerAddress.toString('hex').match(/../g) || []).reverse().join(''),
-            unique: (this.unique.toString('hex').match(/../g) || []).reverse().join(''),
-            minerNonce: (this.minerNonce.toString('hex').match(/../g) || []).reverse().join(''),
-            metadata: (this.metadata.toString('hex').match(/../g) || []).reverse().join(''),
+            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).reverse().join(''),
+            extraNonce1: (this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''),
+            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).reverse().join(''),
+            userNonce: (this.userNonce.toString('hex').match(/../g) || []).reverse().join(''),
+            additionalData: (this.additionalData.toString('hex').match(/../g) || []).reverse().join(''),
         };
     }
 
     toBuffer(): Buffer {
         return Buffer.concat([
             this.tag,
-            this.minerAddress,
-            this.unique,
-            this.minerNonce,
-            this.metadata
+            this.minerPubKeyHash,
+            this.extraNonce1,
+            this.extraNonce2,
+            this.userNonce,
+            this.additionalData
         ]);
     }
 
     toHex(): string {
-        return Buffer.concat([
-            this.tag,
-            this.minerAddress,
-            this.unique,
-            this.minerNonce,
-            this.metadata,
-        ]).toString('hex');
+        return this.toBuffer().toString('hex');
     }
 
     static fromHex(str: string): BoostPowMetadataModel | null {
-        if ((str.length / 2)< 56 || (str.length / 2) > 88) {
-            throw new Error('Invalid Boost Meta');
+        if ((str.length / 2) !== 84) {
+            throw new Error('Invalid Boost Metadata');
         }
         return new BoostPowMetadataModel(
             Buffer.from(str.substr(0, 40), 'hex'),
             Buffer.from(str.substr(40, 40), 'hex'),
-            Buffer.from(str.substr(80, 16), 'hex'),
-            Buffer.from(str.substr(96, 16), 'hex'),
-            Buffer.from(str.substr(112, 64), 'hex'),
+            Buffer.from(str.substr(80, 8), 'hex'),
+            Buffer.from(str.substr(88, 8), 'hex'),
+            Buffer.from(str.substr(96, 8), 'hex'),
+            Buffer.from(str.substr(104, 64), 'hex'),
         );
     }
 

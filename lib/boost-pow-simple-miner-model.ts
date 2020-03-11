@@ -13,7 +13,7 @@ export class BoostPowSimpleMinerModel {
         let counter = 0;
 
         while (!boostPowString) {
-            jobProof.setMinerNonce(cryptoRandomString({length: 16}));
+            jobProof.setNonce(cryptoRandomString({length: 16}));
             jobProof.setTime(Math.round((new Date()).getTime() / 1000).toString(16));
             boostPowString = BoostPowJobModel.tryValidateJobProof(job, jobProof, debugLevel == 2 ? true : false);
             if (counter++ % 500000 === 0 ) {

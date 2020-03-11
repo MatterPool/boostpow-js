@@ -176,9 +176,14 @@ export class BoostGraphApiClient {
         });
     }
 
-    search(q: {}, callback?: Function): Promise<any> {
+    search(q: { contentutf8?: string }, options: {}, callback?: Function): Promise<any> {
         return new Promise((resolve, reject) => {
-            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search?q=${q}`,
+
+            let opts = '?';
+            if (q.contentutf8) {
+                opts += 'contentutf8=' + q.contentutf8;
+            }
+            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`,
                 {
                     headers: this.getHeaders()
                 }

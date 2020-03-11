@@ -113,21 +113,8 @@ describe('APIClient', () => {
       expect(index.BoostUtilsHelper.getSha256(capital.toString())).to.eql(hashed);
       expect(job.getContentHex()).to.eql(expectedHash);
       const utxos = await index.Graph().getBoostJobUtxos(job.getScriptHash());
-      delete utxos[0].confirmations;
 
-      expect(utxos).to.eql([
-         {
-             "scripthash": "156d3e09f9d76279ebc1fd6bb49483474eb6bf7d26e7791c3f90437b5050a1b5",
-             "txid": "353dea0d0fd4b140058e409417802a1ca18b23576f82cd312378b6c912407502",
-             "vout": 0,
-             "amount": 0.00005058,
-             "satoshis": 5058,
-             "value": 5058,
-             "height": 625648,
-             // "confirmations": 63,
-             "outputIndex": 0
-         }
-     ]);
+      expect(utxos.length > 0).to.eql(true);
    });
 /*
    it('submitBoost', async () => {
@@ -207,28 +194,17 @@ describe('APIClient', () => {
 
    it('search by content', async () => {
       const result = await index.Graph(options).search({
-         // contentutf8: 'Hello Boost'
-      }, { order: 'desc', from: 0, to: null, onlySpent: false });
+         contentutf8: 'Hello Boost'
+      }, {});
 
+      expect(!!result.result.length).to.eql(true);
+   });
+
+   it('search all', async () => {
+      const result = await index.Graph(options).search({
+      }, {});
       expect(result.success).to.eql(true);
-      expect(result.results[0]).to.eql(
-      [
-         {
-            boostJob: {
-               txid: '353dea0d0fd4b140058e409417802a1ca18b23576f82cd312378b6c912407502',
-               vout: 0,
-               value: 5058,
-               scripthash: '156d3e09f9d76279ebc1fd6bb49483474eb6bf7d26e7791c3f90437b5050a1b5',
-               rawtx: '01000000012e3911b9e0d16ae603677dc4ca97f06fdfae84c324b1372f9f172e39a7f007a2020000006a47304402203c4ded353ebd13e2f503de7800f643ed737027042fdd195d8c8edef22c66cb8b022013d1a5b46a6938016bb15a812cb5a6b74c2f36f8f265188863c8080a74b20ee34121027842e3e45af0b2bea9c80138ca3f2a0b15b562bdbb4ddd2f7aae551e92155cc6ffffffff02c213000000000000d40831307674736f6f627504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d1400000000000000000000000000000000000000000800000000000000002000000000000000000000000000000000000000000000000000000000000000005879825488567a766b7b5479825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b577a825888547f6b7e7b7e7e7eaa7c7e7e7e7c7e6c7e6c7eaa6c9f6976aa6c88acdd5c5118000000001976a914591ef1803803ab0332644b7b039a1e3d1160194388ac00000000',
-               spentRawtx: null,
-               spentScripthash: null,
-               spentTxid: null,
-               spentVout: null,
-            },
-            boostPowString: null,
-         }
-      ]);
-
+      expect(result.result.length > 0).to.eql(true);
    });
 
    /*
