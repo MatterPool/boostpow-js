@@ -22,7 +22,9 @@ export declare class BoostGraphApiClient {
         redeemedtxid?: string;
         redeemedvout?: number;
     }>;
-    search(q: {}, callback?: Function): Promise<any>;
+    search(q: {
+        contentutf8?: string;
+    }, options: {}, callback?: Function): Promise<any>;
     createBoostJob(params: {
         boost: {
             content: string;

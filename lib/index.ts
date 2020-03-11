@@ -41,9 +41,9 @@ export class BoostGraphClient {
     return BoostPowSimpleMinerModel;
   }
 
-  search(q: {}, callback?: Function): Promise<any> {
+  search(q: {}, options: {}, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
-    return apiClient.search(q, callback);
+    return apiClient.search(q, options,  callback);
   }
 
   getBoostJobStatus(txid: string, callback?: Function): Promise<any> {
