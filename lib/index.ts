@@ -7,7 +7,7 @@ import { BoostUtils } from './boost-utils';
 import { BoostGraphApiClient } from './boost-graph-api-client';
 
 const defaultOptions: any = {
-  graph_api_url: 'https://api.matterpool.io',
+  graph_api_url: 'https://api.boostpow.com',
   // graph_api_url: 'http://localhost:3000',
   api_url: 'https://api.mattercloud.net',
   // api_url: 'http://localhost:3000',
