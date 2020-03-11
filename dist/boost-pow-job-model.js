@@ -49,6 +49,9 @@ class BoostPowJobModel {
     getCategoryBuffer() {
         return this.category;
     }
+    getCategoryNumber() {
+        return parseInt(this.getCategoryHex(), 16);
+    }
     getCategoryHex() {
         return (this.category.toString('hex').match(/../g) || []).reverse().join('');
     }
@@ -76,6 +79,9 @@ class BoostPowJobModel {
     getUnique() {
         return parseInt(this.toObject().unique, 16);
     }
+    getUniqueNumber() {
+        return parseInt(this.getUniqueHex(), 16);
+    }
     getUniqueBuffer() {
         return this.unique;
     }
@@ -102,6 +108,9 @@ class BoostPowJobModel {
             throw new Error('metadata too large. Max 32 bytes.');
         }
         return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.metadata, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.unique, 8));
+    }
+    getBits() {
+        return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
     toObject() {
         return {

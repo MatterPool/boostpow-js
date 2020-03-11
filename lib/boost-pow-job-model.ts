@@ -56,6 +56,10 @@ export class BoostPowJobModel {
         return this.category;
     }
 
+    getCategoryNumber(): number {
+        return parseInt(this.getCategoryHex(), 16);
+    }
+
     getCategoryHex(): string {
         return (this.category.toString('hex').match(/../g) || []).reverse().join('');
     }
@@ -85,6 +89,11 @@ export class BoostPowJobModel {
     getUnique(): number {
         return parseInt(this.toObject().unique, 16);
     }
+
+    getUniqueNumber(): number {
+        return parseInt(this.getUniqueHex(), 16);
+    }
+
     getUniqueBuffer(): Buffer {
         return this.unique;
     }
@@ -127,6 +136,10 @@ export class BoostPowJobModel {
             BoostUtils.createBufferAndPad(params.metadata, 32),
             BoostUtils.createBufferAndPad(params.unique, 8)
         );
+    }
+
+    getBits(): number {
+        return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
 
     toObject () {

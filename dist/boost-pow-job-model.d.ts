@@ -27,6 +27,7 @@ export declare class BoostPowJobModel {
     getContentHex(): string;
     getDiff(): number;
     getCategoryBuffer(): Buffer;
+    getCategoryNumber(): number;
     getCategoryHex(): string;
     getCategoryString(trimLeadingNulls?: boolean): string;
     getTagString(trimLeadingNulls?: boolean): string;
@@ -36,6 +37,7 @@ export declare class BoostPowJobModel {
     getMetadataHex(): string;
     getMetadataBuffer(): Buffer;
     getUnique(): number;
+    getUniqueNumber(): number;
     getUniqueBuffer(): Buffer;
     getUniqueHex(): string;
     static fromObject(params: {
@@ -46,6 +48,7 @@ export declare class BoostPowJobModel {
         metadata?: string;
         unique?: string;
     }): BoostPowJobModel;
+    getBits(): number;
     toObject(): {
         content: string;
         diff: number;
