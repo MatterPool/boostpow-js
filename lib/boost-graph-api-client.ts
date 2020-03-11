@@ -154,6 +154,28 @@ export class BoostGraphApiClient {
         });
     }
 
+    getBoostJobStatus(txid: string, callback?: Function): Promise<{
+        boostJob: BoostPowJobModel, redeemed: boolean, redeemedtxid?: string, redeemedvout?: number}> {
+        return new Promise((resolve, reject) => {
+            axios.get(this.options.graph_api_url + `/api/v1/main/boost/jobs/${txid}`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost job status error',
+                        error: 'BOOST_JOB_STATUS_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+
     createBoostJob(params: { boost: {
         content: string,
         diff: number,

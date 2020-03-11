@@ -34,6 +34,10 @@ class BoostGraphClient {
     get BoostPowSimpleMiner() {
         return boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
     }
+    getBoostJobStatus(txid, callback) {
+        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
+        return apiClient.getBoostJobStatus(txid, callback);
+    }
     submitBoostJob(rawtx, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.submitBoostJob(rawtx, callback);

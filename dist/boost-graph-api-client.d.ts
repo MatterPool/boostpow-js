@@ -16,6 +16,12 @@ export declare class BoostGraphApiClient {
     findAllByContent(content: string, fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel>;
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<BoostPowJobModel>;
+    getBoostJobStatus(txid: string, callback?: Function): Promise<{
+        boostJob: BoostPowJobModel;
+        redeemed: boolean;
+        redeemedtxid?: string;
+        redeemedvout?: number;
+    }>;
     createBoostJob(params: {
         boost: {
             content: string;

@@ -41,6 +41,11 @@ export class BoostGraphClient {
     return BoostPowSimpleMinerModel;
   }
 
+  getBoostJobStatus(txid: string, callback?: Function): Promise<any> {
+    const apiClient = new BoostGraphApiClient(this.options);
+    return apiClient.getBoostJobStatus(txid, callback);
+  }
+
   submitBoostJob(rawtx: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.submitBoostJob(rawtx, callback);
