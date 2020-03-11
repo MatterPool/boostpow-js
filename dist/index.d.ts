@@ -12,6 +12,7 @@ export declare class BoostGraphClient {
     readonly BoostPowJobProof: typeof BoostPowJobProofModel;
     readonly BoostPowMetadata: typeof BoostPowMetadataModel;
     readonly BoostPowSimpleMiner: typeof BoostPowSimpleMinerModel;
+    search(q: {}, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<any>;
     loadBoostJob(txid: string, callback?: Function): Promise<any>;

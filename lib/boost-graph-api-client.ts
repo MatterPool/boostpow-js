@@ -176,6 +176,27 @@ export class BoostGraphApiClient {
         });
     }
 
+    search(q: {}, callback?: Function): Promise<any> {
+        return new Promise((resolve, reject) => {
+            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search?q=${q}`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost job status error',
+                        error: 'BOOST_JOB_STATUS_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+
     createBoostJob(params: { boost: {
         content: string,
         diff: number,
