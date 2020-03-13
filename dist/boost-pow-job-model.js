@@ -160,7 +160,7 @@ class BoostPowJobModel {
     }
     toScript(isHex = false) {
         let buildOut = bsv.Script();
-        buildOut.add(Buffer.from('boostv01', 'utf8'));
+        buildOut.add(Buffer.from('boostpow', 'utf8'));
         buildOut.add(bsv.Opcode.OP_DROP);
         buildOut.add(this.category);
         buildOut.add(this.content);
@@ -212,11 +212,9 @@ class BoostPowJobModel {
         return parseFloat(difficultyString);
     }
     static remainingOperationsMatchExactly(remainingChunks, start) {
-        console.log('check');
         if (78 !== remainingChunks.length) {
             return false;
         }
-        console.log('check2');
         return (
         // BEGIN
         // CAT SWAP
@@ -319,7 +317,7 @@ class BoostPowJobModel {
         console.log('fromHex', asm, 'script', script);
         if (
         // boostv01
-        script.chunks[0].buf.toString('utf8') === 'boostv01' &&
+        script.chunks[0].buf.toString('utf8') === 'boostpow' &&
             // Drop the identifier
             script.chunks[1].opcodenum === bsv.Opcode.OP_DROP &&
             // Category
@@ -406,7 +404,7 @@ class BoostPowJobModel {
         }
         let o = 0;
         for (const out of tx.outputs) {
-            if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === '31307674736f6f62') {
+            if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
                 return BoostPowJobModel.fromScript(out.script, tx.hash, o, out.satoshis);
             }
             o++;
@@ -449,7 +447,7 @@ class BoostPowJobModel {
             // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // additionalDataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
-            boostPowJobProof.getNonce().reverse().toString('hex'),
+            boostPowJobProof.getNonce(),
         ]);
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
         if (debug) {

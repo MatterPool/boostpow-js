@@ -10,7 +10,7 @@ var options = {
 describe('APIClient', () => {
    it('loadBoostJob success', async () => {
       try {
-         const job = await index.Graph(options).loadBoostJob('debbd830e80bdccf25d8659b98e8f77517fe0af4c5c161d645bf86a4e7fcd301');
+         const job = await index.Graph(options).loadBoostJob('32617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a5c');
          expect(job.toObject()).to.eql({
             content:'00000000000000000000000000000000000000000048656c6c6f20426f6f7374',
             diff: 1,
@@ -54,7 +54,7 @@ describe('APIClient', () => {
 
    it('loadBoostJob failure not found', async () => {
       try {
-         await index.Graph().loadBoostJob('deb2d830e80bdccf25d8659b98e8f77517fe0af4c5c161d645bf86a4e7fcd301');
+         await index.Graph().loadBoostJob('12617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a52');
          expect(true).to.eql(false);
       } catch(ex) {
          expect(ex).to.eql({
@@ -83,18 +83,19 @@ describe('APIClient', () => {
    });
 
    it('loadBoostJob and getBoostJobUnspentOutputs', async () => {
-      const job = await index.Graph().loadBoostJob('dc36f3baa9b7e96827928760c07a160579b0a531814e3a3900c1c4112c4a92e7');
+      const job = await index.Graph().loadBoostJob('32617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a5c');
       const utxos = await index.Graph().getBoostJobUtxos(job.getScriptHash());
       delete utxos[0].confirmations;
+
       expect(utxos).to.eql([
          {
-             "scripthash": "03b508a9da0879dd55619e06f5bd656696f77ba879aaa99e0eb22cedd7dd4846",
-             "txid": "dc36f3baa9b7e96827928760c07a160579b0a531814e3a3900c1c4112c4a92e7",
+             "scripthash": "67f7bc8a5aab2f22437c90bc5965109491f34b94e44977a88e25e527d5b4e3c2",
+             "txid": "32617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a5c",
              "vout": 0,
-             "amount": 0.00004363,
-             "satoshis": 4363,
-             "value": 4363,
-             "height": 625311,
+             "amount": 0.00008303,
+             "satoshis": 8303,
+             "value": 8303,
+             "height": 0,
              // "confirmations": 63,
              "outputIndex": 0
          }
