@@ -3,20 +3,13 @@ import * as bsv from 'bsv';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
-/**
- * Responsible for a Boost Job Proof.
- *
- * The Boost Pow String (also known as Boost Header) is derived from the locking and redeem transactions
- * BoostPowString = combined(BoostJob + BoostJobProof)
- *
- */
 export declare class BoostPowJobModel {
     private content;
     private difficulty;
     private category;
     private tag;
-    private metadata;
-    private unique;
+    private additionalData;
+    private userNonce;
     private txid?;
     private vout?;
     private value?;
@@ -33,20 +26,20 @@ export declare class BoostPowJobModel {
     getTagString(trimLeadingNulls?: boolean): string;
     getTagHex(): string;
     getTagBuffer(): Buffer;
-    getMetadataString(trimLeadingNulls?: boolean): string;
-    getMetadataHex(): string;
-    getMetadataBuffer(): Buffer;
-    getUnique(): number;
-    getUniqueNumber(): number;
-    getUniqueBuffer(): Buffer;
-    getUniqueHex(): string;
+    getAdditionalDataString(trimLeadingNulls?: boolean): string;
+    getAdditionalDataHex(): string;
+    getAdditionalDataBuffer(): Buffer;
+    getUserNonce(): number;
+    getUserNonceNumber(): number;
+    getUserNonceBuffer(): Buffer;
+    getUserNonceHex(): string;
     static fromObject(params: {
         content: string;
         diff: number;
         category?: string;
         tag?: string;
-        metadata?: string;
-        unique?: string;
+        additionalData?: string;
+        userNonce?: string;
     }): BoostPowJobModel;
     getBits(): number;
     getBitsHex(): string;
@@ -55,8 +48,8 @@ export declare class BoostPowJobModel {
         diff: number;
         category: string;
         tag: string;
-        metadata: string;
-        unique: string;
+        additionalData: string;
+        userNonce: string;
     };
     private static difficulty2bits;
     getTargetAsNumberHex(): any;
@@ -75,7 +68,7 @@ export declare class BoostPowJobModel {
      * @return {Number}
      */
     static getDifficulty(bits: any): number;
-    static remainingOperationsMatchExactly(remainingChunks: any): boolean;
+    static remainingOperationsMatchExactly(remainingChunks: any, start: number): boolean;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toASM(): string;
     static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;

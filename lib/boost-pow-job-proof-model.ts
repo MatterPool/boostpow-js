@@ -11,8 +11,10 @@ export class BoostPowJobProofModel {
         private signature: Buffer,
         private minerPubKey: Buffer,
         private time: Buffer,
-        private minerNonce: Buffer,
-        private minerAddress: Buffer,
+        private extraNonce1: Buffer,
+        private extraNonce2: Buffer,
+        private nonce: Buffer,
+        private minerPubKeyHash: Buffer,
         // Optional tx information attached or not
         private txid?: string,
         private vout?: number,
@@ -24,15 +26,19 @@ export class BoostPowJobProofModel {
         signature: string,
         minerPubKey: string,
         time: string,
-        minerNonce: string,
-        minerAddress: string
+        nonce: string,
+        extraNonce1: string,
+        extraNonce2: string,
+        minerPubKeyHash: string
     }): BoostPowJobProofModel {
         return new BoostPowJobProofModel(
             BoostUtils.createBufferAndPad(params.signature, 32),
             BoostUtils.createBufferAndPad(params.minerPubKey, 32),
             BoostUtils.createBufferAndPad(params.time, 4),
-            BoostUtils.createBufferAndPad(params.minerNonce, 8),
-            BoostUtils.createBufferAndPad(params.minerAddress, 20),
+            BoostUtils.createBufferAndPad(params.extraNonce1, 4),
+            BoostUtils.createBufferAndPad(params.extraNonce2, 4),
+            BoostUtils.createBufferAndPad(params.nonce, 4),
+            BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20),
         );
     }
 
@@ -54,18 +60,38 @@ export class BoostPowJobProofModel {
     setTime(time: string) {
         this.time = BoostUtils.createBufferAndPad(time, 4)
     }
-    getMinerNonceNumber(): number {
-        return parseInt((this.minerNonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
+
+    getExtraNonce1Number(): number {
+        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''), 16);
     }
-    getMinerNonce(): Buffer {
-        return this.minerNonce;
+
+    getExtraNonce1(): Buffer {
+        return this.extraNonce1;
     }
-    setMinerNonce(minerNonce: string) {
-        this.minerNonce = BoostUtils.createBufferAndPad(minerNonce, 8)
+
+    getExtraNonce2Number(): number {
+        return parseInt((this.extraNonce2.toString('hex').match(/../g) || []).reverse().join(''), 16);
     }
+
+    getExtraNonce2(): Buffer {
+        return this.extraNonce2;
+    }
+
+    getNonceNumber(): number {
+        return parseInt((this.nonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
+    }
+
+    getNonce(): Buffer {
+        return this.nonce;
+    }
+
+    setNonce(nonce: string) {
+        this.nonce = BoostUtils.createBufferAndPad(nonce, 4)
+    }
+
     // Should add bsv.Address version and string version too
-    getMinerAddress(): Buffer {
-        return this.minerAddress;
+    getMinerPubKeyHash(): Buffer {
+        return this.minerPubKeyHash;
     }
 
     toObject () {
@@ -74,12 +100,15 @@ export class BoostPowJobProofModel {
             signature: (this.signature.toString('hex').match(/../g) || []).reverse().join(''),
             minerPubKey: (this.minerPubKey.toString('hex').match(/../g) || []).reverse().join(''),
             time: (this.time.toString('hex').match(/../g) || []).reverse().join(''),
-            minerNonce: (this.minerNonce.toString('hex').match(/../g) || []).reverse().join(''),
-            minerAddress: (this.minerAddress.toString('hex').match(/../g) || []).reverse().join(''),
+            nonce: (this.nonce.toString('hex').match(/../g) || []).reverse().join(''),
+            extraNonce1: (this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''),
+            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).reverse().join(''),
+            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).reverse().join(''),
         };
     }
 
     toHex(): string {
+
         let buildOut = bsv.Script();
         // Add signature
         buildOut.add(this.signature);
@@ -87,14 +116,20 @@ export class BoostPowJobProofModel {
         // Add miner pub key
         buildOut.add(this.minerPubKey);
 
+        // Add miner nonce
+        buildOut.add(this.nonce);
+
         // Add time
         buildOut.add(this.time);
 
-        // Add miner nonce
-        buildOut.add(this.minerNonce);
+        // Add extra nonce2
+        buildOut.add(this.extraNonce2);
+
+        // Add extra nonce 1
+        buildOut.add(this.extraNonce1);
 
         // Add miner address
-        buildOut.add(this.minerAddress);
+        buildOut.add(this.minerPubKeyHash);
 
         const hex = buildOut.toHex();
         const fromhex = bsv.Script.fromHex(hex);
@@ -137,44 +172,53 @@ export class BoostPowJobProofModel {
         let signature;
         let minerPubKey;
         let time;
-        let minerNonce;
-        let minerAddress;
+        let nonce;
+        let extraNonce1;
+        let extraNonce2;
+        let minerPubKeyHash;
 
         if (
-            5 === script.chunks.length &&
+            7 === script.chunks.length &&
 
             // signature
             script.chunks[0].len &&
-            // script.chunks[0].opcodenum === 4 &&
 
             // minerPubKey
             script.chunks[1].len &&
-            // script.chunks[1].len === 32 &&
+
+            // nonce
+            script.chunks[2].len &&
 
             // time
-            script.chunks[2].len &&
-            // script.chunks[2].len === 4 &&
-
-            // minerNonce
             script.chunks[3].len &&
-            // script.chunks[3].len === 20 &&
 
-            // minerAddress
-            script.chunks[4].len
-            // script.chunks[4].len === 8
+            // extra Nonce 2
+            script.chunks[4].len &&
+
+            // extra Nonce 1
+            script.chunks[5].len &&
+
+            // minerPubKeyHash
+            script.chunks[6].len
+
         ) {
             signature = script.chunks[0].buf;
             minerPubKey = script.chunks[1].buf;
-            time = script.chunks[2].buf;
-            minerNonce = script.chunks[3].buf;
-            minerAddress = script.chunks[4].buf;
+            nonce = script.chunks[2].buf;
+            time = script.chunks[3].buf;
+
+            extraNonce2 = script.chunks[4].buf;
+            extraNonce1 = script.chunks[5].buf;
+            minerPubKeyHash = script.chunks[6].buf;
 
             return new BoostPowJobProofModel(
                 signature,
                 minerPubKey,
                 time,
-                minerNonce,
-                minerAddress,
+                extraNonce1,
+                extraNonce2,
+                nonce,
+                minerPubKeyHash,
                 txid,
                 vout,
                 value

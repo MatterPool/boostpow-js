@@ -50,6 +50,9 @@
             }
             paddedBuf = buf;
         } else {
+            if (buf.length > (length*2)) {
+                throw new Error('The buffer is out of bounds: ' + length + ' bytes expected');
+            }
             var re = /^[0-9A-Fa-f]+$/g;
             if (!re.test(buf)) {
                 paddedBuf = Buffer.from(buf)

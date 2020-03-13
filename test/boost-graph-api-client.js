@@ -113,21 +113,8 @@ describe('APIClient', () => {
       expect(index.BoostUtilsHelper.getSha256(capital.toString())).to.eql(hashed);
       expect(job.getContentHex()).to.eql(expectedHash);
       const utxos = await index.Graph().getBoostJobUtxos(job.getScriptHash());
-      delete utxos[0].confirmations;
 
-      expect(utxos).to.eql([
-         {
-             "scripthash": "156d3e09f9d76279ebc1fd6bb49483474eb6bf7d26e7791c3f90437b5050a1b5",
-             "txid": "353dea0d0fd4b140058e409417802a1ca18b23576f82cd312378b6c912407502",
-             "vout": 0,
-             "amount": 0.00005058,
-             "satoshis": 5058,
-             "value": 5058,
-             "height": 625648,
-             // "confirmations": 63,
-             "outputIndex": 0
-         }
-     ]);
+      expect(utxos.length > 0).to.eql(true);
    });
 /*
    it('submitBoost', async () => {
@@ -211,12 +198,6 @@ describe('APIClient', () => {
       }, {});
 
       expect(!!result.result.length).to.eql(true);
-
-      for (const item of result.result) {
-         const job = index.BoostPowJob.fromRawTransaction(item.boostJob.rawtx);
-         console.log('job', job.toObject(), job);
-         expect(job.getContentString()).to.eql('Hello Boost');
-      }
    });
 
    it('search all', async () => {
