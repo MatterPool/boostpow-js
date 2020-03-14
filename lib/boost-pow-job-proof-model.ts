@@ -31,9 +31,30 @@ export class BoostPowJobProofModel {
         extraNonce2: string,
         minerPubKeyHash: string
     }): BoostPowJobProofModel {
+
+        if (params.signature && params.signature.length > 166) {
+            throw new Error('signature too large. Max 83 bytes.')
+        }
+
+        if (params.minerPubKey && params.minerPubKey.length > 66) {
+            throw new Error('minerPubKey too large. Max 33 bytes.')
+        }
+        if (params.nonce && params.nonce.length > 8) {
+            throw new Error('nonce too large. Max 4 bytes.')
+        }
+        if (params.extraNonce1 && params.extraNonce1.length > 8) {
+            throw new Error('extraNonce1 too large. Max 4 bytes.')
+        }
+        if (params.extraNonce2 && params.extraNonce2.length > 8) {
+            throw new Error('extraNonce2 too large. Max 8 bytes.')
+        }
+        if (params.minerPubKeyHash && params.minerPubKeyHash.length > 40) {
+            throw new Error('minerPubKeyHash too large. Max 3320 bytes.')
+        }
+
         return new BoostPowJobProofModel(
-            BoostUtils.createBufferAndPad(params.signature, 32),
-            BoostUtils.createBufferAndPad(params.minerPubKey, 32),
+            Buffer.from(params.signature, 'hex').reverse(),
+            BoostUtils.createBufferAndPad(params.minerPubKey, 33),
             BoostUtils.createBufferAndPad(params.time, 4),
             BoostUtils.createBufferAndPad(params.extraNonce1, 4),
             BoostUtils.createBufferAndPad(params.extraNonce2, 4),
@@ -87,6 +108,14 @@ export class BoostPowJobProofModel {
 
     setNonce(nonce: string) {
         this.nonce = BoostUtils.createBufferAndPad(nonce, 4)
+    }
+
+    setExtraNonce1(nonce: string) {
+        this.extraNonce1 = BoostUtils.createBufferAndPad(nonce, 4)
+    }
+
+    setExtraNonce2(nonce: string) {
+        this.extraNonce2 = BoostUtils.createBufferAndPad(nonce, 4)
     }
 
     // Should add bsv.Address version and string version too
@@ -227,6 +256,67 @@ export class BoostPowJobProofModel {
         throw new Error('Not valid Boost Proof');
     }
 
+
+    static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
+        const script = new bsv.Script.fromASM(asm);
+        let signature;
+        let minerPubKey;
+        let time;
+        let nonce;
+        let extraNonce1;
+        let extraNonce2;
+        let minerPubKeyHash;
+
+        if (
+            7 === script.chunks.length &&
+
+            // signature
+            script.chunks[0].len &&
+
+            // minerPubKey
+            script.chunks[1].len &&
+
+            // nonce
+            script.chunks[2].len &&
+
+            // time
+            script.chunks[3].len &&
+
+            // extra Nonce 2
+            script.chunks[4].len &&
+
+            // extra Nonce 1
+            script.chunks[5].len &&
+
+            // minerPubKeyHash
+            script.chunks[6].len
+
+        ) {
+            signature = script.chunks[0].buf;
+            minerPubKey = script.chunks[1].buf;
+            nonce = script.chunks[2].buf;
+            time = script.chunks[3].buf;
+
+            extraNonce2 = script.chunks[4].buf;
+            extraNonce1 = script.chunks[5].buf;
+            minerPubKeyHash = script.chunks[6].buf;
+
+            return new BoostPowJobProofModel(
+                signature,
+                minerPubKey,
+                time,
+                extraNonce1,
+                extraNonce2,
+                nonce,
+                minerPubKeyHash,
+                txid,
+                vout,
+                value
+            );
+        }
+        throw new Error('Not valid Boost Proof');
+    }
+
     // Optional attached information if available
     getTxOutpoint(): {txid?: string, vout?: number, value?: number} {
         return {
@@ -255,7 +345,7 @@ export class BoostPowJobProofModel {
         return makeAsm.toASM();
     }
 
-    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
+    static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {
         return BoostPowJobProofModel.fromHex(str, txid, vout, value);
     }
 

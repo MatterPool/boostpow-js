@@ -22,7 +22,25 @@ class BoostPowJobProofModel {
         this.value = value;
     }
     static fromObject(params) {
-        return new BoostPowJobProofModel(boost_utils_1.BoostUtils.createBufferAndPad(params.signature, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20));
+        if (params.signature && params.signature.length > 166) {
+            throw new Error('signature too large. Max 83 bytes.');
+        }
+        if (params.minerPubKey && params.minerPubKey.length > 66) {
+            throw new Error('minerPubKey too large. Max 33 bytes.');
+        }
+        if (params.nonce && params.nonce.length > 8) {
+            throw new Error('nonce too large. Max 4 bytes.');
+        }
+        if (params.extraNonce1 && params.extraNonce1.length > 8) {
+            throw new Error('extraNonce1 too large. Max 4 bytes.');
+        }
+        if (params.extraNonce2 && params.extraNonce2.length > 8) {
+            throw new Error('extraNonce2 too large. Max 8 bytes.');
+        }
+        if (params.minerPubKeyHash && params.minerPubKeyHash.length > 40) {
+            throw new Error('minerPubKeyHash too large. Max 3320 bytes.');
+        }
+        return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex').reverse(), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 33), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20));
     }
     getSignature() {
         return this.signature;
@@ -62,6 +80,12 @@ class BoostPowJobProofModel {
     }
     setNonce(nonce) {
         this.nonce = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+    }
+    setExtraNonce1(nonce) {
+        this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+    }
+    setExtraNonce2(nonce) {
+        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
     }
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash() {
@@ -163,6 +187,41 @@ class BoostPowJobProofModel {
         }
         throw new Error('Not valid Boost Proof');
     }
+    static fromASM(asm, txid, vout, value) {
+        const script = new bsv.Script.fromASM(asm);
+        let signature;
+        let minerPubKey;
+        let time;
+        let nonce;
+        let extraNonce1;
+        let extraNonce2;
+        let minerPubKeyHash;
+        if (7 === script.chunks.length &&
+            // signature
+            script.chunks[0].len &&
+            // minerPubKey
+            script.chunks[1].len &&
+            // nonce
+            script.chunks[2].len &&
+            // time
+            script.chunks[3].len &&
+            // extra Nonce 2
+            script.chunks[4].len &&
+            // extra Nonce 1
+            script.chunks[5].len &&
+            // minerPubKeyHash
+            script.chunks[6].len) {
+            signature = script.chunks[0].buf;
+            minerPubKey = script.chunks[1].buf;
+            nonce = script.chunks[2].buf;
+            time = script.chunks[3].buf;
+            extraNonce2 = script.chunks[4].buf;
+            extraNonce1 = script.chunks[5].buf;
+            minerPubKeyHash = script.chunks[6].buf;
+            return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, txid, vout, value);
+        }
+        throw new Error('Not valid Boost Proof');
+    }
     // Optional attached information if available
     getTxOutpoint() {
         return {
@@ -188,7 +247,7 @@ class BoostPowJobProofModel {
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toASM();
     }
-    static fromASM(str, txid, vout, value) {
+    static fromASM2(str, txid, vout, value) {
         return BoostPowJobProofModel.fromHex(str, txid, vout, value);
     }
     toString() {

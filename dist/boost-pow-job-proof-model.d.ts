@@ -38,6 +38,8 @@ export declare class BoostPowJobProofModel {
     getNonceNumber(): number;
     getNonce(): Buffer;
     setNonce(nonce: string): void;
+    setExtraNonce1(nonce: string): void;
+    setExtraNonce2(nonce: string): void;
     getMinerPubKeyHash(): Buffer;
     toObject(): {
         signature: string;
@@ -53,6 +55,7 @@ export declare class BoostPowJobProofModel {
     static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined;
     static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
+    static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
     getTxOutpoint(): {
         txid?: string;
         vout?: number;
@@ -62,7 +65,7 @@ export declare class BoostPowJobProofModel {
     getVout(): number | undefined;
     getValue(): number | undefined;
     toASM(): string;
-    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
+    static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
     toString(): string;
     static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
 }

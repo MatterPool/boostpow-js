@@ -443,15 +443,87 @@ export class BoostPowJobModel {
         throw new Error('Not valid Boost Output');
     }
 
+    static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+        const script = new bsv.Script.fromASM(asm);
+        let category;
+        let content;
+        let diff;
+        let tag;
+        let additionalData;
+        let userNonce;
+        if (
+            // boostv01
+            script.chunks[0].buf.toString('utf8') === 'boostpow' &&
+
+            // Drop the identifier
+            script.chunks[1].opcodenum === bsv.Opcode.OP_DROP &&
+
+            // Category
+            script.chunks[2].buf &&
+            script.chunks[2].opcodenum === 4 &&
+
+            // Content
+            script.chunks[3].buf &&
+            script.chunks[3].len === 32 &&
+
+            // Target
+            script.chunks[4].buf &&
+            script.chunks[4].len === 4 &&
+
+            // Tag
+            script.chunks[5].buf &&
+            script.chunks[5].len === 20 &&
+
+            // User Nonce
+            script.chunks[6].buf &&
+            script.chunks[6].len === 4 &&
+
+            // Additional Data
+            script.chunks[7].buf &&
+            script.chunks[7].len === 32  &&
+
+            BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8)
+
+        ) {
+            category = script.chunks[2].buf;
+            content = script.chunks[3].buf;
+            let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
+            let targetInt = parseInt(targetHex, 16);
+            diff = BoostPowJobModel.getDifficulty(targetInt);
+
+            tag = script.chunks[5].buf;
+            //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
+
+            userNonce = script.chunks[6].buf;
+            //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
+            additionalData = script.chunks[7].buf;
+            //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
+
+            return new BoostPowJobModel(
+                content,
+                diff,
+                category,
+                tag,
+                additionalData,
+                userNonce,
+                txid,
+                vout,
+                value
+            );
+        }
+        throw new Error('Not valid Boost Output');
+    }
+
     toASM(): string {
         const makeHex = this.toHex();
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toASM();
     }
 
-    static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+    static fromASM4(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
         return BoostPowJobModel.fromHex(str, txid, vout, value);
     }
+
     static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
         return BoostPowJobModel.fromHex(str, txid, vout, value);
     }
