@@ -72,6 +72,7 @@ export declare class BoostPowJobModel {
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toASM(): string;
     static fromASM(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
+    static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toString(): string;
     static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobModel;

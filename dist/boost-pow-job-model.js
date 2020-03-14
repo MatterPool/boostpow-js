@@ -314,7 +314,6 @@ class BoostPowJobModel {
         let tag;
         let additionalData;
         let userNonce;
-        console.log('fromHex', asm, 'script', script);
         if (
         // boostv01
         script.chunks[0].buf.toString('utf8') === 'boostpow' &&
@@ -360,6 +359,9 @@ class BoostPowJobModel {
         return makeAsm.toASM();
     }
     static fromASM(str, txid, vout, value) {
+        return BoostPowJobModel.fromHex(str, txid, vout, value);
+    }
+    static fromASM2(str, txid, vout, value) {
         return BoostPowJobModel.fromHex(str, txid, vout, value);
     }
     toString() {

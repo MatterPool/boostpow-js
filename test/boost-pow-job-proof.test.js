@@ -64,6 +64,8 @@ describe('boost #BoostPowJob redeem work', () => {
       expect(jobProof.toASM()).to.eql(fromString.toASM());
 
       expect(jobProof.toASM()).to.eql('0600000000000000000000000000000000000000000000000000000000000000 0600000000000000000000000000000000000000000000000000000000000000 05000000 09003012 03000000 02000000 0100000000000000000000000000000000000000');
+      expect(jobProof.toHex()).to.eql(index.BoostPowJobProof.fromASM(jobProof.toASM()).toHex());
+
    });
 
    it('should update nonce and time', async () => {
