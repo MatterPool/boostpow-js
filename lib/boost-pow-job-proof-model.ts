@@ -49,7 +49,7 @@ export class BoostPowJobProofModel {
             throw new Error('extraNonce2 too large. Max 8 bytes.')
         }
         if (params.minerPubKeyHash && params.minerPubKeyHash.length > 40) {
-            throw new Error('minerPubKeyHash too large. Max 3320 bytes.')
+            throw new Error('minerPubKeyHash too large. Max 20 bytes.')
         }
 
         return new BoostPowJobProofModel(
