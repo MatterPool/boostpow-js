@@ -282,7 +282,6 @@ export class BoostPowJobModel {
         }
         return (
 
-
             // BEGIN
             // CAT SWAP
             remainingChunks[start + 0].opcodenum === bsv.Opcode.OP_CAT &&
