@@ -54,7 +54,7 @@ describe('boost #BoostPowMetadata tests', () => {
 
    it('should success create and get hash of abstract', async () => {
       const fromHex = index.BoostPowMetadata.fromHex('0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a0210000010000004200000000000000000000000000000000000000000000000000000000000000');
-      expect(fromHex.hash()).to.eql('bfe1cc8894efc38a34abb5f9c516cca7c0c8d91ada9597d7ea14c3ffc7f1e513');
+      expect(fromHex.hash()).to.eql('2dd2ce3a9bd404105a56433e1e0ce8cfa458e0a3669ce45f56132fc23d18a125');
    });
 
 });

@@ -281,6 +281,8 @@ export class BoostPowJobModel {
             return false;
         }
         return (
+
+
             // BEGIN
             // CAT SWAP
             remainingChunks[start + 0].opcodenum === bsv.Opcode.OP_CAT &&
@@ -332,11 +334,11 @@ export class BoostPowJobModel {
             remainingChunks[start + 34].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
             remainingChunks[start + 35].opcodenum === bsv.Opcode.OP_CAT &&
 
-            // {5} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_2
+            // {5} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
             remainingChunks[start + 36].opcodenum === bsv.Opcode.OP_5 &&
             remainingChunks[start + 37].opcodenum === bsv.Opcode.OP_ROLL &&
             remainingChunks[start + 38].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + 39].opcodenum === bsv.Opcode.OP_4 &&
+            remainingChunks[start + 39].opcodenum === bsv.Opcode.OP_8 &&
             remainingChunks[start + 40].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
             remainingChunks[start + 41].opcodenum === bsv.Opcode.OP_CAT &&
 
@@ -705,11 +707,11 @@ export class BoostPowJobModel {
         bsv.Opcode.OP_EQUALVERIFY,
         bsv.Opcode.OP_CAT,
 
-        // {5} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_2
+        // {5} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
         bsv.Opcode.OP_5,
         bsv.Opcode.OP_ROLL,
         bsv.Opcode.OP_SIZE,
-        bsv.Opcode.OP_4,
+        bsv.Opcode.OP_8,
         bsv.Opcode.OP_EQUALVERIFY,
         bsv.Opcode.OP_CAT,
 

@@ -94,13 +94,13 @@ class BoostPowJobProofModel {
     toObject() {
         return {
             // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-            signature: (this.signature.toString('hex').match(/../g) || []).reverse().join(''),
-            minerPubKey: (this.minerPubKey.toString('hex').match(/../g) || []).reverse().join(''),
+            signature: (this.signature.toString('hex').match(/../g) || []).join(''),
+            minerPubKey: (this.minerPubKey.toString('hex').match(/../g) || []).join(''),
             time: (this.time.toString('hex').match(/../g) || []).reverse().join(''),
             nonce: (this.nonce.toString('hex').match(/../g) || []).reverse().join(''),
             extraNonce1: (this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''),
-            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).reverse().join(''),
-            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).reverse().join(''),
+            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).join(''),
+            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).join(''),
         };
     }
     toHex() {
