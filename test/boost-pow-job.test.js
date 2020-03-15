@@ -553,11 +553,16 @@ describe('BoostPowJob', () => {
       expect(job.bits()).to.eql(443192243);
       expect(job.bits().toString(16)).to.eql('1a6a93b3');
       expect(job.getDifficulty()).to.eql(157416.40184364);
+      expect(index.BoostPowJob.hexBitsToDifficulty('1a6a93b3')).to.eql(157416.40184364);
    });
 
-   it('should correctly load up job from bitshex ', async () => {
-      expect('bitshex').to.eql('bitshex todo');
+   it('should correctly get bits and target and category number', async () => {
+
+      const prodBitsSample = index.BoostPowJob.hexBitsToDifficulty('1802f15b');
+      expect(prodBitsSample).to.eql(373622670066.215);
+
    });
+
 
    it('should correctly get content and buffers as appropriate', async () => {
       const job = index.BoostPowJob.fromObject({
@@ -586,6 +591,7 @@ describe('BoostPowJob', () => {
 
       expect(job.getBits()).to.eql(486604799);
       expect(job.getBitsHex()).to.eql('1d00ffff');
+      expect(job.getBits().toString(16)).to.eql('1d00ffff');
       expect(job.getCategoryNumber()).to.eql(123);
       expect(job.getUserNonceNumber()).to.eql(456);
 
@@ -601,6 +607,9 @@ describe('BoostPowJob', () => {
       expect(job.getDiff()).to.eql(409786762471.9213);
       expect(job.getBits()).to.eql(402829022);
       expect(job.getBitsHex()).to.eql('1802aede');
+      expect(job.getBits().toString(16)).to.eql('1802aede');
+
+      // 1802f15b
    });
 
 

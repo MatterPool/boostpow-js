@@ -146,7 +146,7 @@ export class BoostPowJobModel {
     }
 
     public static hexBitsToDifficulty(hexBits: string): number {
-        let targetHex = (hexBits.match(/../g) || []).reverse().join('');
+        let targetHex = (hexBits.match(/../g) || []).join('');
         let targetInt = parseInt(targetHex, 16);
         return BoostPowJobModel.getDifficulty(targetInt);
     }
