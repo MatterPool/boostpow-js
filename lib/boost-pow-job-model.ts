@@ -141,6 +141,10 @@ export class BoostPowJobModel {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
 
+    bits(): number {
+        return BoostPowJobModel.difficulty2bits(this.difficulty);
+    }
+
     getBitsHex(): string {
         return this.getTargetAsNumberHex();
     }
@@ -260,6 +264,10 @@ export class BoostPowJobModel {
         var decimalPos = difficultyString.length - 8
         difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos)
         return parseFloat(difficultyString)
+    }
+
+    getDifficulty(): number {
+        return this.difficulty;
     }
 
     static remainingOperationsMatchExactly(remainingChunks, start: number): boolean {

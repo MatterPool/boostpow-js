@@ -201,6 +201,7 @@ describe('BoostPowString', () => {
       expect(boostPowString.contentString()).to.eql('Hello world');
       expect(boostPowString.contentString(true)).to.eql('Hello world');
       expect(boostPowString.bits()).to.eql(486604799);
+      expect(boostPowString.bits().toString(16)).to.eql('1d00ffff');
       expect(boostPowString.difficulty()).to.eql(1);
       expect(boostPowString.metadataHash()).to.eql('acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a');
       expect(boostPowString.time()).to.eql(1305200806);
@@ -210,14 +211,3 @@ describe('BoostPowString', () => {
 
 });
 
-
-describe('BoostPowString', () => {
-   it('should get correctly accessors', async () => {
-      const difficulty = index.BoostPowString.nBitsHexToDifficultyNumber('1d00ffff');
-      expect(difficulty).to.eql(1);
-
-      const nbits = index.BoostPowString.difficultyNumberToNBitsHex(1);
-      expect(nbits).to.eql('332');
-   });
-
-});

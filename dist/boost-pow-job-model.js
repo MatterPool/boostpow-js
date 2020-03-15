@@ -105,6 +105,9 @@ class BoostPowJobModel {
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
+    bits() {
+        return BoostPowJobModel.difficulty2bits(this.difficulty);
+    }
     getBitsHex() {
         return this.getTargetAsNumberHex();
     }
@@ -210,6 +213,9 @@ class BoostPowJobModel {
         var decimalPos = difficultyString.length - 8;
         difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos);
         return parseFloat(difficultyString);
+    }
+    getDifficulty() {
+        return this.difficulty;
     }
     static remainingOperationsMatchExactly(remainingChunks, start) {
         if (78 !== remainingChunks.length) {

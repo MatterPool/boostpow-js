@@ -497,7 +497,66 @@ describe('BoostPowJob', () => {
 
       expect(job.toString()).to.eql('8 0x626f6f7374706f77 OP_DROP 4 0x6c6c6962 32 0x6c616d696e61206f6c6c65680000000000000000000000000000000000000000 4 0xb6300c1c 20 0x6761742061207369207369687400000000000000 4 0xc8010000 32 0x617461446c616e6f6974696464612065726f6d20736920736968740000000000 OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_3 OP_GREATERTHANOREQUAL OP_VERIFY OP_DUP 1 0x20 OP_LESSTHANOREQUAL OP_VERIFY OP_TOALTSTACK 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_RSHIFT OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 OP_FROMALTSTACK OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH256 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
 
-      // expect(job.toObject()).to.eql(index.BoostPowJob.fromScript('8 0x626f6f7374763031 OP_DROP 4 0x6c6c6962 32 0x6c616d696e61206f6c6c65680000000000000000000000000000000000000000 4 0xb6300c1c 20 0x6761742061207369207369687400000000000000 4 0xc8010000 32 0x617461446c616e6f6974696464612065726f6d20736920736968740000000000 OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_3 OP_GREATERTHANOREQUAL OP_VERIFY OP_DUP 1 0x20 OP_LESSTHANOREQUAL OP_VERIFY OP_TOALTSTACK 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_RSHIFT OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 OP_FROMALTSTACK OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH256 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG').toObject());
+
+   });
+
+   it('should correctly match up forms of variables for pow string and pow job', async () => {
+      const boostPowString = index.BoostPowString.fromString('01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc');
+      expect(boostPowString.hash()).to.equal('0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc');
+      expect(boostPowString.toObject()).to.eql({
+         hash: '0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc',
+         content: '00000000000000000000000000000000000000000048656c6c6f20776f726c64',
+         bits: 486604799,
+         difficulty: 1,
+         metadataHash: "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a",
+         time: 1305200806,
+         nonce: 3698479534,
+         category: 1,
+      });
+
+      const job = index.BoostPowJob.fromHex(
+         index.BoostPowJob.fromASM(
+            index.BoostPowJob.fromObject(
+            {
+               content: '00000000000000000000000000000000000000000048656c6c6f20776f726c64',
+               diff: 1,
+               category: '01',
+               tag:  '02',
+               additionalData: '03',
+               userNonce: '44',
+            }).toASM()
+         ).toHex()
+      );
+
+      expect(boostPowString.bits()).to.eql(486604799);
+      expect(job.bits()).to.eql(486604799);
+      expect(boostPowString.bits().toString(16)).to.eql('1d00ffff');
+      expect(job.bits().toString(16)).to.eql('1d00ffff');
+      expect(boostPowString.difficulty()).to.eql(1);
+      expect(job.getDifficulty()).to.eql(1);
+   });
+
+   it('should correctly match target and bits for known bitcoin header 0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca', async () => {
+      const job = index.BoostPowJob.fromHex(
+         index.BoostPowJob.fromASM(
+            index.BoostPowJob.fromObject(
+            {
+               content: '00000000000000000000000000000000000000000048656c6c6f20776f726c64',
+               diff: 157416.4018436489,
+               category: '01',
+               tag:  '02',
+               additionalData: '03',
+               userNonce: '44',
+            }).toASM()
+         ).toHex()
+      );
+      expect(job.bits()).to.eql(443192243);
+      expect(job.bits().toString(16)).to.eql('1a6a93b3');
+      expect(job.getDifficulty()).to.eql(157416.40184364);
+   });
+
+   it('should correctly load up job from bitshex ', async () => {
+      expect('bitshex').to.eql('bitshex todo');
    });
 
    it('should correctly get content and buffers as appropriate', async () => {

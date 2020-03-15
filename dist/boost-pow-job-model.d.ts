@@ -42,6 +42,7 @@ export declare class BoostPowJobModel {
         userNonce?: string;
     }): BoostPowJobModel;
     getBits(): number;
+    bits(): number;
     getBitsHex(): string;
     toObject(): {
         content: string;
@@ -68,6 +69,7 @@ export declare class BoostPowJobModel {
      * @return {Number}
      */
     static getDifficulty(bits: any): number;
+    getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number): boolean;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
