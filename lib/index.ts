@@ -40,6 +40,9 @@ export class BoostGraphClient {
   get BoostPowSimpleMiner() {
     return BoostPowSimpleMinerModel;
   }
+  get BoostUtilsHelper() {
+    return BoostUtilsHelper;
+  }
 
   search(q: {}, options: {}, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);

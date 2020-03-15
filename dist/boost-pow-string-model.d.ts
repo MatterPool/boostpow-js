@@ -14,6 +14,9 @@ export declare class BoostPowStringModel {
     nonce(): number;
     time(): number;
     category(): number;
+    static nBitsHexToDifficultyNumber(nbits: string): number;
+    getTargetAsNumberBuffer(): any;
+    static difficultyNumberToNBitsHex(diff: number): string;
     static validProofOfWorkFromBuffer(buf: any): boolean;
     static validProofOfWorkFromString(str: any): boolean;
     static validProofOfWorkFromObject(obj: any): boolean;

@@ -1,4 +1,5 @@
 import * as bsv from 'bsv';
+import { BoostPowJobModel } from './boost-pow-job-model';
 
 export class BoostPowStringModel {
     private _blockheader;
@@ -62,6 +63,20 @@ export class BoostPowStringModel {
 
     category(): number {
         return this.toObject().category;
+    }
+
+    static nBitsHexToDifficultyNumber(nbits: string): number {
+        return BoostPowJobModel.getTargetDifficulty(parseInt(nbits, 16));
+    }
+
+    getTargetAsNumberBuffer(): any {
+        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        return Buffer.from(i.toString(16), 'hex').reverse();
+    }
+
+    static difficultyNumberToNBitsHex(diff: number): string {
+        const bitsInt32 = BoostPowJobModel.difficulty2bits(diff);
+        return bitsInt32.toString(16);
     }
 
     static validProofOfWorkFromBuffer(buf): boolean {
@@ -181,5 +196,4 @@ export class BoostPowStringModel {
     targetDifficulty(bits?: number) {
         return this._blockheader.getTargetDifficulty(bits);
     }
-
 }

@@ -156,7 +156,7 @@ export class BoostPowJobModel {
         };
     }
 
-    private static difficulty2bits(difficulty) {
+    public static difficulty2bits(difficulty) {
         if (difficulty < 0) throw 'difficulty cannot be negative';
         if (!isFinite(difficulty)) {
             throw 'difficulty cannot be infinite';
@@ -238,7 +238,7 @@ export class BoostPowJobModel {
      * @param {Number} bits
      * @returns {BN} An instance of BN with the decoded difficulty bits
      */
-    static getTargetDifficulty(bits) {
+    public static getTargetDifficulty(bits) {
         var target = new bsv.crypto.BN(bits & 0xffffff)
         var mov = 8 * ((bits >>> 24) - 3)
         while (mov-- > 0) {

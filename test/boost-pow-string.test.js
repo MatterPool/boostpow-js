@@ -207,4 +207,17 @@ describe('BoostPowString', () => {
       expect(boostPowString.nonce()).to.eql(3698479534);
       expect(boostPowString.category()).to.eql(1);
    });
+
+});
+
+
+describe('BoostPowString', () => {
+   it('should get correctly accessors', async () => {
+      const difficulty = index.BoostPowString.nBitsHexToDifficultyNumber('1d00ffff');
+      expect(difficulty).to.eql(1);
+
+      const nbits = index.BoostPowString.difficultyNumberToNBitsHex(1);
+      expect(nbits).to.eql('332');
+   });
+
 });
