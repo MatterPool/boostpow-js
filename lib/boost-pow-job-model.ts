@@ -145,6 +145,12 @@ export class BoostPowJobModel {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
 
+    public static hexBitsToDifficulty(hexBits: string): number {
+        let targetHex = (hexBits.match(/../g) || []).reverse().join('');
+        let targetInt = parseInt(targetHex, 16);
+        return BoostPowJobModel.getDifficulty(targetInt);
+    }
+
     getBitsHex(): string {
         return this.getTargetAsNumberHex();
     }

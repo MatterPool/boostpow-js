@@ -108,6 +108,11 @@ class BoostPowJobModel {
     bits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
     }
+    static hexBitsToDifficulty(hexBits) {
+        let targetHex = (hexBits.match(/../g) || []).reverse().join('');
+        let targetInt = parseInt(targetHex, 16);
+        return BoostPowJobModel.getDifficulty(targetInt);
+    }
     getBitsHex() {
         return this.getTargetAsNumberHex();
     }

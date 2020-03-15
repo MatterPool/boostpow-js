@@ -43,6 +43,7 @@ export declare class BoostPowJobModel {
     }): BoostPowJobModel;
     getBits(): number;
     bits(): number;
+    static hexBitsToDifficulty(hexBits: string): number;
     getBitsHex(): string;
     toObject(): {
         content: string;
