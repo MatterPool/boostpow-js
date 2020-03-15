@@ -365,10 +365,10 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
          signature: '00',
          minerPubKey: '00',
          extraNonce1: Buffer.from('0a00000a', 'hex').toString('hex'),
-         extraNonce2: Buffer.from('bf07000000000000', 'hex').reverse().toString('hex'),
+         extraNonce2: Buffer.from('bf07000000000000', 'hex').toString('hex'),
          time: Buffer.from('5e6dc081', 'hex').toString('hex'),
          nonce:  Buffer.from('1ca169e0', 'hex').toString('hex'),
-         minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').reverse().toString('hex'),
+         minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').toString('hex'),
       });
       const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, true);
       expect(result.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');

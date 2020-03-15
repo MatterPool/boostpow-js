@@ -176,7 +176,6 @@ export class BoostPowStringModel {
 
     toObject () {
         const blockheaderObj = this._blockheader.toObject();
-        console.log('boostpowstring bits hex format', blockheaderObj.bits, blockheaderObj.bits.toString(16));
         const boostheaderObj = {
             hash: blockheaderObj.hash,
             content: blockheaderObj.prevHash,

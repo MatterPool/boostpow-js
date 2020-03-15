@@ -37,7 +37,7 @@ class BoostUtils {
         const i = BoostUtils.difficulty2bits(diff);
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
-    static createBufferAndPad(buf, length) {
+    static createBufferAndPad(buf, length, reverse = true) {
         if (!buf) {
             const emptyBuffer = new Buffer(length);
             emptyBuffer.fill(0);
@@ -65,10 +65,10 @@ class BoostUtils {
         if (paddedBuf.byteLength < length) {
             const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
-            return Buffer.concat([emptyBuffer, paddedBuf]).reverse();
+            return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]).reverse();
         }
         else {
-            return paddedBuf.reverse();
+            return reverse ? paddedBuf.reverse() : paddedBuf;
         }
     }
 }

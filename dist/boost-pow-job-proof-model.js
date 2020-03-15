@@ -40,7 +40,7 @@ class BoostPowJobProofModel {
         if (params.minerPubKeyHash && params.minerPubKeyHash.length > 40) {
             throw new Error('minerPubKeyHash too large. Max 20 bytes.');
         }
-        return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex').reverse(), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 33), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20));
+        return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 33, false), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false));
     }
     getSignature() {
         return this.signature;
