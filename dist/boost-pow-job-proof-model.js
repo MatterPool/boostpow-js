@@ -133,6 +133,10 @@ class BoostPowJobProofModel {
         let buildOut = bsv.Script();
         // Add signature
         buildOut.add(this.signature);
+        /* Buffer.concat([
+             this.signature.toBuffer(),
+             Buffer.from([sigtype & 0xff])
+           ]*/
         // Add miner pub key
         buildOut.add(this.minerPubKey);
         // Add miner nonce
@@ -145,6 +149,12 @@ class BoostPowJobProofModel {
         buildOut.add(this.extraNonce1);
         // Add miner address
         buildOut.add(this.minerPubKeyHash);
+        for (let i = 0; i < buildOut.chunks.length; i++) {
+            if (!buildOut.checkMinimalPush(i)) {
+                console.log('not minimal push!-======================', i);
+                throw new Error('not min push');
+            }
+        }
         const hex = buildOut.toHex();
         const fromhex = bsv.Script.fromHex(hex);
         const hexIso = fromhex.toHex();
