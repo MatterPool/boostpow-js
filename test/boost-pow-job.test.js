@@ -433,19 +433,42 @@ describe('boost #BoostPowJob createRedeemTx', () => {
       });
 
       const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
-      const flags = /*bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA |*/ bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
+      const flags = /*bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA | */ bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
       const signature = bsv.Transaction.sighash.sign(tx, privKey, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
 
       //const unlockingScript = new bsv.Script({});
       //unlockingScript.add()
       console.log('signature', signature);
-      jobProof.setSignature(signature.toBuffer().toString('hex'));
+      // jobProof.setSignature(signature.toBuffer().toString('hex'));
+      jobProof.setSignature(Buffer.concat([
+         signature.toBuffer(),
+         Buffer.from([sigtype & 0xff])
+       ]).toString('hex'));
 
-      expect(jobProof.toBuffer().toString('hex')).to.eql('473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a');
-      tx.inputs[0].setScript(jobProof.toBuffer());
+      //expect(jobProof.toBuffer().toString('hex')).to.eql('473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a');
+        expect(jobProof.toBuffer().toString('hex')).to.eql('483045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e54704121020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a');
 
-      expect(tx.toObject()).to.eql({
-         hash: "acf46aba41aedc8d509b5be41e0e4fcd39797db2ef6091461932c2158beca607",
+      const unlockingScript = new bsv.Script({});
+      unlockingScript
+         .add(
+            Buffer.concat([
+            signature.toBuffer(),
+            Buffer.from([sigtype & 0xff])
+            ])
+         )
+         .add(privKey.toPublicKey().toBuffer())
+         .add(jobProof.getNonce())
+         .add(jobProof.getTime())
+         .add(jobProof.getExtraNonce2())
+         .add(jobProof.getExtraNonce1())
+         .add(Buffer.from('009fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex'));
+
+      console.log('script unlocking', unlockingScript.chunks);
+      // tx.inputs[0].setScript(jobProof.toBuffer());
+      tx.inputs[0].setScript(unlockingScript);
+
+      /*expect(tx.toObject()).to.eql({
+         hash: "aab38150fb6a2b756652fe0c9d88d458a9ddb44ab5dcc5adb10729e559b29888",
          inputs: [
             {
                output: {
@@ -454,15 +477,17 @@ describe('boost #BoostPowJob createRedeemTx', () => {
                },
                outputIndex: 0,
                prevTxId: "0eeea673cd4312a26e61a470afe096e94b5251b9cf286e012dd6719121df1092",
-               script: "473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
-               scriptString: "71 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
+               //script: "473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+               script: "483045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e54704121020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+               //scriptString: "71 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
+               scriptString: "72 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547041 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
                sequenceNumber: 4294967295
             }
          ],
          nLockTime: 0,
          outputs: [],
          version: 1,
-      });
+      });*/
 /*
      tx = new bsv.Transaction({
       hash: "ec63078724a698e70c46025ba3c950fdd76eccee23b3d5884d87c997c89f73f6",
@@ -488,10 +513,33 @@ describe('boost #BoostPowJob createRedeemTx', () => {
          script: bsv.Script(new bsv.Address('1264UeZnzrjrMdYn1QSED5TCbY8Gd11e23')),
          satoshis: 7800
       }));
+      /*expect(tx.toObject()).to.eql({
+         hash: "2c40200bea1705284f36f69d3c2bac6a98364e1cecdbac4932e9dd4e8d2c62a8",
+         inputs: [
+            {
+               output: {
+                 satoshis: 8179,
+                 script: "08626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac"
+               },
+               outputIndex: 0,
+               prevTxId: "0eeea673cd4312a26e61a470afe096e94b5251b9cf286e012dd6719121df1092",
+               // script: "473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+               script: "483045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e54704121020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+               //scriptString: "71 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
+               scriptString: "72 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547041 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
 
-      const newTx = new bsv.Transaction('01000000019210df219171d62d016e28cfb951524be996e0af70a4616ea21243cd73a6ee0e0000000097473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e54702100000000000000000000000000000000000000000000000000000000000000000004e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657affffffff01781e0000000000001976a9140bed1b97a1ec681cf100ee8b11800a54b39b9fda88ac00000000');
-
-      console.log('newTx', newTx, newTx.script, newTx.toObject());
+               sequenceNumber: 4294967295
+            }
+         ],
+         nLockTime: 0,
+         outputs: [
+                {
+                  "satoshis": 7800,
+                  "script": "76a9140bed1b97a1ec681cf100ee8b11800a54b39b9fda88ac"
+                }
+         ],
+         version: 1,
+      });*/
       console.log(tx.toString());
    });
 });

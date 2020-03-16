@@ -176,7 +176,11 @@ export class BoostPowJobProofModel {
 
         let buildOut = bsv.Script();
         // Add signature
-        buildOut.add(this.signature);
+     buildOut.add(this.signature);
+       /* Buffer.concat([
+            this.signature.toBuffer(),
+            Buffer.from([sigtype & 0xff])
+          ]*/
 
         // Add miner pub key
         buildOut.add(this.minerPubKey);
