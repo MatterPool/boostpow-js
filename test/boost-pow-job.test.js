@@ -350,6 +350,35 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
       /*
       >>>>>>>>>>>>>>>>>>> checkShare >>>>>>>>>>>>>>>>>>>
       211193-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175833 30281 StratumServerBitcoin.cc:336] coinbase tx:
+      // Original real:
+      00000000000000000000000000000000000000009fb8cb68b8850a13c7438e26e1d277b748be657a0a00000abf07000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      211194-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175880 30327 StratumServerBitcoin.cc:632] >>>>>>>>>>>>>>>>>>> checkingFoundNewBlock >>>>>>>>>>>>>>>>>>>
+      211195:Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175889 30327 StratumServerBitcoin.cc:637] >>>>>>>>>>>>>>>>>>> FOUND BLOCK FOUND >>>>>>>>>>>>>>>>>>>
+      211196-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175894 30327 StratumServerBitcoin.cc:642] CBlockHeader nVersion: 00000000, hashPrevBlock: 8158deab634af238d95a61ed93ab57f0cd8b1972988c92dbbd932f88b6fcb835, hashMerkleRoot: 7687b9ef4a2a8bc0387336177e4f90ceabca3cbdf246ad4e9f27d4d94f1f4019, nTime: 5e6dc081, nBits: 1d00ffff, nNonce: 1ca169e0, extraNonce1: 0a00000a, extraNonce2: bf07000000000000
+      211197-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175958 30327 StratumServerBitcoin.cc:684] >>>> found a new block: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, jobId: 6804306268015034369, userId: 35, by: shedminer.002 <<<<
+      211198-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175973 30327 StratumServerBitcoin.cc:689] >>>> found a new block_boost: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, jobId: 6804306268015034369, userId: 35, by: shedminer.002 <<<<0 <<<<8158deab634af238d95a61ed93ab57f0cd8b1972988c92dbbd932f88b6fcb835 <<<<7687b9ef4a2a8bc0387336177e4f90ceabca3cbdf246ad4e9f27d4d94f1f4019 <<<<1584251009 <<<<486604799 <<<<480340448
+      211199-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175994 30327 StratumServerBitcoin.cc:710] high diff share, blkhash: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, diff: 272, networkDiff: 1, by: shedminer.002
+      */
+      const jobProof = index.BoostPowJobProof.fromObject({
+         signature: '00',
+         minerPubKey: '00',
+         extraNonce1: Buffer.from('0a00000a', 'hex').toString('hex'),
+         extraNonce2: Buffer.from('bf07000000000000', 'hex').toString('hex'),
+         time: Buffer.from('5e6dc081', 'hex').toString('hex'),
+         nonce:  Buffer.from('1ca169e0', 'hex').toString('hex'),
+         minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').toString('hex'),
+      });
+      const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, false);
+      expect(result.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
+   });
+});
+
+describe('boost #BoostPowJob createRedeemTx', () => {
+   it('createRedeemTx success', async () => {
+      const job = index.BoostPowJob.fromRawTransaction('0100000001a3fa9326238ec8fe6468a144ce204303cfd1d67893f17b57fcd47a9d607457e7010000006a473044022047a94fb4feea3a48d9c9716309d5c074d62e434fdb370e15a130197d888f922b0220597aefbf7bb90428f98e75ba274b7aa18df0fd45f9713f1a55eba445dd05831241210341ac150fc82f6785c9457c9505f3cb01c575ad747b42d4023cdf028e910e54cfffffffff02f31f000000000000d408626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac59400000000000001976a914c2c2a218c36c196153f7fd7f92cf49c5ee23174c88ac00000000');
+      /*
+      >>>>>>>>>>>>>>>>>>> checkShare >>>>>>>>>>>>>>>>>>>
+      211193-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175833 30281 StratumServerBitcoin.cc:336] coinbase tx:
 
       // Original reaL:
       00000000000000000000000000000000000000009fb8cb68b8850a13c7438e26e1d277b748be657a0a00000abf07000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -359,23 +388,127 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
       211197-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175958 30327 StratumServerBitcoin.cc:684] >>>> found a new block: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, jobId: 6804306268015034369, userId: 35, by: shedminer.002 <<<<
       211198-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175973 30327 StratumServerBitcoin.cc:689] >>>> found a new block_boost: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, jobId: 6804306268015034369, userId: 35, by: shedminer.002 <<<<0 <<<<8158deab634af238d95a61ed93ab57f0cd8b1972988c92dbbd932f88b6fcb835 <<<<7687b9ef4a2a8bc0387336177e4f90ceabca3cbdf246ad4e9f27d4d94f1f4019 <<<<1584251009 <<<<486604799 <<<<480340448
       211199-Mar 15 05:43:40 ip-172-31-47-53 sserver[30281]: I0315 05:43:40.175994 30327 StratumServerBitcoin.cc:710] high diff share, blkhash: 0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35, diff: 272, networkDiff: 1, by: shedminer.002
-
       */
+
     const jobProof = index.BoostPowJobProof.fromObject({
          signature: '00',
-         minerPubKey: '00',
+         minerPubKey: '020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65',
          extraNonce1: Buffer.from('0a00000a', 'hex').toString('hex'),
          extraNonce2: Buffer.from('bf07000000000000', 'hex').toString('hex'),
          time: Buffer.from('5e6dc081', 'hex').toString('hex'),
-         nonce:  Buffer.from('1ca169e0', 'hex').toString('hex'),
+         nonce: Buffer.from('1ca169e0', 'hex').toString('hex'),
          minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').toString('hex'),
       });
-      const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, true);
-      expect(result.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
-   });
+      let tx = index.BoostPowJob.createRedeemTx(job, jobProof,'5d5c870220eeb18afe8a498324013955c316cbaaed2a824e5230362c36964c27');
 
+      expect(jobProof.toObject()).to.eql({
+         "extraNonce1": "0a00000a",
+         "extraNonce2": "bf07000000000000",
+         "minerPubKey": "020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65",
+         "minerPubKeyHash": "9fb8cb68b8850a13c7438e26e1d277b748be657a",
+         "nonce": "1ca169e0",
+         "signature": "00",
+         "time": "5e6dc081",
+      });
+      const privKey = new bsv.PrivateKey('5d5c870220eeb18afe8a498324013955c316cbaaed2a824e5230362c36964c27');
+
+      expect(tx.toObject()).to.eql({
+         hash: "34075b36586f13a3d365348b01eb1474b8fdd0f1100ee00911ded2c585eeaada",
+         inputs: [
+            {
+               output: {
+                 satoshis: 8179,
+                 script: "08626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac"
+               },
+               outputIndex: 0,
+               prevTxId: "0eeea673cd4312a26e61a470afe096e94b5251b9cf286e012dd6719121df1092",
+               script: "",
+               scriptString: "",
+               sequenceNumber: 4294967295
+            }
+         ],
+         nLockTime: 0,
+         outputs: [],
+         version: 1,
+      });
+
+      const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
+      const flags = /*bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA |*/ bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
+      const signature = bsv.Transaction.sighash.sign(tx, privKey, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
+
+      //const unlockingScript = new bsv.Script({});
+      //unlockingScript.add()
+      console.log('signature', signature);
+      jobProof.setSignature(signature.toBuffer().toString('hex'));
+
+      expect(jobProof.toBuffer().toString('hex')).to.eql('473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a');
+      tx.inputs[0].setScript(jobProof.toBuffer());
+
+      expect(tx.toObject()).to.eql({
+         hash: "acf46aba41aedc8d509b5be41e0e4fcd39797db2ef6091461932c2158beca607",
+         inputs: [
+            {
+               output: {
+                 satoshis: 8179,
+                 script: "08626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac"
+               },
+               outputIndex: 0,
+               prevTxId: "0eeea673cd4312a26e61a470afe096e94b5251b9cf286e012dd6719121df1092",
+               script: "473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e547021020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d6504e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+               scriptString: "71 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470 33 0x020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
+               sequenceNumber: 4294967295
+            }
+         ],
+         nLockTime: 0,
+         outputs: [],
+         version: 1,
+      });
+/*
+     tx = new bsv.Transaction({
+      hash: "ec63078724a698e70c46025ba3c950fdd76eccee23b3d5884d87c997c89f73f6",
+      inputs: [
+         {
+            output: {
+              satoshis: 8179,
+              script: "08626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac"
+            },
+            outputIndex: 0,
+            prevTxId: "0eeea673cd4312a26e61a470afe096e94b5251b9cf286e012dd6719121df1092",
+            script: "473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470514e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657a",
+            scriptString: "71 0x3045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e5470 81 4 0xe069a11c 4 0x81c06d5e 8 0xbf07000000000000 4 0x0a00000a 20 0x9fb8cb68b8850a13c7438e26e1d277b748be657a",
+            sequenceNumber: 4294967295
+         }
+      ],
+      nLockTime: 0,
+      outputs: [],
+      version: 1,
+   });*/
+
+      tx.addOutput(new bsv.Transaction.Output({
+         script: bsv.Script(new bsv.Address('1264UeZnzrjrMdYn1QSED5TCbY8Gd11e23')),
+         satoshis: 7800
+      }));
+
+      const newTx = new bsv.Transaction('01000000019210df219171d62d016e28cfb951524be996e0af70a4616ea21243cd73a6ee0e0000000097473045022100c499ed49527eab43ad169bb768fc6b1ddaf5028816ae4929ae8bba763926fae202201c422ea8688bba5ab0598c921f2e9907dc43405e816fda4501fcfb22d14e54702100000000000000000000000000000000000000000000000000000000000000000004e069a11c0481c06d5e08bf07000000000000040a00000a149fb8cb68b8850a13c7438e26e1d277b748be657affffffff01781e0000000000001976a9140bed1b97a1ec681cf100ee8b11800a54b39b9fda88ac00000000');
+
+      console.log('newTx', newTx, newTx.script, newTx.toObject());
+      console.log(tx.toString());
+   });
 });
 
+describe('BoostPowJob', () => {
+   it('should correctly load from fromTransaction', async () => {
+      const job = index.BoostPowJob.fromTransaction(new bsv.Transaction('0100000001a3fa9326238ec8fe6468a144ce204303cfd1d67893f17b57fcd47a9d607457e7010000006a473044022047a94fb4feea3a48d9c9716309d5c074d62e434fdb370e15a130197d888f922b0220597aefbf7bb90428f98e75ba274b7aa18df0fd45f9713f1a55eba445dd05831241210341ac150fc82f6785c9457c9505f3cb01c575ad747b42d4023cdf028e910e54cfffffffff02f31f000000000000d408626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e5279825488537f7653a269760120a1696b1d00000000000000000000000000000000000000000000000000000000007e6c5394996b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa6c9f6976aa6c88ac59400000000000001976a914c2c2a218c36c196153f7fd7f92cf49c5ee23174c88ac00000000'));
+      expect(job.toObject()).to.eql({
+         content: '8158deab634af238d95a61ed93ab57f0cd8b1972988c92dbbd932f88b6fcb835',
+         diff: 1,
+         category: '00000000',
+         tag: '0000000000000000000000000000000000000000',
+         additionalData: '0000000000000000000000000000000000000000000000000000000000000000',
+         userNonce: '00000000',
+      });
+   });
+});
 
 describe('BoostPowJob', () => {
    it('should correctly load from fromTransaction', async () => {
@@ -404,7 +537,6 @@ describe('BoostPowJob', () => {
       });
    });
 });
-
 
 describe('BoostPowJob', () => {
    it('should correctly set txid if provided from all loaders', async () => {

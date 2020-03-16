@@ -25,8 +25,6 @@ export declare class BoostPowJobProofModel {
         extraNonce2: string;
         minerPubKeyHash: string;
     }): BoostPowJobProofModel;
-    getSignature(): Buffer;
-    getMinerPubKey(): Buffer;
     getTime(): Buffer;
     getTimeNumber(): number;
     getTimeBuffer(): Buffer;
@@ -41,6 +39,18 @@ export declare class BoostPowJobProofModel {
     setExtraNonce1(nonce: string): void;
     setExtraNonce2(nonce: string): void;
     getMinerPubKeyHash(): Buffer;
+    getMinerPubKeyHashHex(): string;
+    setSignature(signature: string): void;
+    setSignatureBuffer(signature: Buffer): void;
+    getSignature(): Buffer;
+    getSignatureHex(): string;
+    getMinerPubKey(): Buffer;
+    getMinerPubKeyHex(): string;
+    /**
+     *
+     * @param publicKey The publicKey key string to use to redeem the Boost output
+     */
+    setMinerPubKeyAndHash(publicKey: string): void;
     toObject(): {
         signature: string;
         minerPubKey: string;
@@ -67,5 +77,6 @@ export declare class BoostPowJobProofModel {
     toASM(): string;
     static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
     toString(): string;
+    toBuffer(): string;
     static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel;
 }

@@ -35,7 +35,6 @@ export class BoostPowJobProofModel {
         if (params.signature && params.signature.length > 166) {
             throw new Error('signature too large. Max 83 bytes.')
         }
-
         if (params.minerPubKey && params.minerPubKey.length > 66) {
             throw new Error('minerPubKey too large. Max 33 bytes.')
         }
@@ -63,21 +62,18 @@ export class BoostPowJobProofModel {
         );
     }
 
-    getSignature(): Buffer {
-        return this.signature;
-    }
-    getMinerPubKey(): Buffer {
-        return this.minerPubKey;
-    }
     getTime(): Buffer {
         return this.time;
     }
+
     getTimeNumber(): number {
         return parseInt((this.time.toString('hex').match(/../g) || []).reverse().join(''), 16);
     }
+
     getTimeBuffer(): Buffer {
         return this.time;
     }
+
     setTime(time: string) {
         this.time = BoostUtils.createBufferAndPad(time, 4)
     }
@@ -121,6 +117,46 @@ export class BoostPowJobProofModel {
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash(): Buffer {
         return this.minerPubKeyHash;
+    }
+
+    getMinerPubKeyHashHex(): string {
+        return this.minerPubKeyHash.toString('hex');
+    }
+
+    setSignature(signature: string) {
+        this.signature = Buffer.from(signature, 'hex');
+    }
+
+    setSignatureBuffer(signature: Buffer) {
+        this.signature = signature;
+    }
+
+    getSignature(): Buffer {
+        return this.signature;
+    }
+
+    getSignatureHex(): string {
+        return this.signature.toString('hex');
+    }
+
+    getMinerPubKey(): Buffer {
+        return this.minerPubKey;
+    }
+
+    getMinerPubKeyHex(): string {
+        return this.minerPubKey.toString('hex');
+    }
+
+    /**
+     *
+     * @param publicKey The publicKey key string to use to redeem the Boost output
+     */
+    setMinerPubKeyAndHash(publicKey: string) {
+        const pubKey = new bsv.PublicKey(publicKey);
+        this.minerPubKey = pubKey.toBuffer();
+        console.log('minerPubKeyHash1', Buffer.from(pubKey.toAddress().toBuffer()));
+        this.minerPubKeyHash = pubKey.toAddress().toBuffer().slice(1);
+        console.log('minerPubKeyHash2', this.minerPubKeyHash);
     }
 
     toObject () {
@@ -353,6 +389,12 @@ export class BoostPowJobProofModel {
         const makeHex = this.toHex();
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toString();
+    }
+
+    toBuffer(): string {
+        const makeHex = this.toHex();
+        const makeAsm = new bsv.Script(makeHex);
+        return makeAsm.toBuffer();
     }
 
     static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobProofModel {

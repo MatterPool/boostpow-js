@@ -92,6 +92,7 @@ export declare class BoostPowJobModel {
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
+    static createRedeemTx(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKey: string): bsv.Transaction | null;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
     static operations: any[];
 }

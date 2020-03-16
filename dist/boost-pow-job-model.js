@@ -488,6 +488,33 @@ class BoostPowJobModel {
             additionalData: boostPowJob.getAdditionalDataBuffer(),
         });
     }
+    static createRedeemTx(boostPowJob, boostPowJobProof, privateKey) {
+        const boostPowString = BoostPowJobModel.tryValidateJobProof(boostPowJob, boostPowJobProof);
+        if (!boostPowString) {
+            throw new Error('createdRedeemTx: Invalid Job Proof');
+        }
+        const privateKeyObj = new bsv.PrivateKey(privateKey);
+        console.log('privateKey', privateKeyObj);
+        if (!boostPowJob.getTxid() ||
+            (boostPowJob.getVout() === undefined || boostPowJob.getVout() === null) ||
+            !boostPowJob.getValue()) {
+            throw new Error('createRedeemTx: Boost Pow Job requires txid, vout, and value');
+        }
+        let tx = new bsv.Transaction();
+        tx.addInput(new bsv.Transaction.Input({
+            output: new bsv.Transaction.Output({
+                script: boostPowJob.toScript(),
+                satoshis: boostPowJob.getValue()
+            }),
+            prevTxId: boostPowJob.getTxid(),
+            outputIndex: boostPowJob.getVout(),
+            script: bsv.Script.empty()
+        }));
+        const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
+        const flags = bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA | bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
+        // const signature = bsv.Transaction.sighash.sign(tx, privateKeyObj, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
+        return tx;
+    }
     static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {
         const additionalDataHash = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {

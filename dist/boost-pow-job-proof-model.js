@@ -42,12 +42,6 @@ class BoostPowJobProofModel {
         }
         return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 33, false), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false));
     }
-    getSignature() {
-        return this.signature;
-    }
-    getMinerPubKey() {
-        return this.minerPubKey;
-    }
     getTime() {
         return this.time;
     }
@@ -90,6 +84,38 @@ class BoostPowJobProofModel {
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash() {
         return this.minerPubKeyHash;
+    }
+    getMinerPubKeyHashHex() {
+        return this.minerPubKeyHash.toString('hex');
+    }
+    setSignature(signature) {
+        this.signature = Buffer.from(signature, 'hex');
+    }
+    setSignatureBuffer(signature) {
+        this.signature = signature;
+    }
+    getSignature() {
+        return this.signature;
+    }
+    getSignatureHex() {
+        return this.signature.toString('hex');
+    }
+    getMinerPubKey() {
+        return this.minerPubKey;
+    }
+    getMinerPubKeyHex() {
+        return this.minerPubKey.toString('hex');
+    }
+    /**
+     *
+     * @param publicKey The publicKey key string to use to redeem the Boost output
+     */
+    setMinerPubKeyAndHash(publicKey) {
+        const pubKey = new bsv.PublicKey(publicKey);
+        this.minerPubKey = pubKey.toBuffer();
+        console.log('minerPubKeyHash1', Buffer.from(pubKey.toAddress().toBuffer()));
+        this.minerPubKeyHash = pubKey.toAddress().toBuffer().slice(1);
+        console.log('minerPubKeyHash2', this.minerPubKeyHash);
     }
     toObject() {
         return {
@@ -254,6 +280,11 @@ class BoostPowJobProofModel {
         const makeHex = this.toHex();
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toString();
+    }
+    toBuffer() {
+        const makeHex = this.toHex();
+        const makeAsm = new bsv.Script(makeHex);
+        return makeAsm.toBuffer();
     }
     static fromString(str, txid, vout, value) {
         return BoostPowJobProofModel.fromHex(str, txid, vout, value);
