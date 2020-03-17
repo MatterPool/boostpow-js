@@ -140,9 +140,9 @@ class BoostPowJobProofModel {
         // Add miner pub key
         buildOut.add(this.minerPubKey);
         // Add miner nonce
-        buildOut.add(this.nonce);
+        buildOut.add(this.nonce.reverse());
         // Add time
-        buildOut.add(this.time);
+        buildOut.add(this.time.reverse());
         // Add extra nonce2
         buildOut.add(this.extraNonce2);
         // Add extra nonce 1
