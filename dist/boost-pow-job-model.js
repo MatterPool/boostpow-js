@@ -177,7 +177,7 @@ class BoostPowJobModel {
         buildOut.add(this.userNonce);
         buildOut.add(this.additionalData);
         // Add the rest of the script
-        for (const op of BoostPowJobModel.operations) {
+        for (const op of BoostPowJobModel.scriptOperations()) {
             buildOut.add(op);
         }
         for (let i = 0; i < buildOut.chunks.length; i++) {
@@ -232,226 +232,26 @@ class BoostPowJobModel {
     }
     static remainingOperationsMatchExactly(remainingChunks, start) {
         let i = 0;
-        return (
-        // BEGIN
-        // CAT SWAP
-        remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            // {5} ROLL DUP TOALTSTACK CAT                // copy mining pool’s pubkey hash to alt stack
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_5 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_ROLL &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // {2} PICK expand_target TOALTSTACK          // target to alt stack.
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_2 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_PICK &&
-            // expand_target
-            // SIZE 4 EQUALVERIFY 3 SPLIT DUP 3 GREATERTHANOREQUAL VERIFY DUP 32 LESSTHANOREQUAL VERIFY OP_TOALTSTACK
-            // 0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK 3 SUB LSHIFT
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_GREATERTHANOREQUAL &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_VERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[start + i].buf &&
-            remainingChunks[start + i].buf.toString('hex') === '20' &&
-            remainingChunks[start + i].len === 1 &&
-            remainingChunks[start + i++].opcodenum === 1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_LESSTHANOREQUAL &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_VERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[start + i].buf &&
-            remainingChunks[start + i++].buf.toString('hex') === '0000000000000000000000000000000000000000000000000000000000' &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_3 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SUB &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_LSHIFT &&
-            //  Expand target end
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            // {5} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_1
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_5 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_ROLL &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // {5} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_5 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_ROLL &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_8 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // SWAP CAT HASH256                           // create metadata string and hash it.
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_HASH256 &&
-            // start reverse32
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_1 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SPLIT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // end reverse
-            // SWAP TOALTSTACK CAT CAT                    // target to altstack.
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_TOALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // FROMALTSTACK CAT                           // attach target
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // SWAP SIZE {4} EQUALVERIFY CAT              // check size of nonce
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SWAP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_SIZE &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_4 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CAT &&
-            // check that the hash of the title is less than the target
-            // HASH256 FROMALTSTACK LESSTHAN VERIFY
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_HASH256 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_LESSTHAN &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_VERIFY &&
-            // check that the given address matches the pubkey and check signature.
-            // DUP OP_HASH160 FROMALTSTACK EQUALVERIFY CHECKSIG
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_DUP &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_HASH160 &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_FROMALTSTACK &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_EQUALVERIFY &&
-            remainingChunks[start + i++].opcodenum === bsv.Opcode.OP_CHECKSIG);
+        const expectedOps = BoostPowJobModel.scriptOperations();
+        if (expectedOps.length !== (remainingChunks.length - 8)) {
+            console.log('length does not match', expectedOps[i].length, remainingChunks.length);
+            return false;
+        }
+        while (i < (remainingChunks.length - 8)) {
+            // console.log(' i < ', remainingChunks.length, expectedOps[i], remainingChunks[start + i]);
+            if ((
+            // If it's a buffer, then ensure the value matches expect length
+            remainingChunks[start + i].buf && (remainingChunks[start + i].len === expectedOps[i].length))
+                ||
+                    (remainingChunks[start + i].buf === undefined &&
+                        expectedOps[i] === remainingChunks[start + i].opcodenum)) {
+                i++;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
     }
     static fromHex(asm, txid, vout, value) {
         const script = new bsv.Script(asm);
@@ -688,222 +488,289 @@ class BoostPowJobModel {
         }
         return null;
     }
+    static loopOperation(loopIterations, generateFragmentInvoker) {
+        let concatOps = [];
+        for (let i = 0; i < loopIterations; i++) {
+            concatOps = concatOps.concat(generateFragmentInvoker());
+        }
+        return concatOps;
+    }
+    static scriptOperations() {
+        return [
+            // CAT SWAP
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            // {5} ROLL DUP TOALTSTACK CAT                // copy mining pool’s pubkey hash to alt stack. A copy remains on the stack.
+            bsv.Opcode.OP_5,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_CAT,
+            // {2} PICK TOALTSTACK                         // copy target and push to altstack.
+            bsv.Opcode.OP_2,
+            bsv.Opcode.OP_PICK,
+            bsv.Opcode.OP_TOALTSTACK,
+            // {5} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_1
+            bsv.Opcode.OP_5,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // {5} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
+            bsv.Opcode.OP_5,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_8,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // SWAP CAT HASH256                           // create metadata string and hash it.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_HASH256,
+            // SWAP TOALTSTACK CAT CAT                    // target to altstack.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_CAT,
+            // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // FROMALTSTACK CAT                           // attach target
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_CAT,
+            // SWAP SIZE {4} EQUALVERIFY CAT             // check size of nonce. Boost POW string is constructed.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // Take hash of work string and ensure that it is positive and minimally encoded.
+            bsv.Opcode.OP_HASH256, ...BoostPowJobModel.loopOperation(8, BoostPowJobModel.positive_minimal_32),
+            bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.loopOperation(8, BoostPowJobModel.positive_minimal_32),
+            // check that the hash of the Boost POW string is less than the target
+            bsv.Opcode.OP_LESSTHAN,
+            bsv.Opcode.OP_VERIFY,
+            // check that the given address matches the pubkey and check signature.
+            // DUP HASH160 FROMALTSTACK EQUALVERIFY CHECKSIG
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_HASH160,
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CHECKSIG,
+        ];
+    }
+    /*
+    expand_target - transforms the uint32 exponential (compact) format for the difficulty target into the full uint256 value.
+    */
+    static expand_target() {
+        return [
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_3,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_3,
+            Buffer.from('21', 'hex'),
+            bsv.Opcode.OP_WITHIN,
+            bsv.Opcode.OP_VERIFY,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_NOTIF,
+            bsv.Opcode.OP_FALSE,
+            bsv.Opcode.OP_RETURN,
+            bsv.Opcode.OP_ENDIF,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_0,
+            bsv.Opcode.OP_LESSTHAN,
+            bsv.Opcode.OP_VERIFY,
+            Buffer.from('0000000000000000000000000000000000000000000000000000000000', 'hex'),
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_3,
+            bsv.Opcode.OP_SUB,
+            bsv.Opcode.OP_8,
+            bsv.Opcode.OP_MUL,
+            bsv.Opcode.OP_RSHIFT,
+        ];
+    }
+    /*
+    Numbers in Bitcoin script are in little endian and the last bit is a sign bit. However, the target and the hash digest are both supposed to be positive numbers. Thus, we have to attach an extra byte of zeros to numbers if they would be treated as negative in Bitcoin script.
+    In addition, there is a policy (ie, non-consensus rule) which says that numbers must be minimally-encoded, meaning that they cannot have unnecessary bytes of zeros at the end. Thus we must remove extra bytes of zeros. We repeat one line in the function below for as many bytes of zeros as we think we need to worry about. Any number of repetitions is considered to be a valid Boost POW script. This policy was invented by the Core developers as a way to protect against maleation attacks. It has no purpose now that the network handles 0-conf transactions and will no longer be enforced eventually. At that point the standard number of repetitions will be zero.
+    positive_minimal_32 removes zero bytes from the end of a number and attaches one zero byte to negative numbers, making them positive.
+    // repeat this next line as many times as needed
+     */
+    static positive_minimal_32() {
+        return [
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SUB,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_DUP,
+            ...BoostPowJobModel.check_positive_zero(),
+            bsv.Opcode.OP_IF,
+            bsv.Opcode.OP_DROP,
+            bsv.Opcode.OP_ELSE,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_ENDIF,
+            bsv.Opcode.OP_0,
+            bsv.Opcode.OP_LESSTHAN,
+            bsv.Opcode.OP_IF,
+            Buffer.from('00', 'hex'),
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_ENDIF
+        ];
+    }
+    // check_positive_zero looks at the top element of the stack and replaces it
+    // with true if it is positive zero (as opposed to negative zero) and false if it is not.
+    static check_positive_zero() {
+        return [
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_NOTIF,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_RSHIFT,
+            bsv.Opcode.OP_NOTIF,
+            bsv.Opcode.OP_TRUE,
+            bsv.Opcode.OP_ELSE,
+            bsv.Opcode.OP_FALSE,
+            bsv.Opcode.OP_ENDIF,
+            bsv.Opcode.OP_ELSE,
+            bsv.Opcode.OP_FALSE,
+            bsv.Opcode.OP_ENDIF
+        ];
+    }
+    // reverse endianness. Cuz why not?
+    static reverse32() {
+        return [
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+        ];
+    }
 }
-// Start of Boost Output after push datas
-BoostPowJobModel.operations = [
-    // CAT SWAP
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    // {5} ROLL DUP TOALTSTACK CAT                // copy mining pool’s pubkey hash to alt stack. A copy remains on the stack.
-    bsv.Opcode.OP_5,
-    bsv.Opcode.OP_ROLL,
-    bsv.Opcode.OP_DUP,
-    bsv.Opcode.OP_TOALTSTACK,
-    bsv.Opcode.OP_CAT,
-    // {2} PICK expand_target TOALTSTACK            // expand compact form of target and push to altstack.
-    bsv.Opcode.OP_2,
-    bsv.Opcode.OP_PICK,
-    // expand_target
-    // SIZE 4 EQUALVERIFY 3 SPLIT DUP 3 GREATERTHANOREQUAL VERIFY DUP 32 LESSTHANOREQUAL VERIFY OP_TOALTSTACK
-    // 0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK 3 SUB LSHIFT
-    bsv.Opcode.OP_SIZE,
-    bsv.Opcode.OP_4,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_3,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_DUP,
-    bsv.Opcode.OP_3,
-    bsv.Opcode.OP_GREATERTHANOREQUAL,
-    bsv.Opcode.OP_VERIFY,
-    bsv.Opcode.OP_DUP,
-    1,
-    32,
-    bsv.Opcode.OP_LESSTHANOREQUAL,
-    bsv.Opcode.OP_VERIFY,
-    bsv.Opcode.OP_TOALTSTACK,
-    Buffer.from('0000000000000000000000000000000000000000000000000000000000', 'hex'),
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_FROMALTSTACK,
-    bsv.Opcode.OP_3,
-    bsv.Opcode.OP_SUB,
-    bsv.Opcode.OP_LSHIFT,
-    // Expand target end
-    bsv.Opcode.OP_TOALTSTACK,
-    // {5} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_1
-    bsv.Opcode.OP_5,
-    bsv.Opcode.OP_ROLL,
-    bsv.Opcode.OP_SIZE,
-    bsv.Opcode.OP_4,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_CAT,
-    // {5} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
-    bsv.Opcode.OP_5,
-    bsv.Opcode.OP_ROLL,
-    bsv.Opcode.OP_SIZE,
-    bsv.Opcode.OP_8,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_CAT,
-    // SWAP CAT HASH256                           // create metadata string and hash it.
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_HASH256,
-    // reverse32
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_1,
-    bsv.Opcode.OP_SPLIT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_CAT,
-    // SWAP TOALTSTACK CAT CAT                    // target to altstack.
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_TOALTSTACK,
-    bsv.Opcode.OP_CAT,
-    bsv.Opcode.OP_CAT,
-    // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_SIZE,
-    bsv.Opcode.OP_4,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_CAT,
-    // FROMALTSTACK CAT                           // attach target
-    bsv.Opcode.OP_FROMALTSTACK,
-    bsv.Opcode.OP_CAT,
-    // SWAP SIZE {4} EQUALVERIFY CAT             // check size of nonce. Boost POW string is constructed.
-    bsv.Opcode.OP_SWAP,
-    bsv.Opcode.OP_SIZE,
-    bsv.Opcode.OP_4,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_CAT,
-    // check that the hash of the Boost POW string is less than the target
-    // HASH256 FROMALTSTACK LESSTHAN VERIFY
-    bsv.Opcode.OP_HASH256,
-    bsv.Opcode.OP_FROMALTSTACK,
-    bsv.Opcode.OP_LESSTHAN,
-    bsv.Opcode.OP_VERIFY,
-    // check that the given address matches the pubkey and check signature.
-    // DUP HASH160 FROMALTSTACK EQUALVERIFY CHECKSIG
-    bsv.Opcode.OP_DUP,
-    bsv.Opcode.OP_HASH160,
-    bsv.Opcode.OP_FROMALTSTACK,
-    bsv.Opcode.OP_EQUALVERIFY,
-    bsv.Opcode.OP_CHECKSIG,
-];
 exports.BoostPowJobModel = BoostPowJobModel;

@@ -154,9 +154,7 @@ export class BoostPowJobProofModel {
     setMinerPubKeyAndHash(publicKey: string) {
         const pubKey = new bsv.PublicKey(publicKey);
         this.minerPubKey = pubKey.toBuffer();
-        console.log('minerPubKeyHash1', Buffer.from(pubKey.toAddress().toBuffer()));
         this.minerPubKeyHash = pubKey.toAddress().toBuffer().slice(1);
-        console.log('minerPubKeyHash2', this.minerPubKeyHash);
     }
 
     toObject () {

@@ -94,5 +94,10 @@ export declare class BoostPowJobModel {
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
     static createRedeemTx(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKey: string): bsv.Transaction | null;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
-    static operations: any[];
+    static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
+    static scriptOperations(): any[];
+    static expand_target(): any[];
+    static positive_minimal_32(): any[];
+    static check_positive_zero(): any[];
+    static reverse32(): any[];
 }
