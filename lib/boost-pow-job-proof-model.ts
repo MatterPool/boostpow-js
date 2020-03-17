@@ -186,10 +186,10 @@ export class BoostPowJobProofModel {
         buildOut.add(this.minerPubKey);
 
         // Add miner nonce
-        buildOut.add(this.nonce);
+        buildOut.add(this.nonce.reverse());
 
         // Add time
-        buildOut.add(this.time);
+        buildOut.add(this.time.reverse());
 
         // Add extra nonce2
         buildOut.add(this.extraNonce2);
@@ -199,6 +199,14 @@ export class BoostPowJobProofModel {
 
         // Add miner address
         buildOut.add(this.minerPubKeyHash);
+
+        for (let i = 0; i < buildOut.chunks.length ; i++) {
+            if (!buildOut.checkMinimalPush(i)) {
+                console.log('not minimal push!-======================', i);
+                throw new Error('not min push');
+            }
+        }
+
 
         const hex = buildOut.toHex();
         const fromhex = bsv.Script.fromHex(hex);
