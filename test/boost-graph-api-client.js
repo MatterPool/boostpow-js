@@ -76,7 +76,7 @@ describe('APIClient', () => {
              "amount": 0.00008905,
              "satoshis": 8905,
              "value": 8905,
-             "height": 0,
+             "height": 626560,
              // "confirmations": 63,
              "outputIndex": 0
          }
