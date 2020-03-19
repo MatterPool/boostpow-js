@@ -324,15 +324,20 @@ describe('boost #BoostPowJob createRedeemTx', () => {
       const privKey = new bsv.PrivateKey('5d5c870220eeb18afe8a498324013955c316cbaaed2a824e5230362c36964c27');
       const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
       const flags = bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA | bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
-      const signature = bsv.Transaction.sighash.sign(tx, privKey, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
 
-      console.log('signature', signature);
+      tx.addOutput(new bsv.Transaction.Output({
+         script: bsv.Script(new bsv.Address('1264UeZnzrjrMdYn1QSED5TCbY8Gd11e23')),
+         satoshis: 7800
+      }));
+      // console.log('signature', signature);
       // jobProof.setSignature(signature.toBuffer().toString('hex'));
       /*jobProof.setSignature(Buffer.concat([
          signature.toBuffer(),
          Buffer.from([sigtype & 0xff])
        ]).toString('hex'));
        */
+      const signature = bsv.Transaction.sighash.sign(tx, privKey, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
+
       const unlockingScript = new bsv.Script({});
       unlockingScript
          .add(
@@ -351,10 +356,7 @@ describe('boost #BoostPowJob createRedeemTx', () => {
       console.log('script locking', job.toScript(), job.toASM());
       console.log('script unlocking', unlockingScript.chunks, ' STRING VERSION: ', unlockingScript.toString(), ' ASM: ', unlockingScript.toASM(), ' HEX VERSION: ', unlockingScript.toHex());
       tx.inputs[0].setScript(unlockingScript);
-      tx.addOutput(new bsv.Transaction.Output({
-         script: bsv.Script(new bsv.Address('1264UeZnzrjrMdYn1QSED5TCbY8Gd11e23')),
-         satoshis: 7800
-      }));
+
       console.log('built tx: ', tx.toString());
       const interpreter = new bsv.Script.Interpreter();
       try {
