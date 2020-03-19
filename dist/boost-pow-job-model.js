@@ -583,7 +583,7 @@ class BoostPowJobModel {
             bsv.Opcode.OP_ENDIF,
             bsv.Opcode.OP_DUP,
             bsv.Opcode.OP_0,
-            bsv.Opcode.OP_LESSTHAN,
+            bsv.Opcode.OP_GREATERTHAN,
             bsv.Opcode.OP_VERIFY,
             Buffer.from('0000000000000000000000000000000000000000000000000000000000', 'hex'),
             bsv.Opcode.OP_CAT,
@@ -602,6 +602,8 @@ class BoostPowJobModel {
     // repeat this next line as many times as needed
      */
     static positive_minimal_32() {
+        // repeatedly check the last byte for positive zero and
+        // remove it. Repeat this line as many times as needed.
         return [
             bsv.Opcode.OP_SIZE,
             bsv.Opcode.OP_1,
@@ -614,11 +616,25 @@ class BoostPowJobModel {
             bsv.Opcode.OP_ELSE,
             bsv.Opcode.OP_CAT,
             bsv.Opcode.OP_ENDIF,
+            // check the last byte for negative zero or negativity in general and append "00" if so.
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_1,
+            bsv.Opcode.OP_SUB,
+            bsv.Opcode.OP_SPLIT,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_NOTIF,
+            Buffer.from('00', 'hex'),
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_ELSE,
+            bsv.Opcode.OP_CAT,
             bsv.Opcode.OP_0,
+            bsv.Opcode.OP_DUP,
             bsv.Opcode.OP_LESSTHAN,
             bsv.Opcode.OP_IF,
             Buffer.from('00', 'hex'),
             bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_ENDIF,
             bsv.Opcode.OP_ENDIF
         ];
     }
@@ -636,6 +652,7 @@ class BoostPowJobModel {
             bsv.Opcode.OP_FALSE,
             bsv.Opcode.OP_ENDIF,
             bsv.Opcode.OP_ELSE,
+            bsv.Opcode.OP_DROP,
             bsv.Opcode.OP_FALSE,
             bsv.Opcode.OP_ENDIF
         ];
