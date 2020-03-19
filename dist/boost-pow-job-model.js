@@ -571,6 +571,7 @@ class BoostPowJobModel {
             bsv.Opcode.OP_3,
             bsv.Opcode.OP_SPLIT,
             bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_BIN2NUM,
             bsv.Opcode.OP_3,
             Buffer.from('21', 'hex'),
             bsv.Opcode.OP_WITHIN,
