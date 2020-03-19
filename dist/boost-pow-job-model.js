@@ -546,8 +546,8 @@ class BoostPowJobModel {
             bsv.Opcode.OP_EQUALVERIFY,
             bsv.Opcode.OP_CAT,
             // Take hash of work string and ensure that it is positive and minimally encoded.
-            bsv.Opcode.OP_HASH256, ...BoostPowJobModel.positive_minimal_32(),
-            bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.positive_minimal_32(),
+            bsv.Opcode.OP_HASH256, ...BoostPowJobModel.ensure_positive(),
+            bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.ensure_positive(),
             // check that the hash of the Boost POW string is less than the target
             bsv.Opcode.OP_LESSTHAN,
             bsv.Opcode.OP_VERIFY,
@@ -577,11 +577,7 @@ class BoostPowJobModel {
             bsv.Opcode.OP_VERIFY,
             bsv.Opcode.OP_TOALTSTACK,
             bsv.Opcode.OP_DUP,
-            bsv.Opcode.OP_NOTIF,
-            bsv.Opcode.OP_FALSE,
-            bsv.Opcode.OP_RETURN,
-            bsv.Opcode.OP_ENDIF,
-            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_BIN2NUM,
             bsv.Opcode.OP_0,
             bsv.Opcode.OP_GREATERTHAN,
             bsv.Opcode.OP_VERIFY,
@@ -595,71 +591,14 @@ class BoostPowJobModel {
             bsv.Opcode.OP_RSHIFT,
         ];
     }
-    static positiveMinimal32Fragment() {
-        return [
-            bsv.Opcode.OP_SIZE,
-            bsv.Opcode.OP_1,
-            bsv.Opcode.OP_SUB,
-            bsv.Opcode.OP_SPLIT,
-            bsv.Opcode.OP_DUP,
-            ...BoostPowJobModel.check_positive_zero(),
-            bsv.Opcode.OP_IF,
-            bsv.Opcode.OP_DROP,
-            bsv.Opcode.OP_ELSE,
-            bsv.Opcode.OP_CAT,
-            bsv.Opcode.OP_ENDIF,
-        ];
-    }
     /*
     Numbers in Bitcoin script are in little endian and the last bit is a sign bit. However, the target and the hash digest are both supposed to be positive numbers. Thus, we have to attach an extra byte of zeros to numbers if they would be treated as negative in Bitcoin script.
-    In addition, there is a policy (ie, non-consensus rule) which says that numbers must be minimally-encoded, meaning that they cannot have unnecessary bytes of zeros at the end. Thus we must remove extra bytes of zeros. We repeat one line in the function below for as many bytes of zeros as we think we need to worry about. Any number of repetitions is considered to be a valid Boost POW script. This policy was invented by the Core developers as a way to protect against maleation attacks. It has no purpose now that the network handles 0-conf transactions and will no longer be enforced eventually. At that point the standard number of repetitions will be zero.
-    positive_minimal_32 removes zero bytes from the end of a number and attaches one zero byte to negative numbers, making them positive.
-    // repeat this next line as many times as needed
      */
-    static positive_minimal_32() {
+    static ensure_positive() {
         return [
-            // repeatedly check the last byte for positive zero and
-            // remove it. Repeat this line as many times as needed.
-            ...BoostPowJobModel.loopOperation(8, BoostPowJobModel.positiveMinimal32Fragment),
-            // check the last byte for negative zero or negativity in general and append "00" if so.
-            bsv.Opcode.OP_SIZE,
-            bsv.Opcode.OP_1,
-            bsv.Opcode.OP_SUB,
-            bsv.Opcode.OP_SPLIT,
-            bsv.Opcode.OP_DUP,
-            bsv.Opcode.OP_NOTIF,
             Buffer.from('00', 'hex'),
             bsv.Opcode.OP_CAT,
-            bsv.Opcode.OP_CAT,
-            bsv.Opcode.OP_ELSE,
-            bsv.Opcode.OP_CAT,
-            bsv.Opcode.OP_DUP,
-            bsv.Opcode.OP_0,
-            bsv.Opcode.OP_LESSTHAN,
-            bsv.Opcode.OP_IF,
-            Buffer.from('00', 'hex'),
-            bsv.Opcode.OP_CAT,
-            bsv.Opcode.OP_ENDIF,
-            bsv.Opcode.OP_ENDIF
-        ];
-    }
-    // check_positive_zero looks at the top element of the stack and replaces it
-    // with true if it is positive zero (as opposed to negative zero) and false if it is not.
-    static check_positive_zero() {
-        return [
-            bsv.Opcode.OP_DUP,
-            bsv.Opcode.OP_NOTIF,
-            bsv.Opcode.OP_1,
-            bsv.Opcode.OP_RSHIFT,
-            bsv.Opcode.OP_NOTIF,
-            bsv.Opcode.OP_TRUE,
-            bsv.Opcode.OP_ELSE,
-            bsv.Opcode.OP_FALSE,
-            bsv.Opcode.OP_ENDIF,
-            bsv.Opcode.OP_ELSE,
-            bsv.Opcode.OP_DROP,
-            bsv.Opcode.OP_FALSE,
-            bsv.Opcode.OP_ENDIF
+            bsv.Opcode.OP_BIN2NUM
         ];
     }
     // reverse endianness. Cuz why not?

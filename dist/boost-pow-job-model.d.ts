@@ -97,8 +97,6 @@ export declare class BoostPowJobModel {
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
     static scriptOperations(): any[];
     static expand_target(): any[];
-    static positiveMinimal32Fragment(): any[];
-    static positive_minimal_32(): any[];
-    static check_positive_zero(): any[];
+    static ensure_positive(): any[];
     static reverse32(): any[];
 }
