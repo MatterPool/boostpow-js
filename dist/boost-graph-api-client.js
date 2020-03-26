@@ -127,7 +127,6 @@ class BoostGraphApiClient {
     }
     submitBoostSolution(params, callback) {
         return new Promise((resolve, reject) => {
-            console.log('submitBoostSolution', params);
             axios_1.default.post(this.options.graph_api_url + `/api/v1/main/boost/submitsolution`, {
                 txid: params.txid,
                 vout: params.vout,
