@@ -125,6 +125,39 @@ class BoostGraphApiClient {
             });
         });
     }
+    submitBoostSolution(params, callback) {
+        return new Promise((resolve, reject) => {
+            console.log('submitBoostSolution', params);
+            axios_1.default.post(this.options.graph_api_url + `/api/v1/main/boost/submitsolution`, {
+                txid: params.txid,
+                vout: params.vout,
+                nonce: params.nonce,
+                extraNonce1: params.extraNonce1,
+                extraNonce2: params.extraNonce2,
+                time: params.time
+            }, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.status === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit solution error',
+                        error: 'BOOST_SUBMIT_SOLUTION_ERROR'
+                    }), callback);
+                }
+                if (ex.response && ex.response.status === 422) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.response.status,
+                        message: ex.response.data.message,
+                        error: ex.response.data.error,
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
     getBoostJobStatus(txid, callback) {
         return new Promise((resolve, reject) => {
             axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/jobs/${txid}`, {

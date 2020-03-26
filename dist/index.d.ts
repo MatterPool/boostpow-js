@@ -16,6 +16,14 @@ export declare class BoostGraphClient {
     search(q: {}, options: {}, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<any>;
+    submitBoostSolution(params: {
+        txid: string;
+        vout: number;
+        time: number;
+        nonce: number;
+        extraNonce1: number;
+        extraNonce2: string;
+    }, callback?: Function): Promise<any>;
     loadBoostJob(txid: string, callback?: Function): Promise<any>;
     getBoostJobUtxos(scriptHash: string, callback?: Function): Promise<any>;
     setOptions(newOptions: any): void;

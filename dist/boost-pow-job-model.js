@@ -422,17 +422,22 @@ class BoostPowJobModel {
             additionalData: boostPowJob.getAdditionalDataBuffer(),
         });
     }
-    static createRedeemTx(boostPowJob, boostPowJobProof, privateKey) {
+    /**
+     * Create a transaction fragment that can be modified to redeem the boost job
+     *
+     * @param boostPowJob Boost Job to redeem
+     * @param boostPowJobProof Boost job proof to use to redeem
+     * @param privateKey The private key string of the minerPubKeyHash
+     */
+    static createRedeemTransaction(boostPowJob, boostPowJobProof, privateKeyStr, receiveAddressStr) {
         const boostPowString = BoostPowJobModel.tryValidateJobProof(boostPowJob, boostPowJobProof);
-        /* if (!boostPowString) {
-            throw new Error('createdRedeemTx: Invalid Job Proof');
-        }*/
-        const privateKeyObj = new bsv.PrivateKey(privateKey);
-        console.log('privateKey', privateKeyObj);
+        if (!boostPowString) {
+            throw new Error('createRedeemTransaction: Invalid Job Proof');
+        }
         if (!boostPowJob.getTxid() ||
             (boostPowJob.getVout() === undefined || boostPowJob.getVout() === null) ||
             !boostPowJob.getValue()) {
-            throw new Error('createRedeemTx: Boost Pow Job requires txid, vout, and value');
+            throw new Error('createRedeemTransaction: Boost Pow Job requires txid, vout, and value');
         }
         let tx = new bsv.Transaction();
         tx.addInput(new bsv.Transaction.Input({
@@ -444,9 +449,28 @@ class BoostPowJobModel {
             outputIndex: boostPowJob.getVout(),
             script: bsv.Script.empty()
         }));
+        const privKey = new bsv.PrivateKey(privateKeyStr);
         const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
         const flags = bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA | bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
-        // const signature = bsv.Transaction.sighash.sign(tx, privateKeyObj, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
+        const receiveSats = boostPowJob.getValue() !== undefined ? boostPowJob.getValue() : 0;
+        tx.addOutput(new bsv.Transaction.Output({
+            script: bsv.Script(new bsv.Address(receiveAddressStr)),
+            satoshis: receiveSats ? receiveSats - 517 : 0 //subtract miner fee
+        }));
+        const signature = bsv.Transaction.sighash.sign(tx, privKey, sigtype, 0, tx.inputs[0].output.script, new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags);
+        const unlockingScript = new bsv.Script({});
+        unlockingScript
+            .add(Buffer.concat([
+            signature.toBuffer(),
+            Buffer.from([sigtype & 0xff])
+        ]))
+            .add(privKey.toPublicKey().toBuffer())
+            .add(boostPowJobProof.getNonce())
+            .add(boostPowJobProof.getTime())
+            .add(boostPowJobProof.getExtraNonce2())
+            .add(boostPowJobProof.getExtraNonce1())
+            .add(boostPowJobProof.getMinerPubKeyHash());
+        tx.inputs[0].setScript(unlockingScript);
         return tx;
     }
     static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {

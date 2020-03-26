@@ -92,7 +92,14 @@ export declare class BoostPowJobModel {
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
-    static createRedeemTx(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKey: string): bsv.Transaction | null;
+    /**
+     * Create a transaction fragment that can be modified to redeem the boost job
+     *
+     * @param boostPowJob Boost Job to redeem
+     * @param boostPowJobProof Boost job proof to use to redeem
+     * @param privateKey The private key string of the minerPubKeyHash
+     */
+    static createRedeemTransaction(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
     static scriptOperations(): any[];

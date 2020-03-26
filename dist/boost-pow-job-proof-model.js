@@ -79,7 +79,7 @@ class BoostPowJobProofModel {
         this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
     }
     setExtraNonce2(nonce) {
-        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 8);
     }
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash() {

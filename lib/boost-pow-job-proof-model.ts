@@ -111,7 +111,7 @@ export class BoostPowJobProofModel {
     }
 
     setExtraNonce2(nonce: string) {
-        this.extraNonce2 = BoostUtils.createBufferAndPad(nonce, 4)
+        this.extraNonce2 = BoostUtils.createBufferAndPad(nonce, 8)
     }
 
     // Should add bsv.Address version and string version too

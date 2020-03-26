@@ -58,25 +58,11 @@ export class BoostGraphClient {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.submitBoostJob(rawtx, callback);
   }
-/*
-  createBoostJob(params: { boost: {
-    content: string,
-    diff: number,
-    // optional
-    tag: string,
-    type: string,
-    metadata: string,
-    unique: number,
- },
- pay: {
-    rawtx: string, // paying tx
-    // key: privateKey,
-    // value: 40000,
-    // currency: 'satoshi'
- }}, callback?: Function): Promise<any> {
+
+  submitBoostSolution(params: { txid: string, vout: number, time: number, nonce: number, extraNonce1: number, extraNonce2: string}, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
-    return apiClient.createBoostJob(params, callback);
-  }*/
+    return apiClient.submitBoostSolution(params, callback);
+  }
 
   loadBoostJob(txid: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
