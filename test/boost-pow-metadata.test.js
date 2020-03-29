@@ -2,9 +2,6 @@
 var expect = require('chai').expect;
 var index = require('../dist/index.js');
 var bsv = require ('bsv');
-var privateKey = "L5XFMA3GvN1GXvC6pKVApdQV3XHFypfxzokgctkZQXHZgiWkeFrP";
-var expectedPubKeyHash = '92e4d5ab4bb067f872d28f44d3e5433e56fca190';
-var expectedAddress = '1EPhnibPELy7m8XiEGD65Ee5qHh9LC4VXw';
 describe('boost #BoostPowMetadata tests', () => {
 
    it('should success create', async () => {
@@ -83,15 +80,12 @@ describe('boost #BoostPowJob createBoostPowMetadata', () => {
          additionalData: additionalData,
          userNonce: userNonce,
       });
-
+      var expectedPubKeyHash = '92e4d5ab4bb067f872d28f44d3e5433e56fca190';
       const nonceHex = 'e2731ee0';
       const timeHex = '5e802ed9';
-      const privKey = bsv.PrivateKey.fromWIF(privateKey);
-      console.log('public key string', privKey.toPublicKey().toString());
-
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '00',
-         minerPubKey: privKey.toPublicKey().toString(), // '020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65',
+         minerPubKey: '02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66',
          extraNonce1: Buffer.from(extraNonce1Hex, 'hex').toString('hex'),
          extraNonce2: Buffer.from(extraNonce2Hex, 'hex').toString('hex'),
          time: Buffer.from(timeHex, 'hex').toString('hex'),
@@ -102,7 +96,7 @@ describe('boost #BoostPowJob createBoostPowMetadata', () => {
       expect(jobProof.toObject()).to.eql({
          "extraNonce1": extraNonce1Hex,
          "extraNonce2": extraNonce2Hex,
-         "minerPubKey": privKey.toPublicKey().toString(),
+         "minerPubKey": '02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66',
          "minerPubKeyHash": expectedPubKeyHash,
          "nonce": nonceHex,
          "signature": "00",
