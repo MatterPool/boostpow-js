@@ -474,12 +474,12 @@ class BoostPowJobModel {
         return tx;
     }
     static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {
-        const additionalDataHash = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
+        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof');
             console.log('category', boostPowJob.getCategoryBuffer().toString('hex'), boostPowJob.getCategoryBuffer().byteLength);
             console.log('content', boostPowJob.getContentBuffer().toString('hex'), boostPowJob.getContentBuffer().byteLength);
-            console.log('additionalDataHash', additionalDataHash.toBuffer().reverse().toString('hex'), additionalDataHash, additionalDataHash.hash());
+            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().reverse().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength);
@@ -488,7 +488,7 @@ class BoostPowJobModel {
         const headerBuf = Buffer.concat([
             boostPowJob.getCategoryBuffer(),
             boostPowJob.getContentBuffer(),
-            additionalDataHash.hashAsBuffer().reverse(),
+            boostPowMetadataCoinbaseString.hashAsBuffer().reverse(),
             // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // additionalDataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),

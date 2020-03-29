@@ -31,6 +31,8 @@ describe('boost #BoostPowJob redeem work', () => {
       expect(jobProof.toHex()).to.eql(hexAgain);
    });
 
+   // 00000000000000000000000000000000000000009fb8cb68b8850a13c7438e26e1d277b748be657a4600002c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+ 
    it('should success create asm and string', async () => {
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',

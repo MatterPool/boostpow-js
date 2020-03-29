@@ -241,7 +241,6 @@ describe('APIClient', () => {
                spentScripthash: null,
                spentTxid: '6e1d88f10e829fa2dd9691ef5cf9550ba6f0eed51d676f1b74df3fa894fe7035',
                spentVout: 0,
-
             },
             boostPowString: '0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588119401f4fd9d4279f4ead46f2bd3ccaabce904f7e17367338c08b2a4aefb9877681c06d5effff001de069a11c',
          }

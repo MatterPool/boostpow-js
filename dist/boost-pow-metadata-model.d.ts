@@ -29,6 +29,8 @@ export declare class BoostPowMetadataModel {
     getExtraNonce1(): Buffer;
     getExtraNonce2(): Buffer;
     getAdditionalData(): Buffer;
+    toString(): string;
+    getCoinbaseString(): string;
     hash(): any;
     hashAsBuffer(): any;
     toObject(): {

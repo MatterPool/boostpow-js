@@ -35,6 +35,18 @@ class BoostPowMetadataModel {
     getAdditionalData() {
         return this.additionalData;
     }
+    toString() {
+        return Buffer.concat([
+            this.tag,
+            this.minerPubKeyHash,
+            this.extraNonce1,
+            this.extraNonce2,
+            this.additionalData
+        ]).toString('hex');
+    }
+    getCoinbaseString() {
+        return this.toString();
+    }
     hash() {
         return bsv.crypto.Hash.sha256sha256(this.toBuffer()).reverse().toString('hex');
     }
