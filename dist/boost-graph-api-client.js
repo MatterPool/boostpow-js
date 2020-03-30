@@ -175,6 +175,14 @@ class BoostGraphApiClient {
             });
         });
     }
+    static buildGraphSearchQueryResponse(response) {
+        return {
+            q: response.data.q,
+            opts: response.data.opts,
+            info: response.data.info,
+            resultList: response.data.resultList
+        };
+    }
     search(q, options, callback) {
         return new Promise((resolve, reject) => {
             let opts = '?';
@@ -187,7 +195,8 @@ class BoostGraphApiClient {
             axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`, {
                 headers: this.getHeaders()
             }).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                const queryResponse = BoostGraphApiClient.buildGraphSearchQueryResponse(response);
+                return this.resolveOrCallback(resolve, queryResponse, callback);
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({

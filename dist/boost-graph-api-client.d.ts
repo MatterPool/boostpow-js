@@ -1,5 +1,6 @@
 import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
+import { GraphSearchQueryResponse } from './graph-search-query-response';
 export interface BoostClientApiClientOptions {
     graph_api_url: string;
     api_url: string;
@@ -30,11 +31,17 @@ export declare class BoostGraphApiClient {
         redeemedtxid?: string;
         redeemedvout?: number;
     }>;
+    static buildGraphSearchQueryResponse(response: any): {
+        q: any;
+        opts: any;
+        info: any;
+        resultList: any;
+    };
     search(q: {
         contentutf8?: string;
     }, options: {
         mined?: boolean;
-    }, callback?: Function): Promise<any>;
+    }, callback?: Function): Promise<GraphSearchQueryResponse>;
     createBoostJob(params: {
         boost: {
             content: string;

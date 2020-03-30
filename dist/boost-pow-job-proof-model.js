@@ -9,7 +9,7 @@ const boost_utils_1 = require("./boost-utils");
 class BoostPowJobProofModel {
     constructor(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, 
     // Optional tx information attached or not
-    txid, vout, value) {
+    txid, vin) {
         this.signature = signature;
         this.minerPubKey = minerPubKey;
         this.time = time;
@@ -18,8 +18,7 @@ class BoostPowJobProofModel {
         this.nonce = nonce;
         this.minerPubKeyHash = minerPubKeyHash;
         this.txid = txid;
-        this.vout = vout;
-        this.value = value;
+        this.vin = vin;
     }
     static fromObject(params) {
         if (params.signature && params.signature.length > 166) {
@@ -165,14 +164,17 @@ class BoostPowJobProofModel {
         if (!tx) {
             return undefined;
         }
-        let o = 0;
-        for (const out of tx.outputs) {
+        let inp = 0;
+        for (const input of tx.inputs) {
+            console.log('in here', input);
             try {
-                return BoostPowJobProofModel.fromScript(out.script, tx.hash, o, out.satoshis);
+                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp);
             }
             catch (ex) {
                 // Skip and try another output
+                console.log('ex proof', ex);
             }
+            inp++;
         }
         return undefined;
     }
@@ -183,10 +185,10 @@ class BoostPowJobProofModel {
         const tx = new bsv.Transaction(rawtx);
         return BoostPowJobProofModel.fromTransaction(tx);
     }
-    static fromScript(script, txid, vout, value) {
-        return BoostPowJobProofModel.fromHex(script, txid, vout, value);
+    static fromScript(script, txid, vin) {
+        return BoostPowJobProofModel.fromHex(script, txid, vin);
     }
-    static fromHex(asm, txid, vout, value) {
+    static fromHex(asm, txid, vin) {
         const script = new bsv.Script(asm);
         let signature;
         let minerPubKey;
@@ -217,11 +219,11 @@ class BoostPowJobProofModel {
             extraNonce2 = script.chunks[4].buf;
             extraNonce1 = script.chunks[5].buf;
             minerPubKeyHash = script.chunks[6].buf;
-            return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, txid, vout, value);
+            return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, txid, vin);
         }
         throw new Error('Not valid Boost Proof');
     }
-    static fromASM(asm, txid, vout, value) {
+    static fromASM(asm, txid, vin) {
         const script = new bsv.Script.fromASM(asm);
         let signature;
         let minerPubKey;
@@ -252,16 +254,15 @@ class BoostPowJobProofModel {
             extraNonce2 = script.chunks[4].buf;
             extraNonce1 = script.chunks[5].buf;
             minerPubKeyHash = script.chunks[6].buf;
-            return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, txid, vout, value);
+            return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, txid, vin);
         }
         throw new Error('Not valid Boost Proof');
     }
     // Optional attached information if available
-    getTxOutpoint() {
+    getTxInpoint() {
         return {
             txid: this.txid,
-            vout: this.vout,
-            value: this.value,
+            vin: this.vin,
         };
     }
     // Optional attached information if available
@@ -269,20 +270,16 @@ class BoostPowJobProofModel {
         return this.txid;
     }
     // Optional attached information if available
-    getVout() {
-        return this.vout;
-    }
-    // Optional attached information if available
-    getValue() {
-        return this.value;
+    getVin() {
+        return this.vin;
     }
     toASM() {
         const makeHex = this.toHex();
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toASM();
     }
-    static fromASM2(str, txid, vout, value) {
-        return BoostPowJobProofModel.fromHex(str, txid, vout, value);
+    static fromASM2(str, txid, vin) {
+        return BoostPowJobProofModel.fromHex(str, txid, vin);
     }
     toString() {
         const makeHex = this.toHex();
@@ -294,8 +291,8 @@ class BoostPowJobProofModel {
         const makeAsm = new bsv.Script(makeHex);
         return makeAsm.toBuffer();
     }
-    static fromString(str, txid, vout, value) {
-        return BoostPowJobProofModel.fromHex(str, txid, vout, value);
+    static fromString(str, txid, vin) {
+        return BoostPowJobProofModel.fromHex(str, txid, vin);
     }
 }
 exports.BoostPowJobProofModel = BoostPowJobProofModel;
