@@ -119,17 +119,18 @@ export class BoostPowMetadataModel {
         return this.toBuffer().toString('hex');
     }
 
+    static fromString(str: string): BoostPowMetadataModel | null {
+        return BoostPowMetadataModel.fromHex(str);
+    }
+
     static fromHex(str: string): BoostPowMetadataModel | null {
-        if ((str.length / 2) !== 84) {
-            throw new Error('Invalid Boost Metadata');
-        }
         return new BoostPowMetadataModel(
             Buffer.from(str.substr(0, 40), 'hex'),
             Buffer.from(str.substr(40, 40), 'hex'),
             Buffer.from(str.substr(80, 8), 'hex'),
             Buffer.from(str.substr(88, 8), 'hex'),
             Buffer.from(str.substr(96, 8), 'hex'),
-            Buffer.from(str.substr(104, 64), 'hex'),
+            Buffer.from(str.substr(104), 'hex'),
         );
     }
 

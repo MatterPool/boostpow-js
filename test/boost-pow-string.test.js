@@ -203,6 +203,7 @@ describe('BoostPowString', () => {
       expect(boostPowString.time()).to.eql(1305200806);
       expect(boostPowString.nonce()).to.eql(3698479534);
       expect(boostPowString.category()).to.eql(1);
+ 
    });
 
 });

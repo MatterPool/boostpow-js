@@ -1,7 +1,9 @@
 import * as bsv from 'bsv';
+import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowStringModel {
     private _blockheader;
-    constructor(blockheader: bsv.BlockHeader);
+    private _metadata;
+    constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel);
     boosthash(): string;
     hash(): string;
     id(): string;

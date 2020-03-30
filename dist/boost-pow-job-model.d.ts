@@ -91,7 +91,6 @@ export declare class BoostPowJobModel {
     getScriptHash(): string;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
-    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
     /**
      * Create a transaction fragment that can be modified to redeem the boost job
      *
@@ -100,7 +99,11 @@ export declare class BoostPowJobModel {
      * @param privateKey The private key string of the minerPubKeyHash
      */
     static createRedeemTransaction(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null;
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): BoostPowStringModel | null;
+    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): null | {
+        boostPowString: BoostPowStringModel | null;
+        boostPowMetadata: BoostPowMetadataModel | null;
+    };
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
     static scriptOperations(): any[];
     static expand_target(): any[];

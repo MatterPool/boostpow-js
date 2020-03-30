@@ -130,8 +130,17 @@ describe('boost #BoostPowJob createBoostPowMetadata', () => {
       Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474145 15176 StratumServerBitcoinBoost.cc:788] 1
       Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474159 15176 StratumServerBitcoinBoost.cc:799] { "extraNonce1": 1174405125, "extraNonce2": "0000000000000000", "time": 1585458905, "nonce": 3799195360, "txid": "600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede", "vout": 1 }
  */
-      const powString = index.BoostPowJob.tryValidateJobProof(job, jobProof);
-      expect(powString.hash()).to.eql('00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330');
+      const powString = index.BoostPowJob.tryValidateJobProof(job, jobProof, true);
+
+      expect(powString.boostPowString.hash()).to.eql('00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330');
+      const powMetadata = index.BoostPowJob.createBoostPowMetadata(job, jobProof);
+
+      expect(powString.boostPowString.metadataHash()).to.eql(
+         powMetadata.hash()
+      );
+      expect(powString.boostPowString.metadataHash()).to.eql(
+         index.BoostPowMetadata.fromString(powString.boostPowMetadata.toString()).hash()
+      );
    });
 
 

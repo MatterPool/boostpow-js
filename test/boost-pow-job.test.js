@@ -261,7 +261,9 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
          minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').toString('hex'),
       });
       const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, false);
-      expect(result.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
+      expect(result.boostPowString.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
+      expect(result.boostPowMetadata.hash()).to.eql('7687b9ef4a2a8bc0387336177e4f90ceabca3cbdf246ad4e9f27d4d94f1f4019');
+      expect(result.boostPowString.metadataHash()).to.eql(result.boostPowMetadata.hash());
    });
 });
 
@@ -292,8 +294,8 @@ describe('boost #BoostPowJob createRedeemTransaction', () => {
          minerPubKeyHash: Buffer.from('9fb8cb68b8850a13c7438e26e1d277b748be657a', 'hex').toString('hex'),
       });
       const powString = index.BoostPowJob.tryValidateJobProof(job, jobProof);
-      expect(powString.toString()).to.eql('0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588119401f4fd9d4279f4ead46f2bd3ccaabce904f7e17367338c08b2a4aefb9877681c06d5effff001de069a11c');
-      expect(powString.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
+      expect(powString.boostPowString.toString()).to.eql('0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588119401f4fd9d4279f4ead46f2bd3ccaabce904f7e17367338c08b2a4aefb9877681c06d5effff001de069a11c');
+      expect(powString.boostPowString.hash()).to.eql('0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35');
 
       expect(jobProof.toObject()).to.eql({
          "extraNonce1": "0a00000a",

@@ -532,17 +532,6 @@ export class BoostPowJobModel {
         return BoostPowJobModel.fromTransaction(tx);
     }
 
-    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
-        return BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.getTagBuffer(),
-            minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
-            extraNonce1: boostPowJobProof.getExtraNonce1(),
-            extraNonce2: boostPowJobProof.getExtraNonce2(),
-            userNonce: boostPowJob.getUserNonceBuffer(),
-            additionalData: boostPowJob.getAdditionalDataBuffer(),
-        });
-    }
-
     /**
      * Create a transaction fragment that can be modified to redeem the boost job
      *
@@ -602,7 +591,18 @@ export class BoostPowJobModel {
         return tx;
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug: boolean = false): BoostPowStringModel | null {
+    static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
+        return BoostPowMetadataModel.fromBuffer({
+            tag: boostPowJob.getTagBuffer(),
+            minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
+            extraNonce1: boostPowJobProof.getExtraNonce1(),
+            extraNonce2: boostPowJobProof.getExtraNonce2(),
+            userNonce: boostPowJob.getUserNonceBuffer(),
+            additionalData: boostPowJob.getAdditionalDataBuffer(),
+        });
+    }
+
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug: boolean = false): null | { boostPowString: BoostPowStringModel | null, boostPowMetadata: BoostPowMetadataModel | null } {
         const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof')
@@ -632,7 +632,10 @@ export class BoostPowJobModel {
             if (debug) {
                 console.log('BoostPowString.tryValidateJobProof is valid')
             }
-            return new BoostPowStringModel(blockHeader);
+            return {
+                boostPowString: new BoostPowStringModel(blockHeader),
+                boostPowMetadata: boostPowMetadataCoinbaseString,
+            }
         }
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof is invalid')

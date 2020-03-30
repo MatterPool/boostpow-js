@@ -412,16 +412,6 @@ class BoostPowJobModel {
         const tx = new bsv.Transaction(rawtx);
         return BoostPowJobModel.fromTransaction(tx);
     }
-    static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
-        return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.getTagBuffer(),
-            minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
-            extraNonce1: boostPowJobProof.getExtraNonce1(),
-            extraNonce2: boostPowJobProof.getExtraNonce2(),
-            userNonce: boostPowJob.getUserNonceBuffer(),
-            additionalData: boostPowJob.getAdditionalDataBuffer(),
-        });
-    }
     /**
      * Create a transaction fragment that can be modified to redeem the boost job
      *
@@ -473,6 +463,16 @@ class BoostPowJobModel {
         tx.inputs[0].setScript(unlockingScript);
         return tx;
     }
+    static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
+        return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
+            tag: boostPowJob.getTagBuffer(),
+            minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
+            extraNonce1: boostPowJobProof.getExtraNonce1(),
+            extraNonce2: boostPowJobProof.getExtraNonce2(),
+            userNonce: boostPowJob.getUserNonceBuffer(),
+            additionalData: boostPowJob.getAdditionalDataBuffer(),
+        });
+    }
     static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {
         const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         if (debug) {
@@ -502,7 +502,10 @@ class BoostPowJobModel {
             if (debug) {
                 console.log('BoostPowString.tryValidateJobProof is valid');
             }
-            return new boost_pow_string_model_1.BoostPowStringModel(blockHeader);
+            return {
+                boostPowString: new boost_pow_string_model_1.BoostPowStringModel(blockHeader),
+                boostPowMetadata: boostPowMetadataCoinbaseString,
+            };
         }
         if (debug) {
             console.log('BoostPowString.tryValidateJobProof is invalid');

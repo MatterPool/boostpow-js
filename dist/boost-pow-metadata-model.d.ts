@@ -43,5 +43,6 @@ export declare class BoostPowMetadataModel {
     };
     toBuffer(): Buffer;
     toHex(): string;
+    static fromString(str: string): BoostPowMetadataModel | null;
     static fromHex(str: string): BoostPowMetadataModel | null;
 }

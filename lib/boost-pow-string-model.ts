@@ -1,13 +1,21 @@
 import * as bsv from 'bsv';
 import { BoostPowJobModel } from './boost-pow-job-model';
+import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 
 export class BoostPowStringModel {
     private _blockheader;
-
-    constructor(blockheader: bsv.BlockHeader) {
+    private _metadata;
+    constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel) {
         this._blockheader = blockheader;
         if (!this._blockheader.validProofOfWork()) {
             throw new Error('INVALID_POW');
+        }
+
+        if (metadata) {
+            if (!this._blockheader.merkleRoot !== metadata.hash()) {
+                throw new Error('INVALID_METADATA');
+            }
+            this._metadata = metadata;
         }
     }
     // Use boosthash(), hash() and id() to all be equal to the string

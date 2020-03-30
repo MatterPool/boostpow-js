@@ -3,10 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bsv = require("bsv");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 class BoostPowStringModel {
-    constructor(blockheader) {
+    constructor(blockheader, metadata) {
         this._blockheader = blockheader;
         if (!this._blockheader.validProofOfWork()) {
             throw new Error('INVALID_POW');
+        }
+        if (metadata) {
+            if (!this._blockheader.merkleRoot !== metadata.hash()) {
+                throw new Error('INVALID_METADATA');
+            }
+            this._metadata = metadata;
         }
     }
     // Use boosthash(), hash() and id() to all be equal to the string

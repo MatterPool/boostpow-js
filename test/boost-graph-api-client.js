@@ -226,7 +226,7 @@ describe('APIClient', () => {
          minerPubKeyHash: Buffer.from(expectedPubKeyHash, 'hex').toString('hex'),
       });
       const powString = index.BoostPowJob.tryValidateJobProof(job, jobProof);
-      expect(powString.hash()).to.eql('00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330');
+      expect(powString.boostPowString.hash()).to.eql('00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330');
       const submitResult = await index.Graph(options).submitBoostSolution({
          nonce: jobProof.getNonceNumber(),
          extraNonce1: jobProof.getExtraNonce1Number(),
