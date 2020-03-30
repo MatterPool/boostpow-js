@@ -55,7 +55,7 @@ class BoostPowJobProofModel {
         this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4);
     }
     getExtraNonce1Number() {
-        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).join(''), 16);
     }
     getExtraNonce1() {
         return this.extraNonce1;

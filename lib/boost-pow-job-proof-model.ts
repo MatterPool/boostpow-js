@@ -79,7 +79,7 @@ export class BoostPowJobProofModel {
     }
 
     getExtraNonce1Number(): number {
-        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).join(''), 16);
     }
 
     getExtraNonce1(): Buffer {

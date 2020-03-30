@@ -67,11 +67,9 @@ describe('boost #BoostPowJob createBoostPowMetadata', () => {
       const tag = '0000000000000000000000000000000000001223';
       const additionalData = '0000000000000000000000000000000000000000000000000000000000000094';
       const content = '0000000000000000000000000000000000000000000000000000000000935532';
-
       const extraNonce1Int = 1174405125;
       const extraNonce1Hex = Buffer.from(extraNonce1Int.toString(16), 'hex').reverse().toString('hex');
       const extraNonce2Hex = '0000000000000000';
-
       expect(job.toObject()).to.eql({
          content: content,
          diff: 1,

@@ -32,7 +32,9 @@ export declare class BoostGraphApiClient {
     }>;
     search(q: {
         contentutf8?: string;
-    }, options: {}, callback?: Function): Promise<any>;
+    }, options: {
+        mined?: boolean;
+    }, callback?: Function): Promise<any>;
     createBoostJob(params: {
         boost: {
             content: string;

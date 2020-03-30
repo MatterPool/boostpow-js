@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc && gulp build",
     "test": "mocha --reporter spec",
-    "test_one": "mocha --reporter spec --grep 'createBoostPowMetadata'",
+    "test_one": "mocha --reporter spec --grep 'submitBoostJob'",
     "prepare": "npm run build"
   },
   "repository": {

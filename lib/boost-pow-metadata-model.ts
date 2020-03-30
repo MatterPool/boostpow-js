@@ -76,6 +76,7 @@ export class BoostPowMetadataModel {
             this.minerPubKeyHash,
             this.extraNonce1,
             this.extraNonce2,
+            this.userNonce,
             this.additionalData
         ]).toString('hex');
     }

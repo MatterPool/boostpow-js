@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
+import { GraphSearchResultItem } from './graph-search-result-item';
+import { GraphSearchQueryResponse } from './graph-search-query-response';
 
 export interface BoostClientApiClientOptions {
     graph_api_url: string;
@@ -212,19 +214,33 @@ export class BoostGraphApiClient {
         });
     }
 
-    search(q: { contentutf8?: string }, options: {}, callback?: Function): Promise<any> {
+    static buildGraphSearchQueryResponse( response: any) {
+        return {
+            q: response.data.q,
+            opts: response.data.opts,
+            info: response.data.info,
+            resultList: response.data.resultList
+        }
+    }
+
+    search(q: { contentutf8?: string }, options: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
 
             let opts = '?';
             if (q.contentutf8) {
-                opts += 'contentutf8=' + q.contentutf8;
+                opts += 'contentutf8=' + q.contentutf8 + '&';
+            }
+            if (options && options.mined) {
+                opts += 'mined=true&';
             }
             axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`,
                 {
                     headers: this.getHeaders()
                 }
+
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                const queryResponse = BoostGraphApiClient.buildGraphSearchQueryResponse(response);
+                return this.resolveOrCallback(resolve, queryResponse, callback);
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({

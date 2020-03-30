@@ -179,7 +179,10 @@ class BoostGraphApiClient {
         return new Promise((resolve, reject) => {
             let opts = '?';
             if (q.contentutf8) {
-                opts += 'contentutf8=' + q.contentutf8;
+                opts += 'contentutf8=' + q.contentutf8 + '&';
+            }
+            if (options && options.mined) {
+                opts += 'mined=true&';
             }
             axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`, {
                 headers: this.getHeaders()
