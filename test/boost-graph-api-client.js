@@ -103,7 +103,7 @@ describe('APIClient', () => {
                spentTxid: '3b56d3a6118ee837e27e4ee508db1a2919630f485a36cec02ea11051b6712592',
                spentVout: 0,
             },
-            boostPowMetadata: null,
+            boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460014a20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
             boostPowString: '0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881ddf4f115036caa271c6e67a059418dd144211949cdf465ef2c10c8e9fb50dcdd6e3c805effff001d482dd7d5',
          }
       });
@@ -131,7 +131,7 @@ describe('APIClient', () => {
 
             },
             boostPowString: '0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881ddf4f115036caa271c6e67a059418dd144211949cdf465ef2c10c8e9fb50dcdd6e3c805effff001d482dd7d5',
-            boostPowMetadata: null,
+            boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460014a20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
          }
       });
    });
@@ -217,7 +217,7 @@ describe('APIClient', () => {
       const nonceHex = 'e2731ee0';
       const timeHex = '5e802ed9';
       const jobProof = index.BoostPowJobProof.fromObject({
-         signature: '00',
+         signature: '304402206594747de751c8927ae31fd10c5886d189a852089a44b638f966a490eabb65ae02205540c7e11d8f2615ae0d5643d4ace20a83c17ebfa7837df9b175060f2914041b41',
          minerPubKey: '02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66',
          extraNonce1: Buffer.from(extraNonce1Hex, 'hex').toString('hex'),
          extraNonce2: Buffer.from(extraNonce2Hex, 'hex').toString('hex'),
@@ -253,9 +253,21 @@ describe('APIClient', () => {
                spentVout: 0,
             },
             boostPowString: '78000000325593000000000000000000000000000000000000000000000000000000000084c441284e9e919e73e3318b11dfce8cec8647e0a9a9f2c694e73b4b7bee6bfcd92e805effff001de01e73e2',
-            boostPowMetadata: 'null',
+            boostPowMetadata: '231200000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460000050000000000000000886600009400000000000000000000000000000000000000000000000000000000000000',
          }
       });
+
+      const boostJobClone = index.BoostPowJob.fromRawTransaction(submitResult.result.boostJob.rawtx);
+      expect(boostJobClone.toObject()).to.eql(job.toObject());
+
+      const boostJobProofClone = index.BoostPowJobProof.fromRawTransaction(submitResult.result.boostJob.spentRawtx);
+      expect(boostJobProofClone.toObject()).to.eql(jobProof.toObject());
+
+      const validatedPow = index.BoostPowString.fromString(submitResult.result.boostPowString);
+      expect(validatedPow.hash()).to.eql('00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330')
+      expect(submitResult.result.boostPowMetadata).to.eql(index.BoostPowJob.createBoostPowMetadata(boostJobClone, boostJobProofClone).getCoinbaseString());
+      expect(validatedPow.metadataHash()).to.eql(index.BoostPowJob.createBoostPowMetadata(boostJobClone, boostJobProofClone).hash());
+
    });
 
    it('search by content', async () => {

@@ -14,6 +14,8 @@ export declare class BoostPowJobProofModel {
     private minerPubKeyHash;
     private txid?;
     private vin?;
+    private spentTxid?;
+    private spentVout?;
     private constructor();
     static fromObject(params: {
         signature: string;
@@ -62,15 +64,17 @@ export declare class BoostPowJobProofModel {
     toHex(): string;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined;
-    static fromScript(script: bsv.Script, txid?: string, vin?: number): BoostPowJobProofModel;
-    static fromHex(asm: string, txid?: string, vin?: number): BoostPowJobProofModel;
-    static fromASM(asm: string, txid?: string, vin?: number): BoostPowJobProofModel;
+    static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
+    static fromHex(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
+    static fromASM(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
     getTxInpoint(): {
         txid?: string;
         vin?: number;
     };
     getTxid(): string | undefined;
     getVin(): number | undefined;
+    getSpentTxid(): string | undefined;
+    getSpentVout(): number | undefined;
     toASM(): string;
     static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel;
     toString(): string;

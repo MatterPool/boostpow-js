@@ -111,6 +111,9 @@ describe('boost #BoostPowJobProof', () => {
       expect(jobProof.getNonceNumber()).to.eql(2964235106);
       expect(jobProof.getTxid()).to.eql('5fc289d2b04e98ca9ffb0156f5c66b9dac38af65630ea45ac8508a716af1e9b3');
       expect(jobProof.getVin()).to.eql(0);
+
+      expect(jobProof.getSpentTxid()).to.eql('7f7927e1b425869442e8955f909e54964fef0b0426db44c907200aabd986522e');
+      expect(jobProof.getSpentVout()).to.eql(1);
    });
 
    it('should success load job proof from scripthex', async () => {
