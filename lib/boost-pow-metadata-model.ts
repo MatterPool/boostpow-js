@@ -51,19 +51,19 @@ export class BoostPowMetadataModel {
         );
     }
     public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
+        let content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
+            content = content.replace(/^\0/g, '');
+            content = content.replace(/\0*$/g, '');
         }
+        return content;
     }
 
     getTag(): Buffer {
         return this.tag;
     }
     getTagUtf8(): string {
-        return this.trimBufferString(this.tag.toString('hex'), true);
+        return this.trimBufferString(this.tag.reverse().toString('hex'), true);
     }
     getMinerPubKeyHash(): Buffer {
         return this.minerPubKeyHash;
@@ -75,7 +75,7 @@ export class BoostPowMetadataModel {
         return this.userNonce;
     }
     getUserNonceUtf8(): string {
-        return this.trimBufferString(this.userNonce.toString('hex'), true);
+        return this.trimBufferString(this.userNonce.reverse().toString('hex'), true);
     }
     getExtraNonce1(): Buffer {
         return this.extraNonce1;
@@ -87,7 +87,7 @@ export class BoostPowMetadataModel {
         return this.additionalData;
     }
     getAdditionalDataUtf8(): string {
-        return this.trimBufferString(this.additionalData.toString('hex'), true);
+        return this.trimBufferString(this.additionalData.reverse().toString('hex'), true);
     }
 
     toString() {

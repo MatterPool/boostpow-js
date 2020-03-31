@@ -15,7 +15,6 @@ export declare class BoostGraphApiClient {
     constructor(options: any);
     getHeaders(): any;
     broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel>;
-    findAllByContent(content: string, fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel>;
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<BoostPowJobModel>;
     submitBoostSolution(params: {
@@ -33,7 +32,7 @@ export declare class BoostGraphApiClient {
         redeemedvout?: number;
     }>;
     static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse;
-    search(q: GraphSearchQuery, options: {
+    search(q: GraphSearchQuery, options?: {
         mined?: boolean;
     }, callback?: Function): Promise<GraphSearchQueryResponse>;
     createBoostJob(params: {

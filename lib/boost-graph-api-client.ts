@@ -64,53 +64,6 @@ export class BoostGraphApiClient {
         });
     }
 
-    findAllByContent(content: string,fromTime?: number, toTime?: number, callback?: Function): Promise<BoostPowJobModel> {
-        return new Promise((resolve, reject) => {
-            if (content && content.length > 32) {
-                return this.rejectOrCallback(reject, this.formatErrorResponse({
-                    code: 422,
-                    message: 'query content too long',
-                    error: 'QUERY_CONTENT_TOO_LONG'
-                }), callback)
-            }
-            let params = `/v1/bsv/boost/search?content=${content}`;
-
-            if (fromTime === undefined || fromTime === null) {
-            } else {
-                params += `&fromTime=${fromTime}`;
-            }
-            if (toTime === undefined || toTime === null) {
-            } else {
-                params += `&toTime=${toTime}`;
-            }
-            axios.get(this.options.graph_api_url + params,
-                {
-                    headers: this.getHeaders()
-                }
-            ).then((response) => {
-                const job = BoostPowJobModel.fromRawTransaction(response.data.rawtx);
-                if (!job){
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: 400,
-                        message: 'tx is not a valid boost output',
-                        error: 'TX_INVALID_BOOST_OUTPUT'
-                    }), callback)
-                }
-                return this.resolveOrCallback(resolve, job, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'tx not found',
-                        error: 'TX_NOT_FOUND'
-                    }), callback)
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
-
-            })
-        });
-    }
-
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
             axios.get(this.fullUrl + `/scripthash/${scriptHash}/utxo`,
@@ -223,7 +176,7 @@ export class BoostGraphApiClient {
         }
     }
 
-    search(q: GraphSearchQuery, options: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
+    search(q: GraphSearchQuery, options?: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
             let qString = '?';
             qString += GraphSearchQueryString.build(q);
@@ -231,7 +184,6 @@ export class BoostGraphApiClient {
                 {
                     headers: this.getHeaders()
                 }
-
             ).then((response) => {
                 const queryResponse = BoostGraphApiClient.buildGraphSearchQueryResponse(response);
                 return this.resolveOrCallback(resolve, queryResponse, callback);

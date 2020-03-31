@@ -44,50 +44,6 @@ class BoostGraphApiClient {
             });
         });
     }
-    findAllByContent(content, fromTime, toTime, callback) {
-        return new Promise((resolve, reject) => {
-            if (content && content.length > 32) {
-                return this.rejectOrCallback(reject, this.formatErrorResponse({
-                    code: 422,
-                    message: 'query content too long',
-                    error: 'QUERY_CONTENT_TOO_LONG'
-                }), callback);
-            }
-            let params = `/v1/bsv/boost/search?content=${content}`;
-            if (fromTime === undefined || fromTime === null) {
-            }
-            else {
-                params += `&fromTime=${fromTime}`;
-            }
-            if (toTime === undefined || toTime === null) {
-            }
-            else {
-                params += `&toTime=${toTime}`;
-            }
-            axios_1.default.get(this.options.graph_api_url + params, {
-                headers: this.getHeaders()
-            }).then((response) => {
-                const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
-                if (!job) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: 400,
-                        message: 'tx is not a valid boost output',
-                        error: 'TX_INVALID_BOOST_OUTPUT'
-                    }), callback);
-                }
-                return this.resolveOrCallback(resolve, job, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'tx not found',
-                        error: 'TX_NOT_FOUND'
-                    }), callback);
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
-            });
-        });
-    }
     getScriptUtxos(scriptHash, callback) {
         return new Promise((resolve, reject) => {
             axios_1.default.get(this.fullUrl + `/scripthash/${scriptHash}/utxo`, {

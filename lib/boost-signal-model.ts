@@ -42,14 +42,15 @@ export class BoostSignalModel {
         return this.boostPowString.contentString();
     }
     public category(hex?: boolean): string {
+        const category = this.boostPowString.category();
+        const cat = Buffer.allocUnsafe(4);
+        cat.writeUInt32LE(category, 0);
         if (hex) {
-            const category = this.boostPowString.category();
-            const cat = Buffer.allocUnsafe(4);
-            cat.writeUInt32LE(category, 0);
             return cat.toString('hex');
         }
-        return this.boostPowString.contentString();
+        return cat.toString('utf8');
     }
+
     public metadataHash(): string {
         return this.boostPowString.metadataHash();
     }
