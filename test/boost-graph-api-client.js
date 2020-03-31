@@ -95,6 +95,7 @@ describe('APIClient', () => {
                txid: goodBostJobTxid,
                vout: goodBostJobTxVout,
                diff: 1,
+               createdTime: 1585459599,
                value: goodBostJobTxValue,
                scripthash: goodBostJobTxScripthash,
                rawtx: goodBoostJobTx,
@@ -121,6 +122,7 @@ describe('APIClient', () => {
                txid: goodBostJobTxid,
                vout: goodBostJobTxVout,
                diff: 1,
+               createdTime: 1585459599,
                value: goodBostJobTxValue,
                scripthash: goodBostJobTxScripthash,
                rawtx: goodBoostJobTx,
@@ -243,6 +245,7 @@ describe('APIClient', () => {
                txid: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede',
                vout: 1,
                diff: 1,
+               createdTime: 1585590793,
                value: 6370,
                scripthash: '1f860e678a1c7dd09c8669a74f20329119558abc69303119d2259ca379bbc0ff',
                rawtx: '01000000018ff2fe10e8629051853507b4189bf3981569a0d358e0506033a11618f2e3b10c010000006b483045022100f82288631d8c8b6b6fba9094a6d56af6ab572347b7365dcf7e6d68905cb8fd000220390cde292cc50a92bd60e680bfcbddf17443d904c7372880b6ec312a06952fb3412102be82a62c8c3d8e949c9b54a60b4cadf0efacec08164b3eca3b6e793f52bf8d8affffffff0220090000000000001976a914cdb2b66b5fa33fa3f55fb9296f31d445892d990988ace218000000000000e108626f6f7374706f7775047800000020325593000000000000000000000000000000000000000000000000000000000004ffff001d14231200000000000000000000000000000000000004886600002094000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e52796b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa01007e816c825488537f7681530121a5696b768100a0691d00000000000000000000000000000000000000000000000000000000007e6c539458959901007e819f6976a96c88ac00000000',
@@ -269,75 +272,4 @@ describe('APIClient', () => {
       expect(validatedPow.metadataHash()).to.eql(index.BoostPowJob.createBoostPowMetadata(boostJobClone, boostJobProofClone).hash());
 
    });
-
-   it('search by content', async () => {
-      const result = await index.Graph(options).search({
-         contentutf8: 'Hello Boost'
-      }, {});
-
-      expect(!!result.result.length).to.eql(true);
-   });
-
-   it('search all', async () => {
-      const result = await index.Graph(options).search({
-      }, {});
-      expect(result.success).to.eql(true);
-      expect(result.result.length > 0).to.eql(true);
-   });
-
-   it('search by content and limit by mined boost only', async () => {
-      const request = await index.Graph(options).search({
-         contentutf8: 'Hello Boost',
-      }, {
-         mined: true
-      });
-
-      expect(request.success).to.eql(true);
-      expect(request.result.length > 0).to.eql(true);
-
-      let afterBoostJobId = null
-      let maxIterations = 10;
-      let i = 0;
-      do {
-         const request = await index.Graph(options).search({
-            contentutf8: 'Hello Boost',
-         }, {
-            mined: true
-         });
-      } while (afterBoostJobId && i++ < maxIterations);
-
-      for (const item of request.result) {
-         console.log(item);
-      }
-   });
-
-   it('search all content returned in resultset', async () => {
-      const response = await index.Graph(options).search({
-         minedTimeFrom: 1577836800,
-         minedTimeEnd: 1585440000
-      });
-      const ranker = new index.Rank();
-      for (const item of response.result.mined) {
-         ranker.add(item.powString);
-      }
-      expect(ranker.list).to.eql([
-         {
-
-         }
-      ]);
-   });
-
-   it('search and return all items by matching parameters equality', async () => {
-      const response = await index.Graph(options).search({
-         minedTimeFrom: 1577836800,
-         minedTimeEnd: 1585440000
-      });
-      const ranker = new index.Rank(response.result.mined);
-      expect(ranker.list).to.eql([
-         {
-
-         }
-      ]);
-   });
-
 });

@@ -3,6 +3,7 @@ import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
 import { GraphSearchResultItem } from './graph-search-result-item';
 import { GraphSearchQueryResponse } from './graph-search-query-response';
+import { GraphSearchQuery, GraphSearchQueryString } from './graph-search-query';
 
 export interface BoostClientApiClientOptions {
     graph_api_url: string;
@@ -214,26 +215,19 @@ export class BoostGraphApiClient {
         });
     }
 
-    static buildGraphSearchQueryResponse( response: any) {
+    static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse {
         return {
             q: response.data.q,
-            opts: response.data.opts,
-            info: response.data.info,
-            resultList: response.data.resultList
+            nextPaginationToken: response.data.nextPaginationToken,
+            mined: response.data.mined
         }
     }
 
-    search(q: { contentutf8?: string }, options: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
+    search(q: GraphSearchQuery, options: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
-
-            let opts = '?';
-            if (q.contentutf8) {
-                opts += 'contentutf8=' + q.contentutf8 + '&';
-            }
-            if (options && options.mined) {
-                opts += 'mined=true&';
-            }
-            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${opts}`,
+            let qString = '?';
+            qString += GraphSearchQueryString.build(q);
+            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`,
                 {
                     headers: this.getHeaders()
                 }

@@ -1,25 +1,8 @@
 import { GraphSearchResultItem } from "./graph-search-result-item";
+import { GraphSearchQuery } from './graph-search-query';
 
 export interface GraphSearchQueryResponse {
-    q: {
-        contentutf8?: string,
-        contenthex?: string,
-        tagutf8?: string,
-        taghex?: string,
-        categoryutf8?: string,
-        categoryhex?: string,
-        usernonceutf8?: string,
-        usernoncehex?: string,
-        // unmined?: boolean,
-        group?: 'contentutf8' | 'contenthex' | 'tagutf8' | 'taghex' | 'categoryutf8' | 'categoryhex' | 'usernonceutf8' | 'usernoncehex',
-        limit?: number
-        createdTimeFrom?: number,
-        createdTimeEnd?: number,
-        minedTimeFrom?: number,
-        minedTimeEnd?: number,
-        paginationToken?: string, // token to use to paginate for everything after
-    },
-    minedCountThisPage: number,
-    nextPaginationToken?: string
-    mined: Array<GraphSearchResultItem>;
+    q: GraphSearchQuery,
+    nextPaginationToken?: string,
+    mined: GraphSearchResultItem[]
 }
