@@ -2,10 +2,11 @@ import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
-import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
 import { BoostUtils } from './boost-utils';
 import { BoostGraphApiClient } from './boost-graph-api-client';
 import { BoostSignalModel } from './boost-signal-model';
+import { BoostSignalRankerModel } from './boost-signal-ranker-model';
+import { GraphSearchQuery } from './graph-search-query';
 
 const defaultOptions: any = {
   graph_api_url: 'https://graph2.boostpow.com',
@@ -45,7 +46,7 @@ export class BoostGraphClient {
     return BoostUtilsHelper;
   }
 
-  search(q: {}, options: {}, callback?: Function): Promise<any> {
+  search(q?: {}, options?: {}, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.search(q, options,  callback);
   }
@@ -104,12 +105,13 @@ try {
       BoostPowJobProof: BoostPowJobProofModel,
       BoostPowMetadata: BoostPowMetadataModel,
       BoostSignal: BoostSignalModel,
+      BoostSignalRanker: BoostSignalRankerModel,
       BoostUtils: BoostUtils,
     };
   }
 }
 catch (ex) {
-  // Window is not defined, must be running in windowless env....
+  // Window is not defined, must be running in windowless env...
 }
 
 export var BoostPowString = BoostPowStringModel;
@@ -119,4 +121,24 @@ export var BoostPowMetadata = BoostPowMetadataModel;
 export var BoostUtilsHelper = BoostUtils;
 export var BoostGraph = BoostGraphClient;
 export var BoostSignal = BoostSignalModel;
+export var BoostSignalRanker = BoostSignalRankerModel;
 
+function searchGraph(q?: GraphSearchQuery, options?: {}, callback?: Function): Promise<any> {
+  const apiClient = new BoostGraphApiClient(defaultOptions);
+  return apiClient.search(q, options,  callback);
+}
+
+export var search = searchGraph;
+
+function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any> {
+  const apiClient = new BoostGraphApiClient(defaultOptions);
+  return apiClient.submitBoostJob(rawtx, callback);
+}
+
+export var submitJob = submitBoostJobGraph;
+
+function getBoostJobStatusGraph(txid: string, callback?: Function): Promise<any> {
+  const apiClient = new BoostGraphApiClient(defaultOptions);
+  return apiClient.getBoostJobStatus(txid, callback);
+}
+export var getJobStatus = getBoostJobStatusGraph;

@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class GraphSearchQueryString {
     static build(q) {
+        if (!q) {
+            return '';
+        }
         let str = '';
         if (q.contentutf8) {
             str += 'contentutf8=' + q.contentutf8 + '&';

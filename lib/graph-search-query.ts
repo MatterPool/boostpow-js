@@ -19,6 +19,9 @@ export interface GraphSearchQuery {
 }
 export class GraphSearchQueryString {
     static build(q) {
+        if (!q) {
+            return '';
+        }
         let str = '';
         if (q.contentutf8) {
             str += 'contentutf8=' + q.contentutf8 + '&';

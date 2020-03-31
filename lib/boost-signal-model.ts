@@ -6,6 +6,8 @@ export class BoostSignalModel {
     private constructor(
         private boostPowString: BoostPowStringModel,
         private boostPowMetadata: BoostPowMetadataModel,
+        private boostJobId?: string,
+        private boostJobProofId?: string
     ) {
         if (!boostPowMetadata) {
             // No metadata, that's OKAY! We just have a valid Pow String but know nothing of tag, userNonce, additionalData, etc
@@ -20,6 +22,12 @@ export class BoostSignalModel {
             throw new Error('Fatal: Invalid metadata for the pow string');
         }
     };
+    public getBoostJobId(): string | undefined {
+        return this.boostJobId;
+    }
+    public getBoostJobProofId(): string | undefined {
+        return this.boostJobProofId;
+    }
     public getBoostPowString(): BoostPowStringModel {
         return this.boostPowString;
     }
@@ -44,7 +52,7 @@ export class BoostSignalModel {
     public category(hex?: boolean): string {
         const category = this.boostPowString.category();
         const cat = Buffer.allocUnsafe(4);
-        cat.writeUInt32LE(category, 0);
+        cat.writeUInt32BE(category, 0);
         if (hex) {
             return cat.toString('hex');
         }
@@ -125,7 +133,7 @@ export class BoostSignalModel {
      * @param powStringAndOptionalMetadata 80 bytes minimum or also added the powMetadata
      * @param powMetadata Optionally provided in 2nd argument
      */
-    static fromHex(powStringAndOptionalMetadata: string, powMetadata?: string) {
+    static fromHex(powStringAndOptionalMetadata: string, powMetadata?: string, boostJobId?: string, boostJobProofId?: string) {
         if (!powStringAndOptionalMetadata) {
             throw new Error('invalid argument');
         }
@@ -152,7 +160,6 @@ export class BoostSignalModel {
             }
         }
 
-        return new BoostSignalModel(boostPowString, boostPowMetadata);
+        return new BoostSignalModel(boostPowString, boostPowMetadata, boostJobId, boostJobProofId);
     }
-
 }

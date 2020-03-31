@@ -3,7 +3,11 @@ import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostSignalModel {
     private boostPowString;
     private boostPowMetadata;
+    private boostJobId?;
+    private boostJobProofId?;
     private constructor();
+    getBoostJobId(): string | undefined;
+    getBoostJobProofId(): string | undefined;
     getBoostPowString(): BoostPowStringModel;
     getBoostMetadata(): BoostPowMetadataModel;
     hash(): string;
@@ -37,5 +41,5 @@ export declare class BoostSignalModel {
      * @param powStringAndOptionalMetadata 80 bytes minimum or also added the powMetadata
      * @param powMetadata Optionally provided in 2nd argument
      */
-    static fromHex(powStringAndOptionalMetadata: string, powMetadata?: string): BoostSignalModel;
+    static fromHex(powStringAndOptionalMetadata: string, powMetadata?: string, boostJobId?: string, boostJobProofId?: string): BoostSignalModel;
 }

@@ -176,7 +176,7 @@ export class BoostGraphApiClient {
         }
     }
 
-    search(q: GraphSearchQuery, options?: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
+    search(q?: GraphSearchQuery, options?: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
             let qString = '?';
             qString += GraphSearchQueryString.build(q);

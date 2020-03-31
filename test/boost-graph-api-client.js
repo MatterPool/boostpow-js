@@ -91,6 +91,7 @@ describe('APIClient', () => {
          result:
          {
             boostJobId: "5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0",
+            boostJobProofId: '3b56d3a6118ee837e27e4ee508db1a2919630f485a36cec02ea11051b6712592.0',
             boostJob: {
                boostJobId: goodBostJobTxid + '.' + goodBostJobTxVout,
                txid: goodBostJobTxid,
@@ -119,6 +120,7 @@ describe('APIClient', () => {
          result:
          {
             boostJobId: "5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0",
+            boostJobProofId: '3b56d3a6118ee837e27e4ee508db1a2919630f485a36cec02ea11051b6712592.0',
             boostJob: {
                boostJobId: '5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0',
                txid: goodBostJobTxid,
@@ -243,6 +245,7 @@ describe('APIClient', () => {
          success: true,
          result: {
             boostJobId: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede.1',
+            boostJobProofId: '6974a4c575c661a918e50d735852c29541a3263dcc4ff46bf90eb9f8f0ec485e.0',
             boostJob: {
                boostJobId: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede.1',
                txid: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede',

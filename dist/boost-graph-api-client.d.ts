@@ -32,7 +32,7 @@ export declare class BoostGraphApiClient {
         redeemedvout?: number;
     }>;
     static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse;
-    search(q: GraphSearchQuery, options?: {
+    search(q?: GraphSearchQuery, options?: {
         mined?: boolean;
     }, callback?: Function): Promise<GraphSearchQueryResponse>;
     createBoostJob(params: {

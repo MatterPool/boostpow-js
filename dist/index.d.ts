@@ -4,6 +4,8 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
 import { BoostSignalModel } from './boost-signal-model';
+import { BoostSignalRankerModel } from './boost-signal-ranker-model';
+import { GraphSearchQuery } from './graph-search-query';
 export declare class BoostGraphClient {
     options: any;
     constructor(providedOptions?: any);
@@ -13,7 +15,7 @@ export declare class BoostGraphClient {
     readonly BoostPowMetadata: typeof BoostPowMetadataModel;
     readonly BoostPowSignal: typeof BoostSignalModel;
     readonly BoostUtilsHelper: typeof BoostUtils;
-    search(q: {}, options: {}, callback?: Function): Promise<any>;
+    search(q?: {}, options?: {}, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<any>;
     submitBoostSolution(params: {
@@ -38,3 +40,11 @@ export declare var BoostPowMetadata: typeof BoostPowMetadataModel;
 export declare var BoostUtilsHelper: typeof BoostUtils;
 export declare var BoostGraph: typeof BoostGraphClient;
 export declare var BoostSignal: typeof BoostSignalModel;
+export declare var BoostSignalRanker: typeof BoostSignalRankerModel;
+declare function searchGraph(q?: GraphSearchQuery, options?: {}, callback?: Function): Promise<any>;
+export declare var search: typeof searchGraph;
+declare function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any>;
+export declare var submitJob: typeof submitBoostJobGraph;
+declare function getBoostJobStatusGraph(txid: string, callback?: Function): Promise<any>;
+export declare var getJobStatus: typeof getBoostJobStatusGraph;
+export {};

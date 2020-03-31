@@ -4,9 +4,11 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const bsv = require("bsv");
 class BoostSignalModel {
-    constructor(boostPowString, boostPowMetadata) {
+    constructor(boostPowString, boostPowMetadata, boostJobId, boostJobProofId) {
         this.boostPowString = boostPowString;
         this.boostPowMetadata = boostPowMetadata;
+        this.boostJobId = boostJobId;
+        this.boostJobProofId = boostJobProofId;
         if (!boostPowMetadata) {
             // No metadata, that's OKAY! We just have a valid Pow String but know nothing of tag, userNonce, additionalData, etc
             // But that's okay and this is still a valid signal, but missing the metadata
@@ -21,6 +23,12 @@ class BoostSignalModel {
         }
     }
     ;
+    getBoostJobId() {
+        return this.boostJobId;
+    }
+    getBoostJobProofId() {
+        return this.boostJobProofId;
+    }
     getBoostPowString() {
         return this.boostPowString;
     }
@@ -45,7 +53,7 @@ class BoostSignalModel {
     category(hex) {
         const category = this.boostPowString.category();
         const cat = Buffer.allocUnsafe(4);
-        cat.writeUInt32LE(category, 0);
+        cat.writeUInt32BE(category, 0);
         if (hex) {
             return cat.toString('hex');
         }
@@ -119,7 +127,7 @@ class BoostSignalModel {
      * @param powStringAndOptionalMetadata 80 bytes minimum or also added the powMetadata
      * @param powMetadata Optionally provided in 2nd argument
      */
-    static fromHex(powStringAndOptionalMetadata, powMetadata) {
+    static fromHex(powStringAndOptionalMetadata, powMetadata, boostJobId, boostJobProofId) {
         if (!powStringAndOptionalMetadata) {
             throw new Error('invalid argument');
         }
@@ -144,7 +152,7 @@ class BoostSignalModel {
                 boostPowMetadata = boost_pow_metadata_model_1.BoostPowMetadataModel.fromHex(powStringAndOptionalMetadata.slice(160));
             }
         }
-        return new BoostSignalModel(boostPowString, boostPowMetadata);
+        return new BoostSignalModel(boostPowString, boostPowMetadata, boostJobId, boostJobProofId);
     }
 }
 exports.BoostSignalModel = BoostSignalModel;
