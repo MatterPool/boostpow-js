@@ -4,9 +4,9 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
-const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model");
 const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
+const boost_signal_model_1 = require("./boost-signal-model");
 const defaultOptions = {
     graph_api_url: 'https://graph2.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
@@ -31,8 +31,8 @@ class BoostGraphClient {
     get BoostPowMetadata() {
         return boost_pow_metadata_model_1.BoostPowMetadataModel;
     }
-    get BoostPowSimpleMiner() {
-        return boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
+    get BoostPowSignal() {
+        return boost_signal_model_1.BoostSignalModel;
     }
     get BoostUtilsHelper() {
         return exports.BoostUtilsHelper;
@@ -88,7 +88,7 @@ try {
             BoostPowJob: boost_pow_job_model_1.BoostPowJobModel,
             BoostPowJobProof: boost_pow_job_proof_model_1.BoostPowJobProofModel,
             BoostPowMetadata: boost_pow_metadata_model_1.BoostPowMetadataModel,
-            BoostPowSimpleMiner: boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel,
+            BoostSignal: boost_signal_model_1.BoostSignalModel,
             BoostUtils: boost_utils_1.BoostUtils,
         };
     }
@@ -100,6 +100,6 @@ exports.BoostPowString = boost_pow_string_model_1.BoostPowStringModel;
 exports.BoostPowJob = boost_pow_job_model_1.BoostPowJobModel;
 exports.BoostPowJobProof = boost_pow_job_proof_model_1.BoostPowJobProofModel;
 exports.BoostPowMetadata = boost_pow_metadata_model_1.BoostPowMetadataModel;
-exports.BoostPowSimpleMiner = boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
 exports.BoostUtilsHelper = boost_utils_1.BoostUtils;
 exports.BoostGraph = BoostGraphClient;
+exports.BoostSignal = boost_signal_model_1.BoostSignalModel;

@@ -40,7 +40,7 @@ export class BoostPowStringModel {
         return this.toObject().content;
     }
 
-    private trimBufferString(str: string, trimLeadingNulls = true): string {
+    public trimBufferString(str: string, trimLeadingNulls = true): string {
         const content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
             return content.replace(/\0/g, '');

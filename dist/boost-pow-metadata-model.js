@@ -17,14 +17,32 @@ class BoostPowMetadataModel {
     static fromBuffer(params) {
         return new BoostPowMetadataModel(params.tag, params.minerPubKeyHash, params.extraNonce1, params.extraNonce2, params.userNonce, params.additionalData);
     }
+    trimBufferString(str, trimLeadingNulls = true) {
+        const content = Buffer.from(str, 'hex').toString('utf8');
+        if (trimLeadingNulls) {
+            return content.replace(/\0/g, '');
+        }
+        else {
+            return content;
+        }
+    }
     getTag() {
         return this.tag;
+    }
+    getTagUtf8() {
+        return this.trimBufferString(this.tag.toString('hex'), true);
     }
     getMinerPubKeyHash() {
         return this.minerPubKeyHash;
     }
+    getMinerPubKeyHashUtf8() {
+        return this.minerPubKeyHash.toString('hex');
+    }
     getUserNonce() {
         return this.userNonce;
+    }
+    getUserNonceUtf8() {
+        return this.trimBufferString(this.userNonce.toString('hex'), true);
     }
     getExtraNonce1() {
         return this.extraNonce1;
@@ -34,6 +52,9 @@ class BoostPowMetadataModel {
     }
     getAdditionalData() {
         return this.additionalData;
+    }
+    getAdditionalDataUtf8() {
+        return this.trimBufferString(this.additionalData.toString('hex'), true);
     }
     toString() {
         return Buffer.concat([

@@ -90,6 +90,7 @@ describe('APIClient', () => {
          success: true,
          result:
          {
+            boostJobId: "5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0",
             boostJob: {
                boostJobId: goodBostJobTxid + '.' + goodBostJobTxVout,
                txid: goodBostJobTxid,
@@ -117,6 +118,7 @@ describe('APIClient', () => {
          success: true,
          result:
          {
+            boostJobId: "5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0",
             boostJob: {
                boostJobId: '5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0',
                txid: goodBostJobTxid,
@@ -240,6 +242,7 @@ describe('APIClient', () => {
       expect(submitResult).to.eql({
          success: true,
          result: {
+            boostJobId: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede.1',
             boostJob: {
                boostJobId: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede.1',
                txid: '600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede',

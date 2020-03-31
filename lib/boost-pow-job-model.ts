@@ -619,7 +619,6 @@ export class BoostPowJobModel {
             boostPowJob.getCategoryBuffer(),
             boostPowJob.getContentBuffer(),
             boostPowMetadataCoinbaseString.hashAsBuffer().reverse(),
-            // Buffer.from('0e60651a9934e8f0decd1c5fde39309e48fca0cd1c84a21ddfde95033762d86c', 'hex').reverse(), // additionalDataHash.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
             boostPowJobProof.getNonce(),

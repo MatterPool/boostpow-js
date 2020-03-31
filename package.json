@@ -1,6 +1,6 @@
 {
   "name": "boostpow-js",
-  "version": "1.1.55",
+  "version": "1.2.0",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,6 +12,7 @@
     "test_BoostPowMetadata": "mocha --reporter spec --grep 'BoostPowMetadata'",
     "test_BoostPowJobProof": "mocha --reporter spec --grep 'BoostPowJobProof'",
     "test_search": "mocha --reporter spec --grep 'Graph Search'",
+    "test_signal": "mocha --reporter spec --grep 'BoostSignal'",
     "prepare": "npm run build"
   },
   "repository": {

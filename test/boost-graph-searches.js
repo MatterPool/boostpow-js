@@ -9,28 +9,50 @@ var options = {
 
 describe('Graph Search', () => {
 
-   it('search matching content', async () => {
+   it('search matching contentutf8', async () => {
+      const s = 'Hello Boost Test9323';
       const result = await index.Graph(options).search({
-         contentutf8: 'Hello Boost'
+         contentutf8: s
       }, {});
-      console.log('result', result);
-      expect(!!result.result.length).to.eql(true);
-   });
 
-  /* it('search all content returned in resultset', async () => {
-      const response = await index.Graph(options).search({
-         minedTimeFrom: 1577836800,
-         minedTimeEnd: 1585440000
-      });
-      const ranker = new index.Rank();
-      for (const item of response.result.mined) {
-         ranker.add(item.powString);
+      let signals = [];
+      for (const item of result.mined) {
+         const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
+         expect(signal.content()).to.eql(s);
+         signals.push(signal);
       }
-      expect(ranker.list).to.eql([
-         {
-
-         }
-      ]);
+      expect(signals.length > 0).to.eql(true);
    });
-*/
+   it('search matching contenthex', async () => {
+      const s = '00000000000000000000000048656c6c6f20426f6f7374205465737439333233';
+      const result = await index.Graph(options).search({
+         contenthex: s
+      }, {});
+
+      let signals = [];
+      for (const item of result.mined) {
+         const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
+         console.log(item);
+         expect(signal.content(true)).to.eql(s);
+         signals.push(signal);
+      }
+      expect(signals.length > 0).to.eql(true);
+   });
+   it('search matching contenthex and content', async () => {
+      const s = '00000000000000000000000048656c6c6f20426f6f7374205465737439333233';
+      const s2 = 'Hello Boost Test9323';
+      const result = await index.Graph(options).search({
+         contenthex: s,
+         contentutf8: s2
+      }, {});
+
+      let signals = [];
+      for (const item of result.mined) {
+         const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
+         expect(signal.content(true)).to.eql(s);
+         signals.push(signal);
+      }
+      expect(signals.length > 0).to.eql(true);
+   });
+
 });

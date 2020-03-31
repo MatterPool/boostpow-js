@@ -23,12 +23,17 @@ export declare class BoostPowMetadataModel {
         userNonce: Buffer;
         additionalData: Buffer;
     }): BoostPowMetadataModel;
+    trimBufferString(str: string, trimLeadingNulls?: boolean): string;
     getTag(): Buffer;
+    getTagUtf8(): string;
     getMinerPubKeyHash(): Buffer;
+    getMinerPubKeyHashUtf8(): string;
     getUserNonce(): Buffer;
+    getUserNonceUtf8(): string;
     getExtraNonce1(): Buffer;
     getExtraNonce2(): Buffer;
     getAdditionalData(): Buffer;
+    getAdditionalDataUtf8(): string;
     toString(): string;
     getCoinbaseString(): string;
     hash(): any;

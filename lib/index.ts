@@ -5,6 +5,7 @@ import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostPowSimpleMinerModel } from './boost-pow-simple-miner-model';
 import { BoostUtils } from './boost-utils';
 import { BoostGraphApiClient } from './boost-graph-api-client';
+import { BoostSignalModel } from './boost-signal-model';
 
 const defaultOptions: any = {
   graph_api_url: 'https://graph2.boostpow.com',
@@ -37,8 +38,8 @@ export class BoostGraphClient {
     return BoostPowMetadataModel;
   }
 
-  get BoostPowSimpleMiner() {
-    return BoostPowSimpleMinerModel;
+  get BoostPowSignal() {
+    return BoostSignalModel;
   }
   get BoostUtilsHelper() {
     return BoostUtilsHelper;
@@ -102,7 +103,7 @@ try {
       BoostPowJob: BoostPowJobModel,
       BoostPowJobProof: BoostPowJobProofModel,
       BoostPowMetadata: BoostPowMetadataModel,
-      BoostPowSimpleMiner: BoostPowSimpleMinerModel,
+      BoostSignal: BoostSignalModel,
       BoostUtils: BoostUtils,
     };
   }
@@ -115,8 +116,7 @@ export var BoostPowString = BoostPowStringModel;
 export var BoostPowJob = BoostPowJobModel;
 export var BoostPowJobProof = BoostPowJobProofModel;
 export var BoostPowMetadata = BoostPowMetadataModel;
-export var BoostPowSimpleMiner = BoostPowSimpleMinerModel;
 export var BoostUtilsHelper = BoostUtils;
 export var BoostGraph = BoostGraphClient;
-
+export var BoostSignal = BoostSignalModel;
 
