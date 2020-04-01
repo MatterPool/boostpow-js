@@ -92,6 +92,7 @@ describe('APIClient', () => {
          {
             boostJobId: "5cb0245a9e44f409b26d357a1f03cc30309e056d7acee769c3050b058dd22cdc.0",
             boostJobProofId: '3b56d3a6118ee837e27e4ee508db1a2919630f485a36cec02ea11051b6712592.0',
+            boostPowHash: '3b56d3a6118ee837e27e4ee508db1a2919630f485a36cec02ea11051b6712592',
             boostJob: {
                boostJobId: goodBostJobTxid + '.' + goodBostJobTxVout,
                txid: goodBostJobTxid,

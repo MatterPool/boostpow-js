@@ -93,4 +93,18 @@ describe('Graph Search', () => {
       expect(signals.length > 0).to.eql(true);
    });
 
+   it('search all', async () => {
+      const result = await index.Graph(options).search({contentutf8: 'test1235'});
+
+      let signals = [];
+      for (const item of result.mined) {
+         const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
+         expect(!!signal).to.eql(true);
+ 
+         signals.push(signals);
+      }
+      expect(signals.length > 0).to.eql(true);
+
+   });
+
 });

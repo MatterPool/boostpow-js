@@ -185,8 +185,124 @@ describe('Boost Signal Ranker', () => {
          expect(!!item.getBoostJobId()).to.eql(true);
          expect(!!item.getBoostJobProofId()).to.eql(true);
       }
-
-      // group by userNonce
    });
+   it('search group by each type', async () => {
+      const sample = [ { boostJobId: '9c9225eae6952577805c52db2324b912c313f05268e9feb39723cbf0b9ca4366.0',
+         boostJobProofId: '4a801ca78670d847749d16258ecee47f3b6820c1aee12c7840271e1c36a3faf6.0',
+         boostPowString: '7274746d7461000000000000000000000000000000000000000000000000000000000000f374355bf20d1f328a9bedf2d710a4aea8f18de8fa62b36da6a3d8df28dcf188bc95835e0055551c005c5124',
+         boostPowMetadata: '7274746d0000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000006400000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: 'e82302a424b82c615070d6950464761661326afdf207a4c5253a96b9e479ff28.0',
+         boostJobProofId: 'e470e99e26cc9624cc6acc6243bbb0da25b8fc68bb35c35d43927e6492a9b3bc.0',
+         boostPowString: '7274746d35333231747365740000000000000000000000000000000000000000000000002b4d2be5295802423194712156822f6bb628bdbb2b329c9f1847b38be57f4e115993835effff001dbbc9a87d',
+         boostPowMetadata: '726567676174000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: '7d42d8292eca15548d2601057bb6c076fb79a6fe371e3d2a7a038b9031ca8f92.2',
+         boostJobProofId: 'de90d82c137e894f391f31f24610b6f704b7eb32634f1638696fcd7072e72e73.0',
+         boostPowString: '426165733ebcb9fe837ff4c3eb063e0e378cb06f0d72b3474f66d80f1a51d77fb6d9ebcebc1feaf80b38dbe16ebd7ec47fd025b78ebc45c0d9280a6bd769044a05383165dd76835effff001db7f221eb',
+         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460561e600000000000000006f377a4b0000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: '0b33f92e5b01321bde80862ab98aa63e9faa34a39b8ac90f63dfb91be8c35298.0',
+         boostJobProofId: 'e1d83d15957fe06ee0bbfb36ae8a3d4759654ed60dda77376cd53d9ba49ece77.0',
+         boostPowString: '65707974746e65746e6f6300000000000000000000000000000000000000000000000000009f8bc27587f9fe2442bda91d8b657423b68cfcf0d9c5a4ada012038cf182b37500835effff001dccd3e126',
+         boostPowMetadata: '676174000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046049790000000000000000072657375617461646c616e6f697469646461000000000000000000000000000000000000' },
+      { boostJobId: '7cde2eeebf337182f6ccd5a6b2de14e7f6ab7ce2cb8c7796457c1a3e04c8821a.1',
+         boostJobProofId: '6b85704dbbb39302018f41a5ea8737b76ff3410738d1428d7c6f122f27819579.0',
+         boostPowString: '4261657307841772e19a840e2d7b5c1b703729375cd3ee9d6ccedf82170b9d5db1d301ae0ade80d57f3500997ce4596354476a808da063f2ad50c012b195241da7e1595901fc825effff001dc19f01e0',
+         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca1904604979000000000000000005675334c0000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: 'b59a9b29712da100f708226cae08e284e593f39e986c67dd12f0e3ad1f355bb4.1',
+         boostJobProofId: '83af733c825a616e74cffb52244d625696a3980eb29f643fa800345c9a027bbe.0',
+         boostPowString: '4261657322488a0c5658798aca15575f86176917e874182b50ecb7825c953b9ef28ae14f10ad9db13b7f1e85e4e168e476a72c17a7146159d727b92bb37fc0daac1e6caeb0fb825effff001d5de176eb',
+         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca1904604979000000000000000007072334c0000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: '294b7e9f2c4ef9feea41ffd5ce17292ed13b0e36a89ff8a4d6c12b73309c5969.0',
+         boostJobProofId: '5fe5df6419c13626e7bd1e4af6b7964010cf2d112ae7efa0b818c780dbad1c22.0',
+         boostPowString: '0000000031000000000000000000000000000000000000000000000000000000000000002368708a1fda2264631415e0d84cad7ca7ccd956401ab474303e460f86baa3d06af1825effff001d2e8b525b',
+         boostPowMetadata: '697461000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460482ef0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
 
+      { boostJobId: undefined,
+         boostJobProofId: undefined,
+         boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08189d9835effff001d853fa90c',
+         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: undefined,
+         boostJobProofId: undefined,
+         boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08124d9835e0055551c1e51e2c9',
+         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+      { boostJobId: undefined,
+         boostJobProofId: undefined,
+         boostPowString: '7274746d35333231747365740000000000000000000000000000000000000000000000002b4d2be5295802423194712156822f6bb628bdbb2b329c9f1847b38be57f4e115993835effff001dbbc9a87d',
+         boostPowMetadata: '726567676174000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' }
+      ];
+      const ranker = index.BoostSignalRanker.fromArray(sample);
+      const ranked = ranker.group('content');
+      const expected = [
+         {
+            field: 'content',
+            fieldValue: 'test1235',
+            expectedDifficulty: 6,
+            allLength: 4
+         },
+         {
+            field: 'content',
+            fieldValue: 'at',
+            expectedDifficulty: 3,
+            allLength: 1
+         },
+
+         {
+            field: 'content',
+            hex: true,
+            fieldValue: 'ceebd9b67fd7511a0fd8664f47b3720d6fb08c370e3e06ebc3f47f83feb9bc3e',
+            expectedDifficulty: 1,
+            allLength: 1
+         },
+         {
+            field: 'content',
+            fieldValue: '00000000000000000000000000000000000000000000000000636f6e74656e74',
+            hex: true,
+            expectedDifficulty: 1,
+            allLength: 1
+         },
+
+         {
+            field: 'content',
+            fieldValue: 'ae01d3b15d9d0b1782dfce6c9deed35c372937701b5c7b2d0e849ae172178407',
+            hex: true,
+            expectedDifficulty: 1,
+            allLength: 1
+         },
+
+         {
+            field: 'content',
+            fieldValue: '4fe18af29e3b955c82b7ec502b1874e8176917865f5715ca8a7958560c8a4822',
+            hex: true,
+            expectedDifficulty: 1,
+            allLength: 1
+
+         },
+         {
+            field: 'content',
+            fieldValue: '0000000000000000000000000000000000000000000000000000000000000031',
+            hex: true,
+            expectedDifficulty: 1,
+            allLength: 1
+
+         }
+      ];
+
+       // Check that all items are returned in order
+       let maxDiff = 9999999999999;
+       expect(sample.length).to.eql(10);
+       expect(ranked.length).to.eql(7);
+       for (const item of ranked) {
+          if (item.totalDifficulty > maxDiff) {
+             throw new Error('invalid order');
+          }
+          maxDiff = item.totalDifficulty;
+       }
+
+      for (let i = 0; i < expected.length; i++) {
+         const hex = expected[i].hex;
+         expect(ranked[i].first[expected[i].field](hex)).to.eql(expected[i].fieldValue);
+         expect(ranked[i].totalDifficulty).to.eql(expected[i].expectedDifficulty);
+         expect(ranked[i].all.length).to.eql(expected[i].allLength);
+      }
+
+   });
 });

@@ -102,10 +102,16 @@ class BoostSignalModel {
         return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
     }
     toString() {
-        return this.toObject().toString();
+        let str = this.boostPowString.toString();
+        if (this.boostPowMetadata) {
+            str += this.boostPowMetadata;
+        }
+        return str;
     }
     toObject() {
         return {
+            boostJobId: this.boostJobId,
+            boostJobProofId: this.boostJobProofId,
             boostPowString: this.boostPowString.toString(),
             boostPowMetadata: this.boostPowMetadata ? this.boostPowMetadata.toString() : null,
         };

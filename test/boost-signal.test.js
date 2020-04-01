@@ -29,6 +29,8 @@ describe('boost #BoostSignal tests', () => {
 
       const signal = index.BoostSignal.fromHex(pows[0].boostPowString);
       expect(signal.toObject()).to.eql({
+         boostJobId: undefined,
+         boostJobProofId: undefined,
          boostPowString: '0000000033323339747365542074736f6f42206f6c6c6548000000000000000000000000946cb28060eeb84d58176310531b98f043b9c3c7aa9afb22b153431e9b247471f4cf825e80ff7f1ced58f240',
          boostPowMetadata: null
       });
@@ -49,6 +51,8 @@ describe('boost #BoostSignal tests', () => {
 
       const signal = index.BoostSignal.fromHex(pows[0].boostPowString + pows[0].boostPowMetadata);
       expect(signal.toObject()).to.eql({
+         boostJobId: undefined,
+         boostJobProofId: undefined,
          boostPowString: '0000000033323339747365542074736f6f42206f6c6c6548000000000000000000000000946cb28060eeb84d58176310531b98f043b9c3c7aa9afb22b153431e9b247471f4cf825e80ff7f1ced58f240',
          boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
       });
@@ -68,6 +72,8 @@ describe('boost #BoostSignal tests', () => {
 
       const signal = index.BoostSignal.fromHex(pows[1].boostPowString, pows[1].boostPowMetadata);
       expect(signal.toObject()).to.eql({
+         boostJobId: undefined,
+         boostJobProofId: undefined,
          boostPowString: '0000000033323339747365542074736f6f42206f6c6c65480000000000000000000000001719080ea4eaa516315f887cde5188129f413e33ca0dd8dafd0c5848948d3bb500cc825effff001d08e93848',
          boostPowMetadata: '67617420796d000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000',
       });
@@ -102,13 +108,16 @@ describe('boost #BoostSignal tests', () => {
             boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' }
       ];
 
-      const signal = index.BoostSignal.fromHex(pows[1].boostPowString, pows[1].boostPowMetadata);
+      const signal = index.BoostSignal.fromHex(pows[1].boostPowString, pows[1].boostPowMetadata, '0138e22adf9f1ad791e8502fdd5217cefad49cc9da21450ddadd104a1b1eb71e');
       expect(signal.toObject()).to.eql({
+         boostJobId: '0138e22adf9f1ad791e8502fdd5217cefad49cc9da21450ddadd104a1b1eb71e',
+         boostJobProofId: undefined,
          boostPowString: '0000000033323339747365542074736f6f42206f6c6c65480000000000000000000000001719080ea4eaa516315f887cde5188129f413e33ca0dd8dafd0c5848948d3bb500cc825effff001d08e93848',
          boostPowMetadata: '67617420796d000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000',
       });
+      expect(signal.toString()).to.eql('0000000033323339747365542074736f6f42206f6c6c65480000000000000000000000001719080ea4eaa516315f887cde5188129f413e33ca0dd8dafd0c5848948d3bb500cc825effff001d08e9384867617420796d000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000');
 
-      expect(signal.getBoostJobId()).to.eql(undefined);
+      expect(signal.getBoostJobId()).to.eql('0138e22adf9f1ad791e8502fdd5217cefad49cc9da21450ddadd104a1b1eb71e');
       expect(signal.getBoostJobProofId()).to.eql(undefined);
       expect(signal.category()).to.eql('\u0000\u0000\u0000\u0000');
       expect(signal.category(true)).to.eql('00000000');
