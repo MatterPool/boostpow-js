@@ -4,6 +4,8 @@ import * as bsv from 'bsv';
 import { GraphSearchResultItem } from './graph-search-result-item';
 import { GraphSearchQueryResponse } from './graph-search-query-response';
 import { GraphSearchQuery, GraphSearchQueryString } from './graph-search-query';
+import { BoostSignalRanker } from '.';
+import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 
 export interface BoostClientApiClientOptions {
     graph_api_url: string;
@@ -172,11 +174,38 @@ export class BoostGraphApiClient {
         return {
             q: response.data.q,
             nextPaginationToken: response.data.nextPaginationToken,
-            mined: response.data.mined
+            mined:  response.data.mined
         }
     }
 
-    search(q?: GraphSearchQuery, options?: { mined?: boolean }, callback?: Function): Promise<GraphSearchQueryResponse> {
+    static buildSignalRank(response: any): BoostSignalRankerModel {
+        return BoostSignalRanker.fromArray(response.data.mined);
+    }
+
+    search(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse> {
+        return new Promise((resolve, reject) => {
+            let qString = '?';
+            qString += GraphSearchQueryString.build(q);
+            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                const signalRanker = BoostGraphApiClient.buildSignalRank(response);
+                return this.resolveOrCallback(resolve, signalRanker, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost job status error',
+                        error: 'BOOST_JOB_STATUS_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+    rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
             let qString = '?';
             qString += GraphSearchQueryString.build(q);

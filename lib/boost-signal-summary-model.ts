@@ -13,10 +13,10 @@ export class BoostSignalSummary{
     get totalDifficulty() {
         return this.totalDifficulty_;
     }
-    get first(): BoostSignalModel {
+    get entity(): BoostSignalModel {
         return this.boostSignals[0];
     }
-    get all(): BoostSignalModel[] {
+    get signals(): BoostSignalModel[] {
         return this.boostSignals;
     }
     toString() {
@@ -30,7 +30,7 @@ export class BoostSignalSummary{
         return {
             totalDifficulty: this.totalDifficulty,
             first: this.boostSignals[0].toObject(),
-            all: i
+            signals: i
         }
     }
 }

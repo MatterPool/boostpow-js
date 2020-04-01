@@ -11,9 +11,9 @@ describe('Graph Search', () => {
 
    it('search matching contentutf8', async () => {
       const s = 'Hello Boost Test9323';
-      const result = await index.Graph(options).search({
+      const result = await index.Graph(options).rawSearch({
          contentutf8: s
-      }, {});
+      });
 
       let signals = [];
       for (const item of result.mined) {
@@ -25,9 +25,9 @@ describe('Graph Search', () => {
    });
    it('search matching contenthex', async () => {
       const s = '00000000000000000000000048656c6c6f20426f6f7374205465737439333233';
-      const result = await index.Graph(options).search({
+      const result = await index.Graph(options).rawSearch({
          contenthex: s
-      }, {});
+      });
 
       let signals = [];
       for (const item of result.mined) {
@@ -41,10 +41,10 @@ describe('Graph Search', () => {
    it('search matching contenthex and content', async () => {
       const s = '00000000000000000000000048656c6c6f20426f6f7374205465737439333233';
       const s2 = 'Hello Boost Test9323';
-      const result = await index.Graph(options).search({
+      const result = await index.Graph(options).rawSearch({
          contenthex: s,
          contentutf8: s2
-      }, {});
+      });
 
       let signals = [];
       for (const item of result.mined) {
@@ -55,7 +55,7 @@ describe('Graph Search', () => {
       }
       expect(signals.length > 0).to.eql(true);
 
-      const result2 = await index.Graph(options).search({categoryutf8: 'mttr'});
+      const result2 = await index.Graph(options).rawSearch({categoryutf8: 'mttr'});
       let signals2 = [];
       for (const item of result2.mined) {
          const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
@@ -68,7 +68,7 @@ describe('Graph Search', () => {
    });
    it('search matching not found empty', async () => {
       const s2 = 'super secret string';
-      const result = await index.Graph(options).search({
+      const result = await index.Graph(options).rawSearch({
          contentutf8: s2
       });
 
@@ -82,7 +82,7 @@ describe('Graph Search', () => {
       });
    });
    it('search all', async () => {
-      const result = await index.Graph(options).search();
+      const result = await index.Graph(options).rawSearch();
 
       let signals = [];
       for (const item of result.mined) {
@@ -93,17 +93,31 @@ describe('Graph Search', () => {
       expect(signals.length > 0).to.eql(true);
    });
 
-   it('search all', async () => {
-      const result = await index.Graph(options).search({contentutf8: 'test1235'});
+   it('search rawsearch', async () => {
+      const result = await index.Graph(options).rawSearch({contentutf8: 'test1235'});
 
       let signals = [];
       for (const item of result.mined) {
          const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
          expect(!!signal).to.eql(true);
- 
+
          signals.push(signals);
       }
       expect(signals.length > 0).to.eql(true);
+
+   });
+
+   it('search total difficulty for a peice of content', async () => {
+      const result = await index.Graph(options).search({
+         contentutf8: 'test1235',
+         categoryutf8: 'mttr',
+         tagutf8: 'bitcoin-protocol'
+      });
+
+      expect(result.first.entity.content()).to.eql('test1235');
+      expect(result.first.totalDifficulty).to.eql(1);
+      expect(result.list[0].entity.content()).to.eql('test1235');
+
 
    });
 

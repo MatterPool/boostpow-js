@@ -14,10 +14,10 @@ class BoostSignalSummary {
     get totalDifficulty() {
         return this.totalDifficulty_;
     }
-    get first() {
+    get entity() {
         return this.boostSignals[0];
     }
-    get all() {
+    get signals() {
         return this.boostSignals;
     }
     toString() {
@@ -31,7 +31,7 @@ class BoostSignalSummary {
         return {
             totalDifficulty: this.totalDifficulty,
             first: this.boostSignals[0].toObject(),
-            all: i
+            signals: i
         };
     }
 }

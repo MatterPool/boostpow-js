@@ -176,14 +176,14 @@ describe('Boost Signal Ranker', () => {
       // Check that all items are returned in order
       let maxDiff = 9999999999999;
       expect(sample.length).to.eql(40);
-      expect(ranker.list.length).to.eql(40);
+      expect(ranker.list.length).to.eql(33);
       for (const item of ranker.list) {
-         if (item.difficulty() > maxDiff) {
+         if (item.totalDifficulty > maxDiff) {
             throw new Error('invalid order');
          }
-         maxDiff = item.difficulty();
-         expect(!!item.getBoostJobId()).to.eql(true);
-         expect(!!item.getBoostJobProofId()).to.eql(true);
+         maxDiff = item.totalDifficulty;
+         expect(!!item.first.getBoostJobId()).to.eql(true);
+         expect(!!item.first.getBoostJobProofId()).to.eql(true);
       }
    });
    it('search group by each type', async () => {
@@ -230,7 +230,10 @@ describe('Boost Signal Ranker', () => {
          boostPowMetadata: '726567676174000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' }
       ];
       const ranker = index.BoostSignalRanker.fromArray(sample);
+
       const ranked = ranker.group('content');
+      expect(ranked[0].totalDifficulty).to.eql(6);
+
       const expected = [
          {
             field: 'content',

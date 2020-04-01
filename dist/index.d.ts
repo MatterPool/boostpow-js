@@ -15,7 +15,8 @@ export declare class BoostGraphClient {
     readonly BoostPowMetadata: typeof BoostPowMetadataModel;
     readonly BoostPowSignal: typeof BoostSignalModel;
     readonly BoostUtilsHelper: typeof BoostUtils;
-    search(q?: {}, options?: {}, callback?: Function): Promise<any>;
+    rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<any>;
+    search(q?: GraphSearchQuery, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<any>;
     submitBoostSolution(params: {
@@ -41,8 +42,10 @@ export declare var BoostUtilsHelper: typeof BoostUtils;
 export declare var BoostGraph: typeof BoostGraphClient;
 export declare var BoostSignal: typeof BoostSignalModel;
 export declare var BoostSignalRanker: typeof BoostSignalRankerModel;
-declare function searchGraph(q?: GraphSearchQuery, options?: {}, callback?: Function): Promise<any>;
+declare function searchGraph(q?: GraphSearchQuery, callback?: Function): Promise<any>;
+declare function rawSearchGraph(q?: GraphSearchQuery, callback?: Function): Promise<any>;
 export declare var search: typeof searchGraph;
+export declare var rawSearch: typeof rawSearchGraph;
 declare function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any>;
 export declare var submitJob: typeof submitBoostJobGraph;
 declare function getBoostJobStatusGraph(txid: string, callback?: Function): Promise<any>;

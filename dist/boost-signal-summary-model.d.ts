@@ -4,16 +4,16 @@ export declare class BoostSignalSummary {
     private totalDifficulty_;
     constructor(boostSignals: BoostSignalModel[]);
     readonly totalDifficulty: number;
-    readonly first: BoostSignalModel;
-    readonly all: BoostSignalModel[];
+    readonly entity: BoostSignalModel;
+    readonly signals: BoostSignalModel[];
     toString(): {
         totalDifficulty: number;
         first: any;
-        all: any;
+        signals: any;
     };
     toObject(): {
         totalDifficulty: number;
         first: any;
-        all: any;
+        signals: any;
     };
 }

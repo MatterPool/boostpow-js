@@ -8,12 +8,32 @@ class BoostSignalRankerModel {
         this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
     }
     ;
+    get first() {
+        const sigs = this.list;
+        return sigs && sigs.length ? sigs[0] : null;
+    }
     get list() {
-        return this.boostSignals;
+        const groups = {};
+        for (const item of this.boostSignals) {
+            const itemKey = item.content(true) + item.category(true) + item.tag(true) + item.additionalData(true);
+            if (!groups[itemKey]) {
+                groups[itemKey] = [];
+            }
+            groups[itemKey].push(item);
+        }
+        const resultList = [];
+        for (const groupedKey in groups) {
+            if (!groups.hasOwnProperty(groupedKey)) {
+                continue;
+            }
+            resultList.push(new boost_signal_summary_model_1.BoostSignalSummary(groups[groupedKey]));
+        }
+        resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1);
+        return resultList;
     }
     group(field1) {
         if (!field1 || field1 === '') {
-            field1 = 'usernonce';
+            throw new Error('invalid arg');
         }
         const groups = {};
         for (const item of this.boostSignals) {

@@ -38,9 +38,13 @@ class BoostGraphClient {
     get BoostUtilsHelper() {
         return exports.BoostUtilsHelper;
     }
-    search(q, options, callback) {
+    rawSearch(q, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
-        return apiClient.search(q, options, callback);
+        return apiClient.rawSearch(q, callback);
+    }
+    search(q, callback) {
+        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
+        return apiClient.search(q, callback);
     }
     getBoostJobStatus(txid, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
@@ -106,11 +110,16 @@ exports.BoostUtilsHelper = boost_utils_1.BoostUtils;
 exports.BoostGraph = BoostGraphClient;
 exports.BoostSignal = boost_signal_model_1.BoostSignalModel;
 exports.BoostSignalRanker = boost_signal_ranker_model_1.BoostSignalRankerModel;
-function searchGraph(q, options, callback) {
+function searchGraph(q, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
-    return apiClient.search(q, options, callback);
+    return apiClient.search(q, callback);
+}
+function rawSearchGraph(q, callback) {
+    const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
+    return apiClient.search(q, callback);
 }
 exports.search = searchGraph;
+exports.rawSearch = rawSearchGraph;
 function submitBoostJobGraph(rawtx, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
     return apiClient.submitBoostJob(rawtx, callback);

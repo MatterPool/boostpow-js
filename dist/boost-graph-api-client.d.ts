@@ -2,6 +2,7 @@ import { BoostPowJobModel } from './boost-pow-job-model';
 import * as bsv from 'bsv';
 import { GraphSearchQueryResponse } from './graph-search-query-response';
 import { GraphSearchQuery } from './graph-search-query';
+import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 export interface BoostClientApiClientOptions {
     graph_api_url: string;
     api_url: string;
@@ -32,9 +33,9 @@ export declare class BoostGraphApiClient {
         redeemedvout?: number;
     }>;
     static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse;
-    search(q?: GraphSearchQuery, options?: {
-        mined?: boolean;
-    }, callback?: Function): Promise<GraphSearchQueryResponse>;
+    static buildSignalRank(response: any): BoostSignalRankerModel;
+    search(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse>;
+    rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse>;
     createBoostJob(params: {
         boost: {
             content: string;
