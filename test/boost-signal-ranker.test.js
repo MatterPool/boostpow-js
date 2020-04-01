@@ -182,8 +182,8 @@ describe('Boost Signal Ranker', () => {
             throw new Error('invalid order');
          }
          maxDiff = item.totalDifficulty;
-         expect(!!item.first.getBoostJobId()).to.eql(true);
-         expect(!!item.first.getBoostJobProofId()).to.eql(true);
+         expect(!!item.entity.getBoostJobId()).to.eql(true);
+         expect(!!item.entity.getBoostJobProofId()).to.eql(true);
       }
    });
    it('search group by each type', async () => {
@@ -302,9 +302,9 @@ describe('Boost Signal Ranker', () => {
 
       for (let i = 0; i < expected.length; i++) {
          const hex = expected[i].hex;
-         expect(ranked[i].first[expected[i].field](hex)).to.eql(expected[i].fieldValue);
+         expect(ranked[i].entity[expected[i].field](hex)).to.eql(expected[i].fieldValue);
          expect(ranked[i].totalDifficulty).to.eql(expected[i].expectedDifficulty);
-         expect(ranked[i].all.length).to.eql(expected[i].allLength);
+         expect(ranked[i].signals.length).to.eql(expected[i].allLength);
       }
 
    });

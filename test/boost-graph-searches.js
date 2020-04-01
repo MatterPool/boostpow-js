@@ -4,7 +4,7 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 var options = {
-   graph_api_url: 'http://localhost:3000'
+   // graph_api_url: 'http://localhost:3000'
 }
 
 describe('Graph Search', () => {
