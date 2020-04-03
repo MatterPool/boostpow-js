@@ -32,7 +32,6 @@ describe('Graph Search', () => {
       let signals = [];
       for (const item of result.mined) {
          const signal = index.BoostSignal.fromHex(item.boostPowString, item.boostPowMetadata);
-         console.log(item);
          expect(signal.content(true)).to.eql(s);
          signals.push(signal);
       }
@@ -77,7 +76,9 @@ describe('Graph Search', () => {
         "nextPaginationToken": null,
         "q": {
          "contentutf8": "super secret string",
-        "limit": 10000
+        "limit": 10000,
+        "be": true,
+        "unmined": true
          }
       });
    });
@@ -115,7 +116,7 @@ describe('Graph Search', () => {
       });
 
       expect(result.first.entity.content()).to.eql('test1235');
-      expect(result.first.totalDifficulty).to.eql(1);
+      expect(result.first.totalDifficulty).to.eql(2);
       expect(result.list[0].entity.content()).to.eql('test1235');
 
 

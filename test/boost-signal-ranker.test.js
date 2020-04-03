@@ -176,7 +176,7 @@ describe('Boost Signal Ranker', () => {
       // Check that all items are returned in order
       let maxDiff = 9999999999999;
       expect(sample.length).to.eql(40);
-      expect(ranker.list.length).to.eql(33);
+      expect(ranker.list.length).to.eql(31);
       for (const item of ranker.list) {
          if (item.totalDifficulty > maxDiff) {
             throw new Error('invalid order');
@@ -186,6 +186,41 @@ describe('Boost Signal Ranker', () => {
          expect(!!item.entity.getBoostJobProofId()).to.eql(true);
       }
    });
+
+   it('search all rank by multiple groups', async () => {
+      const sample = [ { boostJobId: '9c9225eae6952577805c52db2324b912c313f05268e9feb39723cbf0b9ca4366.0',
+     boostPowMetadata: '7274746d0000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000006400000000000000000000000000000000000000000000000000000000000000' },
+    { boostPowString: '7274746d35333231747365740000000000000000000000000000000000000000000000002b4d2be5295802423194712156822f6bb628bdbb2b329c9f1847b38be57f4e115993835effff001dbbc9a87d',
+      boostPowMetadata: '726567676174000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+    { boostPowString: '426165733ebcb9fe837ff4c3eb063e0e378cb06f0d72b3474f66d80f1a51d77fb6d9ebcebc1feaf80b38dbe16ebd7ec47fd025b78ebc45c0d9280a6bd769044a05383165dd76835effff001db7f221eb',
+      boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460561e600000000000000006f377a4b0000000000000000000000000000000000000000000000000000000000000000' },
+    { boostPowString: '65707974746e65746e6f6300000000000000000000000000000000000000000000000000009f8bc27587f9fe2442bda91d8b657423b68cfcf0d9c5a4ada012038cf182b37500835effff001dccd3e126',
+      boostPowMetadata: '676174000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046049790000000000000000072657375617461646c616e6f697469646461000000000000000000000000000000000000' },
+    { boostPowString: '4261657307841772e19a840e2d7b5c1b703729375cd3ee9d6ccedf82170b9d5db1d301ae0ade80d57f3500997ce4596354476a808da063f2ad50c012b195241da7e1595901fc825effff001dc19f01e0',
+      boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca1904604979000000000000000005675334c0000000000000000000000000000000000000000000000000000000000000000' },
+    { boostPowString: '4261657322488a0c5658798aca15575f86176917e874182b50ecb7825c953b9ef28ae14f10ad9db13b7f1e85e4e168e476a72c17a7146159d727b92bb37fc0daac1e6caeb0fb825effff001d5de176eb',
+      boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca1904604979000000000000000007072334c0000000000000000000000000000000000000000000000000000000000000000' },
+   ];
+      const contentRanker = index.BoostSignalRanker.fromArray(sample);
+
+      expect(contentRanker.lastSignalTime).to.eql(1585642416);
+      expect(contentRanker.recentSignalTime).to.eql(1585681241);
+
+      expect(contentRanker.list.length).to.eql(5);
+      expect(contentRanker.totalEnergy).to.eql(5);
+      expect(contentRanker.totalDifficulty).to.eql(5);
+
+      expect(contentRanker.first.totalEnergy).to.eql(1);
+      expect(contentRanker.first.totalDifficulty).to.eql(1);
+      expect(contentRanker.first.lastSignalTime).to.eql(1585681241);
+      expect(contentRanker.first.recentSignalTime).to.eql(1585681241);
+      expect(contentRanker.second.totalEnergy).to.eql(1);
+      expect(contentRanker.third.totalEnergy).to.eql(1);
+      expect(contentRanker.fourth.totalEnergy).to.eql(1);
+      expect(contentRanker.last.totalEnergy).to.eql(1);
+  });
+
+
    it('search group by each type', async () => {
       const sample = [ { boostJobId: '9c9225eae6952577805c52db2324b912c313f05268e9feb39723cbf0b9ca4366.0',
          boostJobProofId: '4a801ca78670d847749d16258ecee47f3b6820c1aee12c7840271e1c36a3faf6.0',
@@ -220,11 +255,17 @@ describe('Boost Signal Ranker', () => {
          boostJobProofId: undefined,
          boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08189d9835effff001d853fa90c',
          boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
-      { boostJobId: undefined,
-         boostJobProofId: undefined,
-         boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08124d9835e0055551c1e51e2c9',
-         boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
-      { boostJobId: undefined,
+         { boostJobId: undefined,
+          boostJobProofId: undefined,
+          boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08124d9835e0055551c1e51e2c9',
+          boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+          // insert duplicate
+        { boostJobId: undefined,
+          boostJobProofId: undefined,
+          boostPowString: '000000003533323174736574000000000000000000000000000000000000000000000000b1a688961aa5f0f8c59777ef880b4f70aa6bb54a7bf4208da815ccce03d7d08124d9835e0055551c1e51e2c9',
+          boostPowMetadata: '000000000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460600370000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' },
+
+        { boostJobId: undefined,
          boostJobProofId: undefined,
          boostPowString: '7274746d35333231747365740000000000000000000000000000000000000000000000002b4d2be5295802423194712156822f6bb628bdbb2b329c9f1847b38be57f4e115993835effff001dbbc9a87d',
          boostPowMetadata: '726567676174000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca19046058ffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' }
@@ -232,14 +273,14 @@ describe('Boost Signal Ranker', () => {
       const ranker = index.BoostSignalRanker.fromArray(sample);
 
       const ranked = ranker.group('content');
-      expect(ranked[0].totalDifficulty).to.eql(6);
+      expect(ranked[0].totalDifficulty).to.eql(5);
 
       const expected = [
          {
             field: 'content',
             fieldValue: 'test1235',
-            expectedDifficulty: 6,
-            allLength: 4
+            expectedDifficulty: 5,
+            allLength: 3
          },
          {
             field: 'content',
@@ -291,7 +332,8 @@ describe('Boost Signal Ranker', () => {
 
        // Check that all items are returned in order
        let maxDiff = 9999999999999;
-       expect(sample.length).to.eql(10);
+       console.log(ranked.list);
+       expect(sample.length).to.eql(11);
        expect(ranked.length).to.eql(7);
        for (const item of ranked) {
           if (item.totalDifficulty > maxDiff) {
