@@ -64,7 +64,7 @@ export class BoostSignalRankerModel {
     get list(): BoostSignalSummary[] {
         const groups: any = {}
         for (const item of this.boostSignals) {
-            const itemKey = item.content(true) + item.category(true);
+            const itemKey = item.content(true);
             if (!groups[itemKey]) {
                 groups[itemKey] = [];
             }
@@ -81,7 +81,23 @@ export class BoostSignalRankerModel {
         return resultList;
     }
 
-    group(field1: string): BoostSignalSummary[] {
+    get length(): number {
+        return this.list.length;
+    }
+
+    groupByCategory(): BoostSignalSummary[] {
+        return this.groupPrivate('category');
+    }
+    groupByContent(): BoostSignalSummary[] {
+        return this.groupPrivate('content');
+    }
+    groupByTag(): BoostSignalSummary[] {
+        return this.groupPrivate('tag');
+    }
+    groupByAdditionalData(): BoostSignalSummary[] {
+        return this.groupPrivate('additionalData');
+    }
+    private groupPrivate(field1: string): BoostSignalSummary[] {
         if (!field1 || field1 === '') {
             throw new Error('invalid arg');
         }
@@ -132,8 +148,8 @@ export class BoostSignalRankerModel {
         return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals));
     }
 
-    static fromArray(items: any[]): BoostSignalRankerModel {
-
+    static fromArray(items: Array<{boostPowString: string, boostPowMetadata: string, boostJobId: string, boostJobProofId: string}>): BoostSignalRankerModel {
+      //  todo add filter restriction
         if (!items) {
             return new BoostSignalRankerModel([]);
         }

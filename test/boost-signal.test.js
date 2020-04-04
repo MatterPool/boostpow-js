@@ -82,9 +82,9 @@ describe('boost #BoostSignal tests', () => {
       expect(signal.category(true)).to.eql('00000000');
       expect(signal.content()).to.eql('Hello Boost Test9323');
       expect(signal.content(true)).to.eql('00000000000000000000000048656c6c6f20426f6f7374205465737439333233');
-      expect(signal.tag()).to.eql('\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000my tag');
+      expect(signal.tag()).to.eql('my tag');
       expect(signal.tag(true)).to.eql('00000000000000000000000000006d7920746167');
-      expect(signal.additionalData()).to.eql("\u0000\u0000\u0000{ type: \'testing\', foo: 432}");
+      expect(signal.additionalData()).to.eql("{ type: \'testing\', foo: 432}");
       expect(signal.additionalData(true)).to.eql('000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
       expect(signal.userNonce()).to.eql('');
       expect(signal.userNonce(true)).to.eql('00000000');
@@ -123,9 +123,9 @@ describe('boost #BoostSignal tests', () => {
       expect(signal.category(true)).to.eql('00000000');
       expect(signal.content()).to.eql('Hello Boost Test9323');
       expect(signal.content(true)).to.eql('00000000000000000000000048656c6c6f20426f6f7374205465737439333233');
-      expect(signal.tag()).to.eql('\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000my tag');
+      expect(signal.tag()).to.eql('my tag');
       expect(signal.tag(true)).to.eql('00000000000000000000000000006d7920746167');
-      expect(signal.additionalData()).to.eql("\u0000\u0000\u0000{ type: \'testing\', foo: 432}");
+      expect(signal.additionalData()).to.eql("{ type: \'testing\', foo: 432}");
       expect(signal.additionalData(true)).to.eql('000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
       expect(signal.userNonce()).to.eql('');
       expect(signal.userNonce(true)).to.eql('00000000');

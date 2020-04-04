@@ -140,8 +140,8 @@ class BoostGraphApiClient {
             mined: response.data.mined
         };
     }
-    static buildSignalRank(response) {
-        return _1.BoostSignalRanker.fromArray(response.data.mined);
+    static buildSignalRank(mined) {
+        return _1.BoostSignalRanker.fromArray(mined);
     }
     search(q, callback) {
         return new Promise((resolve, reject) => {
@@ -150,14 +150,14 @@ class BoostGraphApiClient {
             axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`, {
                 headers: this.getHeaders()
             }).then((response) => {
-                const signalRanker = BoostGraphApiClient.buildSignalRank(response);
+                const signalRanker = BoostGraphApiClient.buildSignalRank(response.data.mined);
                 return this.resolveOrCallback(resolve, signalRanker, callback);
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.code,
-                        message: 'boost job status error',
-                        error: 'BOOST_JOB_STATUS_ERROR'
+                        message: 'boost search error',
+                        error: 'BOOST_SEARCH_ERROR'
                     }), callback);
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);

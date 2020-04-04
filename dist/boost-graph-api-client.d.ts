@@ -33,8 +33,8 @@ export declare class BoostGraphApiClient {
         redeemedvout?: number;
     }>;
     static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse;
-    static buildSignalRank(response: any): BoostSignalRankerModel;
-    search(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse>;
+    static buildSignalRank(mined: any[]): BoostSignalRankerModel;
+    search(q?: GraphSearchQuery, callback?: Function): Promise<BoostSignalRankerModel>;
     rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse>;
     createBoostJob(params: {
         boost: {

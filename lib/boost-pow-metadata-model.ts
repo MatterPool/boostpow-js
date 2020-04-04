@@ -51,12 +51,12 @@ export class BoostPowMetadataModel {
         );
     }
     public trimBufferString(str: string, trimLeadingNulls = true): string {
-        let content = Buffer.from(str, 'hex').toString('utf8');
+        const content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
-            content = content.replace(/^\0/g, '');
-            content = content.replace(/\0*$/g, '');
+            return content.replace(/\0/g, '');
+        } else {
+            return content;
         }
-        return content;
     }
 
     getTag(): Buffer {

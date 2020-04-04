@@ -176,7 +176,7 @@ describe('Boost Signal Ranker', () => {
       // Check that all items are returned in order
       let maxDiff = 9999999999999;
       expect(sample.length).to.eql(40);
-      expect(ranker.list.length).to.eql(31);
+      expect(ranker.list.length).to.eql(28);
       for (const item of ranker.list) {
          if (item.totalDifficulty > maxDiff) {
             throw new Error('invalid order');
@@ -272,7 +272,7 @@ describe('Boost Signal Ranker', () => {
       ];
       const ranker = index.BoostSignalRanker.fromArray(sample);
 
-      const ranked = ranker.group('content');
+      const ranked = ranker.groupByContent();
       expect(ranked[0].totalDifficulty).to.eql(5);
 
       const expected = [

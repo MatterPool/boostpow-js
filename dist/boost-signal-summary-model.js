@@ -4,10 +4,11 @@ class BoostSignalSummary {
     constructor(boostSignals) {
         this.boostSignals = boostSignals;
         this.totalDifficulty_ = 0;
-        if (!boostSignals.length) {
+        this.boostSignals = BoostSignalSummary.dedupSignalObjects(boostSignals);
+        if (!this.boostSignals.length) {
             throw new Error('invalid arg');
         }
-        for (const signal of boostSignals) {
+        for (const signal of this.boostSignals) {
             this.totalDifficulty_ += signal.difficulty();
         }
         for (const sig of this.boostSignals) {
@@ -20,6 +21,18 @@ class BoostSignalSummary {
         }
     }
     ;
+    static dedupSignalObjects(items) {
+        const dedupMap = {};
+        const newList = [];
+        for (const item of items) {
+            if (dedupMap[item.getBoostPowString().toString()]) {
+                continue;
+            }
+            dedupMap[item.getBoostPowString().toString()] = true;
+            newList.push(item);
+        }
+        return newList;
+    }
     get lastSignalTime() {
         return this.lastSignalTime_;
     }

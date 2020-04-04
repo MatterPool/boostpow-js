@@ -5,6 +5,7 @@ export declare class BoostSignalSummary {
     private lastSignalTime_;
     private recentSignalTime_;
     constructor(boostSignals: BoostSignalModel[]);
+    static dedupSignalObjects(items: any[]): any[];
     readonly lastSignalTime: number;
     readonly recentSignalTime: number;
     readonly totalDifficulty: number;

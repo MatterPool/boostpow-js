@@ -16,9 +16,19 @@ export declare class BoostSignalRankerModel {
     readonly totalDifficulty: number;
     readonly totalEnergy: number;
     readonly list: BoostSignalSummary[];
-    group(field1: string): BoostSignalSummary[];
+    readonly length: number;
+    groupByCategory(): BoostSignalSummary[];
+    groupByContent(): BoostSignalSummary[];
+    groupByTag(): BoostSignalSummary[];
+    groupByAdditionalData(): BoostSignalSummary[];
+    private groupPrivate;
     static dedupPlainObjects(items: any): any[];
     static dedupSignalObjects(items: any[]): any[];
     static fromSignals(signals: BoostSignalModel[]): BoostSignalRankerModel;
-    static fromArray(items: any[]): BoostSignalRankerModel;
+    static fromArray(items: Array<{
+        boostPowString: string;
+        boostPowMetadata: string;
+        boostJobId: string;
+        boostJobProofId: string;
+    }>): BoostSignalRankerModel;
 }

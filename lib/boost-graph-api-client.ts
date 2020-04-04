@@ -178,11 +178,11 @@ export class BoostGraphApiClient {
         }
     }
 
-    static buildSignalRank(response: any): BoostSignalRankerModel {
-        return BoostSignalRanker.fromArray(response.data.mined);
+    static buildSignalRank(mined: any[]): BoostSignalRankerModel {
+        return BoostSignalRanker.fromArray(mined);
     }
 
-    search(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse> {
+    search(q?: GraphSearchQuery, callback?: Function): Promise<BoostSignalRankerModel> {
         return new Promise((resolve, reject) => {
             let qString = '?';
             qString += GraphSearchQueryString.build(q);
@@ -191,14 +191,14 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                const signalRanker = BoostGraphApiClient.buildSignalRank(response);
+                const signalRanker = BoostGraphApiClient.buildSignalRank(response.data.mined);
                 return this.resolveOrCallback(resolve, signalRanker, callback);
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.code,
-                        message: 'boost job status error',
-                        error: 'BOOST_JOB_STATUS_ERROR'
+                        message: 'boost search error',
+                        error: 'BOOST_SEARCH_ERROR'
                     }), callback)
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)

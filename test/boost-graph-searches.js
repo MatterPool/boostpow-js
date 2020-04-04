@@ -4,7 +4,7 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 var options = {
-   // graph_api_url: 'http://localhost:3000'
+   graph_api_url: 'http://localhost:3000'
 }
 
 describe('Graph Search', () => {
@@ -23,6 +23,7 @@ describe('Graph Search', () => {
       }
       expect(signals.length > 0).to.eql(true);
    });
+
    it('search matching contenthex', async () => {
       const s = '00000000000000000000000048656c6c6f20426f6f7374205465737439333233';
       const result = await index.Graph(options).rawSearch({
@@ -63,8 +64,8 @@ describe('Graph Search', () => {
          signals.push(signals2);
       }
       expect(signals2.length > 0).to.eql(false);
-
    });
+
    it('search matching not found empty', async () => {
       const s2 = 'super secret string';
       const result = await index.Graph(options).rawSearch({
@@ -78,7 +79,8 @@ describe('Graph Search', () => {
          "contentutf8": "super secret string",
         "limit": 10000,
         "be": true,
-        "unmined": true
+        "debug": true,
+         "expanded": true
          }
       });
    });
@@ -108,18 +110,132 @@ describe('Graph Search', () => {
 
    });
 
+   it('search by content hex and only get back content hex', async () => {
+      const result = await index.Graph(options).search({
+         contentutf8: 'test1235',
+         categoryutf8: 'mttr',
+         tagutf8: 'bitcoin-protocol'
+      });
+      for (const item of result.list) {
+         expect(item.entity.content()).to.eql('test1235');
+         expect(item.entity.category()).to.eql('mttr');
+         expect(item.entity.tag()).to.eql('bitcoin-protocol');
+      }
+      expect(result.length > 0).to.eql(true);
+   });
+
    it('search total difficulty for a peice of content', async () => {
       const result = await index.Graph(options).search({
          contentutf8: 'test1235',
          categoryutf8: 'mttr',
          tagutf8: 'bitcoin-protocol'
       });
-
+      expect(result.length).to.eql(1);
       expect(result.first.entity.content()).to.eql('test1235');
       expect(result.first.totalDifficulty).to.eql(2);
       expect(result.list[0].entity.content()).to.eql('test1235');
+   });
+
+   it('retrieve no matching signals at all', async () => {
+      const result = await index.Graph(options).search({
+         contentutf8: ['asdfsdfi1219092jkrha111'],
+      });
+      expect(result.first).to.eql(null);
+      expect(result.second).to.eql(null);
+      expect(result.third).to.eql(null);
+      expect(result.last).to.eql(null);
+      expect(result.length).to.eql(0);
+   });
+
+   it('CURRENT_TEST retrieve all signals that match at least one of content', async () => {
+      const result = await index.Graph(options).search({
+         contentutf8: ['hello', 'Hello World'],
+      });
+      for (const item of result.list) {
+         if (item.entity.content() !== 'hello' && item.entity.content() !== 'Hello World') {
+            expect(item.entity.content()).to.eql('fail');
+            expect('Fail').to.eql('Non matching hello and Hello World! returned: ' + item.entity.content());
+         }
+       }
+
+       expect(result.length > 1).to.eql(true);
+       expect(result.totalDifficulty).to.eql(24);
+
+       expect(result.first.totalDifficulty).to.eql(23);
+       expect(result.list[0].totalDifficulty).to.eql(23);
+       expect(result.second.totalDifficulty).to.eql(1);
+       expect(result.list[1].totalDifficulty).to.eql(1);
+   });
+
+   it('retrieve all signals that match the content and tags', async () => {
+      let result = await index.Graph(options).search({
+         contentutf8: ['supertest9382', 'superanimal9389', 'supertest9382'],
+      });
+
+      for (const item of result.list) {
+         if (item.entity.content() !== 'supertest9382' && item.entity.content() !== 'superanimal9389' && item.entity.content() !== 'supertest9382') {
+            expect('Fail').to.eql('Non matching string returned: ' + item.entity.content());
+         }
+      }
+
+      expect(result.length > 0).to.eql(true);
+      expect(result.totalDifficulty).to.eql(5);
+      expect(result.first.totalDifficulty).to.eql(3);
+      expect(result.list[0].totalDifficulty).to.eql(3);
+      expect(result.second.totalDifficulty).to.eql(2);
+      expect(result.list[1].totalDifficulty).to.eql(2);
 
 
+      result = await index.Graph(options).search({
+         contentutf8: 'supertest9382',
+         categoryutf8: 'mttr'
+      });
+
+      for (const item of result.list) {
+         if (item.entity.content() !== 'supertest9382') {
+            expect('Fail').to.eql('Non matching string returned: ' + item.entity.content());
+         }
+       }
+       expect(result.length > 0).to.eql(true);
+       expect(result.totalDifficulty).to.eql(1);
+       expect(result.first.totalDifficulty).to.eql(1);
+       expect(result.list[0].totalDifficulty).to.eql(1);
+
+   });
+
+   it('retrieve all signals that match category', async () => {
+      const result = await index.Graph(options).search({
+         category: '5421',                // Use single value. optional array performs logicsl OR for lookup.
+         content: ['hello4545823'],       // Use array. optional array performs logicsl OR for lookup.
+      });
+
+      expect(result.first.entity.content()).to.eql('hello4545823');
+      expect(result.first.entity.category()).to.eql('5421');
+      expect(result.first.totalDifficulty).to.eql(2);
+      expect(result.totalDifficulty).to.eql(2);
+   });
+
+   it('retrieve all signals for a content and category', async () => {
+      const result = await index.Graph(options).search({
+         category: '5421',                // Use single value. optional array performs logicsl OR for lookup.
+         content: ['hello4545823'],       // Use array. optional array performs logicsl OR for lookup.
+      });
+
+      expect(result.first.entity.content()).to.eql('hello4545823');
+      expect(result.first.entity.category()).to.eql('5421');
+      expect(result.first.totalDifficulty).to.eql(2);
+      expect(result.length).to.eql(1);
+   });
+
+   it('retrieve all signals for content. Dedup by content and usernonce only', async () => {
+      const result = await index.Graph(options).search({
+         content: ['usernoncetest314'],       // Use array. optional array performs logicsl OR for lookup.
+      });
+      expect(result.first.totalDifficulty).to.eql(5);
+      expect(result.length).to.eql(1);
+   });
+   it('retrieve all signals for content. Dedup by category, content and usernonce only', async () => {
+      // todo if you see this
    });
 
 });

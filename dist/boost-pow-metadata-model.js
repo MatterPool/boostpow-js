@@ -18,12 +18,13 @@ class BoostPowMetadataModel {
         return new BoostPowMetadataModel(params.tag, params.minerPubKeyHash, params.extraNonce1, params.extraNonce2, params.userNonce, params.additionalData);
     }
     trimBufferString(str, trimLeadingNulls = true) {
-        let content = Buffer.from(str, 'hex').toString('utf8');
+        const content = Buffer.from(str, 'hex').toString('utf8');
         if (trimLeadingNulls) {
-            content = content.replace(/^\0/g, '');
-            content = content.replace(/\0*$/g, '');
+            return content.replace(/\0/g, '');
         }
-        return content;
+        else {
+            return content;
+        }
     }
     getTag() {
         return this.tag;

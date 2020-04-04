@@ -8,17 +8,25 @@ export interface GraphSearchQuery {
     categoryutf8?: string;
     category?: string;
     categoryhex?: string;
-    usernonceutf8?: string;
-    usernonce?: string;
     usernoncehex?: string;
     additionaldatahex?: string;
-    additionaldata?: string;
     additionaldatautf8?: string;
+    additionaldata?: string;
     limit?: number;
     createdTimeFrom?: number;
     createdTimeEnd?: number;
     minedTimeFrom?: number;
     minedTimeEnd?: number;
+    boostPowString?: string;
+    boostHash?: string;
+    boostJobId?: string;
+    boostJobProofId?: string;
+    txid?: string;
+    spentTxid?: string;
+    unmined?: any;
+    debug?: boolean;
+    expanded?: boolean;
+    be?: boolean;
     paginationToken?: string;
 }
 export declare class GraphSearchQueryString {

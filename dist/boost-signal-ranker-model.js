@@ -57,7 +57,7 @@ class BoostSignalRankerModel {
     get list() {
         const groups = {};
         for (const item of this.boostSignals) {
-            const itemKey = item.content(true) + item.category(true);
+            const itemKey = item.content(true);
             if (!groups[itemKey]) {
                 groups[itemKey] = [];
             }
@@ -73,7 +73,22 @@ class BoostSignalRankerModel {
         resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1);
         return resultList;
     }
-    group(field1) {
+    get length() {
+        return this.list.length;
+    }
+    groupByCategory() {
+        return this.groupPrivate('category');
+    }
+    groupByContent() {
+        return this.groupPrivate('content');
+    }
+    groupByTag() {
+        return this.groupPrivate('tag');
+    }
+    groupByAdditionalData() {
+        return this.groupPrivate('additionalData');
+    }
+    groupPrivate(field1) {
         if (!field1 || field1 === '') {
             throw new Error('invalid arg');
         }
@@ -122,6 +137,7 @@ class BoostSignalRankerModel {
         return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals));
     }
     static fromArray(items) {
+        //  todo add filter restriction
         if (!items) {
             return new BoostSignalRankerModel([]);
         }

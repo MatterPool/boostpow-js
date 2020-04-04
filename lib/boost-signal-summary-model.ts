@@ -6,10 +6,12 @@ export class BoostSignalSummary{
     private recentSignalTime_;
 
     constructor(private boostSignals: BoostSignalModel[]) {
-        if (!boostSignals.length) {
+        this.boostSignals = BoostSignalSummary.dedupSignalObjects(boostSignals);
+
+        if (!this.boostSignals.length) {
             throw new Error('invalid arg');
         }
-        for (const signal of boostSignals) {
+        for (const signal of this.boostSignals) {
             this.totalDifficulty_ += signal.difficulty();
         }
         for (const sig of this.boostSignals) {
@@ -21,6 +23,20 @@ export class BoostSignalSummary{
             }
         }
     };
+
+
+    static dedupSignalObjects(items: any[]): any[] {
+        const dedupMap = {};
+        const newList: any = [];
+        for (const item of items) {
+            if (dedupMap[item.getBoostPowString().toString()]) {
+                continue;
+            }
+            dedupMap[item.getBoostPowString().toString()] = true;
+            newList.push(item);
+        }
+       return newList;
+    }
     get lastSignalTime(): number {
         return this.lastSignalTime_;
     }
