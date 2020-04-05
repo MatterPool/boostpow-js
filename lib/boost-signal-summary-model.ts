@@ -14,6 +14,8 @@ export class BoostSignalSummary{
         for (const signal of this.boostSignals) {
             this.totalDifficulty_ += signal.difficulty();
         }
+        this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
+
         for (const sig of this.boostSignals) {
             if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time()) {
                 this.lastSignalTime_ = sig.time();
@@ -23,8 +25,6 @@ export class BoostSignalSummary{
             }
         }
     };
-
-
     static dedupSignalObjects(items: any[]): any[] {
         const dedupMap = {};
         const newList: any = [];
