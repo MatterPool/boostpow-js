@@ -4,7 +4,7 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 var options = {
-  graph_api_url: 'http://localhost:3000'
+  // graph_api_url: 'http://localhost:3000'
 }
 
 describe('Graph Search', () => {
@@ -232,7 +232,8 @@ describe('Graph Search', () => {
       expect(result.first.totalDifficulty).to.eql(4);
       expect(result.length).to.eql(2);
    });
-   it('retrieve all for everything', async () => {
+
+   it('retrieve all for everything (limits to 1 week of data)', async () => {
       const result = await index.Graph(options).search();
       expect(result.length > 0).to.eql(true);
    });
