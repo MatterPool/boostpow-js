@@ -57,7 +57,7 @@ class BoostSignalRankerModel {
     get list() {
         const groups = {};
         for (const item of this.boostSignals) {
-            const itemKey = item.content(true);
+            const itemKey = item.category(true) + item.content(true);
             if (!groups[itemKey]) {
                 groups[itemKey] = [];
             }

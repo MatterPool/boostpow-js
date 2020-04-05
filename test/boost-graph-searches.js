@@ -157,14 +157,12 @@ describe('Graph Search', () => {
             expect('Fail').to.eql('Non matching hello and Hello World! returned: ' + item.entity.content());
          }
        }
-
        expect(result.length > 1).to.eql(true);
        expect(result.totalDifficulty).to.eql(24);
-
-       expect(result.first.totalDifficulty).to.eql(23);
-       expect(result.list[0].totalDifficulty).to.eql(23);
-       expect(result.second.totalDifficulty).to.eql(1);
-       expect(result.list[1].totalDifficulty).to.eql(1);
+       expect(result.first.totalDifficulty).to.eql(13);
+       expect(result.list[0].totalDifficulty).to.eql(13);
+       expect(result.second.totalDifficulty).to.eql(11);
+       expect(result.list[1].totalDifficulty).to.eql(11);
    });
 
    it('retrieve all signals that match the content and tags', async () => {
@@ -180,10 +178,10 @@ describe('Graph Search', () => {
 
       expect(result.length > 0).to.eql(true);
       expect(result.totalDifficulty).to.eql(5);
-      expect(result.first.totalDifficulty).to.eql(3);
-      expect(result.list[0].totalDifficulty).to.eql(3);
-      expect(result.second.totalDifficulty).to.eql(2);
-      expect(result.list[1].totalDifficulty).to.eql(2);
+      expect(result.first.totalDifficulty).to.eql(4);
+      expect(result.list[0].totalDifficulty).to.eql(4);
+      expect(result.second.totalDifficulty).to.eql(1);
+      expect(result.list[1].totalDifficulty).to.eql(1);
 
 
       result = await index.Graph(options).search({
@@ -231,8 +229,8 @@ describe('Graph Search', () => {
       const result = await index.Graph(options).search({
          content: ['usernoncetest314'],       // Use array. optional array performs logicsl OR for lookup.
       });
-      expect(result.first.totalDifficulty).to.eql(5);
-      expect(result.length).to.eql(1);
+      expect(result.first.totalDifficulty).to.eql(4);
+      expect(result.length).to.eql(2);
    });
    it('retrieve all for everything', async () => {
       const result = await index.Graph(options).search();

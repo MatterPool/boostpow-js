@@ -64,7 +64,7 @@ export class BoostSignalRankerModel {
     get list(): BoostSignalSummary[] {
         const groups: any = {}
         for (const item of this.boostSignals) {
-            const itemKey = item.content(true);
+            const itemKey = item.category(true) + item.content(true);
             if (!groups[itemKey]) {
                 groups[itemKey] = [];
             }
@@ -84,7 +84,6 @@ export class BoostSignalRankerModel {
     get length(): number {
         return this.list.length;
     }
-
     groupByCategory(): BoostSignalSummary[] {
         return this.groupPrivate('category');
     }

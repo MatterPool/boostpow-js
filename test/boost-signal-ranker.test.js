@@ -171,7 +171,7 @@ describe('Boost Signal Ranker', () => {
       // Check that all items are returned in order
       let maxDiff = 9999999999999;
       expect(sample.length).to.eql(40);
-      expect(ranker.list.length).to.eql(28);
+      expect(ranker.list.length).to.eql(10);
       for (const item of ranker.list) {
          if (item.totalDifficulty > maxDiff) {
             throw new Error('invalid order');
@@ -201,17 +201,16 @@ describe('Boost Signal Ranker', () => {
       expect(contentRanker.lastSignalTime).to.eql(1585642416);
       expect(contentRanker.recentSignalTime).to.eql(1585681241);
 
-      expect(contentRanker.list.length).to.eql(5);
+      expect(contentRanker.list.length).to.eql(3);
       expect(contentRanker.totalEnergy).to.eql(5);
       expect(contentRanker.totalDifficulty).to.eql(5);
 
-      expect(contentRanker.first.totalEnergy).to.eql(1);
-      expect(contentRanker.first.totalDifficulty).to.eql(1);
-      expect(contentRanker.first.lastSignalTime).to.eql(1585681241);
-      expect(contentRanker.first.recentSignalTime).to.eql(1585681241);
+      expect(contentRanker.first.totalEnergy).to.eql(3);
+      expect(contentRanker.first.totalDifficulty).to.eql(3);
+      expect(contentRanker.first.lastSignalTime).to.eql(1585642416);
+      expect(contentRanker.first.recentSignalTime).to.eql(1585673949);
       expect(contentRanker.second.totalEnergy).to.eql(1);
       expect(contentRanker.third.totalEnergy).to.eql(1);
-      expect(contentRanker.fourth.totalEnergy).to.eql(1);
       expect(contentRanker.last.totalEnergy).to.eql(1);
   });
 
