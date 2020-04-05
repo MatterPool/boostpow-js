@@ -4,7 +4,7 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 var options = {
-  // graph_api_url: 'http://localhost:3000'
+  graph_api_url: 'http://localhost:3000'
 }
 
 describe('Graph Search', () => {
@@ -161,8 +161,8 @@ describe('Graph Search', () => {
        expect(result.totalDifficulty).to.eql(24);
        expect(result.first.totalDifficulty).to.eql(13);
        expect(result.list[0].totalDifficulty).to.eql(13);
-       expect(result.second.totalDifficulty).to.eql(11);
-       expect(result.list[1].totalDifficulty).to.eql(11);
+       expect(result.second.totalDifficulty).to.eql(10);
+       expect(result.list[1].totalDifficulty).to.eql(10);
    });
 
    it('retrieve all signals that match the content and tags', async () => {
@@ -178,10 +178,10 @@ describe('Graph Search', () => {
 
       expect(result.length > 0).to.eql(true);
       expect(result.totalDifficulty).to.eql(5);
-      expect(result.first.totalDifficulty).to.eql(4);
-      expect(result.list[0].totalDifficulty).to.eql(4);
-      expect(result.second.totalDifficulty).to.eql(1);
-      expect(result.list[1].totalDifficulty).to.eql(1);
+      expect(result.first.totalDifficulty).to.eql(2);
+      expect(result.list[0].totalDifficulty).to.eql(2);
+      expect(result.second.totalDifficulty).to.eql(2);
+      expect(result.list[1].totalDifficulty).to.eql(2);
 
 
       result = await index.Graph(options).search({
