@@ -327,7 +327,6 @@ describe('Boost Signal Ranker', () => {
 
        // Check that all items are returned in order
        let maxDiff = 9999999999999;
-       console.log(ranked.list);
        expect(sample.length).to.eql(11);
        expect(ranked.length).to.eql(7);
        for (const item of ranked) {

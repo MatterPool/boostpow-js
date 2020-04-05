@@ -234,8 +234,9 @@ describe('Graph Search', () => {
       expect(result.first.totalDifficulty).to.eql(5);
       expect(result.length).to.eql(1);
    });
-   it('retrieve all signals for content. Dedup by category, content and usernonce only', async () => {
-      // todo if you see this
+   it('retrieve all for everything', async () => {
+      const result = await index.Graph(options).search();
+      expect(result.length > 0).to.eql(true);
    });
 
 });
