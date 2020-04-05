@@ -9,7 +9,7 @@ const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_ranker_model_1 = require("./boost-signal-ranker-model");
 const defaultOptions = {
-    graph_api_url: 'https://graph2.boostpow.com',
+    graph_api_url: 'https://graph.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
     api_url: 'https://api.mattercloud.net',
     // api_url: 'http://localhost:3000',

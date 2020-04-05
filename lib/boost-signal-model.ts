@@ -120,7 +120,7 @@ export class BoostSignalModel {
             boostJobProofId: this.boostJobProofId,
             boostPowString: this.boostPowString.toString(),
             boostPowMetadata: this.boostPowMetadata ? this.boostPowMetadata.toString() : null,
-            "boostData": {
+            /*"boostData": {
                 "additionaldata": this.boostPowMetadata.getAdditionalData(),
                 "additionaldatautf8": this.boostPowMetadata.getAdditionalDataUtf8(),
                 "category": this.boostPowString.category(),
@@ -129,7 +129,7 @@ export class BoostSignalModel {
                 "tag": this.boostPowMetadata.getTag(),
                 "tagutf8": this.boostPowMetadata.getTagUtf8(),
                 "usernonce": this.boostPowMetadata.getUserNonceUtf8(),
-             },
+             },*/
         };
     }
 

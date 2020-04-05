@@ -9,7 +9,7 @@ import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 import { GraphSearchQuery } from './graph-search-query';
 
 const defaultOptions: any = {
-  graph_api_url: 'https://graph2.boostpow.com',
+  graph_api_url: 'https://graph.boostpow.com',
   // graph_api_url: 'http://localhost:3000',
   api_url: 'https://api.mattercloud.net',
   // api_url: 'http://localhost:3000',

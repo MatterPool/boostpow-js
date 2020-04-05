@@ -1,11 +1,6 @@
 'use strict';
 var expect = require('chai').expect;
 var index = require('../dist/index.js');
-var bsv = require('bsv');
-
-var options = {
-   graph_api_url: 'http://localhost:3000'
-}
 
 describe('Boost Signal Ranker', () => {
 
