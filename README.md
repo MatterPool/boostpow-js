@@ -371,7 +371,6 @@ export interface GraphSearchQuery {
 ```json
 {
   "q": {
-    // Returns the query filter params
     "contentutf8": "hello",
     "tagutf8": "",
     "categoryutf8": "mttr",
@@ -380,9 +379,7 @@ export interface GraphSearchQuery {
     "debug": true,
     "expanded": true
   },
-  // To be used if search results exceed 10000
   "nextPaginationToken": null,
-  // Array of mined boost signals
   "mined": [
     {
       "boostPowString": "7274746d6f6c6c65680000000000000000000000000000000000000000000000000000005a3f5b83f03b8d5b136a91fddb5b3fcd1b4e0b4aae0eeb115a1303d1e04a2a1fa071865effff001d03bd428a",
