@@ -73,7 +73,7 @@ const boost = require('boostpow-js');
 const boostJob = boost.BoostPowJob.fromObject({
   content: Buffer.from('hello world', 'utf8').toString('hex'),
   diff: 1, // Minimum '1'. Specifies how much hashrate. 1 = difficulty of Bitcoin Genesis (7 MH/second)
-  category: Buffer.from('B', 'hex').toString('hex'),
+  category: Buffer.from('B', 'utf8').toString('hex'),
   additionalData: Buffer.from(`{ "foo": 1234, "metadata": "hello"}`, 'utf8').toString('hex'),
   userNonce: Buffer.from(Math.random(999999999), 'utf8').toString('hex'),
   tag: Buffer.from('funny-animals', 'utf8').toString('hex'),

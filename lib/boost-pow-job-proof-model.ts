@@ -201,7 +201,6 @@ export class BoostPowJobProofModel {
 
         for (let i = 0; i < buildOut.chunks.length ; i++) {
             if (!buildOut.checkMinimalPush(i)) {
-                console.log('not minimal push!-======================', i);
                 throw new Error('not min push');
             }
         }

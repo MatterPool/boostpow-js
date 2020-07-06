@@ -84,8 +84,8 @@ export class GraphSearchQueryString {
         if (q.additionaldatahex) {
             str += 'additionaldatahex=' + normalize(q.additionaldatahex);
         }
-        if (q.minedTimeStart) {
-            str += 'minedTimeStart=' + q.minedTimeStart + '&';
+        if (q.minedTimeFrom) {
+            str += 'minedTimeFrom=' + q.minedTimeFrom + '&';
         }
         if (q.minedTimeEnd) {
             str += 'minedTimeEnd=' + q.minedTimeEnd + '&';
