@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostPowMetadataModel = void 0;
 const bsv = require("bsv");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowMetadataModel {

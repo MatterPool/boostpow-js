@@ -9,12 +9,12 @@ import { GraphSearchQuery } from './graph-search-query';
 export declare class BoostGraphClient {
     options: any;
     constructor(providedOptions?: any);
-    readonly BoostPowString: typeof BoostPowStringModel;
-    readonly BoostPowJob: typeof BoostPowJobModel;
-    readonly BoostPowJobProof: typeof BoostPowJobProofModel;
-    readonly BoostPowMetadata: typeof BoostPowMetadataModel;
-    readonly BoostPowSignal: typeof BoostSignalModel;
-    readonly BoostUtilsHelper: typeof BoostUtils;
+    get BoostPowString(): typeof BoostPowStringModel;
+    get BoostPowJob(): typeof BoostPowJobModel;
+    get BoostPowJobProof(): typeof BoostPowJobProofModel;
+    get BoostPowMetadata(): typeof BoostPowMetadataModel;
+    get BoostPowSignal(): typeof BoostSignalModel;
+    get BoostUtilsHelper(): typeof BoostUtils;
     rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<any>;
     search(q?: GraphSearchQuery, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostUtils = void 0;
 const bsv = require("bsv");
 class BoostUtils {
     static getSha256(str, encoding = 'utf8') {

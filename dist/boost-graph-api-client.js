@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostGraphApiClient = void 0;
 const axios_1 = require("axios");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const graph_search_query_1 = require("./graph-search-query");

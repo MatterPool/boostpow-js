@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostPowJobProofModel = void 0;
 const bsv = require("bsv");
 const boost_utils_1 = require("./boost-utils");
 /**
@@ -150,7 +151,6 @@ class BoostPowJobProofModel {
         buildOut.add(this.minerPubKeyHash);
         for (let i = 0; i < buildOut.chunks.length; i++) {
             if (!buildOut.checkMinimalPush(i)) {
-                console.log('not minimal push!-======================', i);
                 throw new Error('not min push');
             }
         }

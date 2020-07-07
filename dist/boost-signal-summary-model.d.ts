@@ -6,12 +6,12 @@ export declare class BoostSignalSummary {
     private recentSignalTime_;
     constructor(boostSignals: BoostSignalModel[]);
     static dedupSignalObjects(items: any[]): any[];
-    readonly lastSignalTime: number;
-    readonly recentSignalTime: number;
-    readonly totalDifficulty: number;
-    readonly totalEnergy: number;
-    readonly entity: BoostSignalModel;
-    readonly signals: BoostSignalModel[];
+    get lastSignalTime(): number;
+    get recentSignalTime(): number;
+    get totalDifficulty(): number;
+    get totalEnergy(): number;
+    get entity(): BoostSignalModel;
+    get signals(): BoostSignalModel[];
     toString(): {
         totalDifficulty: number;
         totalEnergy: number;

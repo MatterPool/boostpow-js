@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostPowSimpleMinerModel = void 0;
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const cryptoRandomString = require("crypto-random-string");
 class BoostPowSimpleMinerModel {

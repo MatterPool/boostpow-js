@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostSignalRankerModel = void 0;
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_summary_model_1 = require("./boost-signal-summary-model");
 class BoostSignalRankerModel {

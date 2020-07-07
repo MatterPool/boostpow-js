@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 class BoostPowStringModel {
