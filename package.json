@@ -74,7 +74,7 @@
     "mocha": "^5.2.0",
     "streamqueue": "^1.1.2",
     "tsify": "^4.0.1",
-    "typescript": "^3.3.3",
+    "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
