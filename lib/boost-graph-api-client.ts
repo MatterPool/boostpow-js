@@ -21,6 +21,37 @@ const defaultOptions: BoostClientApiClientOptions = {
     network: 'main',                          // 'bsv'
     version_path: 'api/v3',                   // Leave as is
 }
+
+export interface BoostSignalSummarySerialize {
+    totalDifficulty: number;
+    totalEnergy: number;
+    recentSignalTime?: number;
+    entity: {
+        boosthash: string,
+        content: string,
+        contenthex: string,
+        category: string,
+        categoryhex: string,
+        userNonce: string,
+        userNoncehex: string,
+        additionalData: string,
+        additionalDatahex: string,
+        tag: string,
+        taghex: string,
+        boostJobId: string,
+        boostJobProofId: string,
+        metadataHash: string,
+        minerPubKeyHash: string,
+        time: number,
+        difficulty: number,
+        energy: number,
+    },
+    tags: {
+        [key: string]: number
+    }
+    signals: any[]
+};
+
 export class BoostGraphApiClient {
     options = defaultOptions;
     fullUrl;

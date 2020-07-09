@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostSignalRankerModel = void 0;
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_summary_model_1 = require("./boost-signal-summary-model");
+;
+;
 class BoostSignalRankerModel {
     constructor(boostSignals) {
         this.boostSignals = boostSignals;
@@ -88,6 +90,75 @@ class BoostSignalRankerModel {
     }
     groupByAdditionalData() {
         return this.groupPrivate('additionalData');
+    }
+    /**
+     * Returns the Boost Rank for the list of transactions.
+     *
+     * Pass in an array of bsv.Transaction and get them ranked by boost!
+     *
+     * Pass in an array of txids/hashes and get back ranked by Boost
+     *
+     * @param txidsOrObjects ["txid1", { hash: "txid2" }, "txidn"]
+     */
+    rank(txidsOrObjects, debug) {
+        const grouped = this.groupByContent();
+        const boostrank = [];
+        const checkHashMap = new Map();
+        // For fast lookup by hash whether it's a string or in the .hash property
+        for (const item of txidsOrObjects) {
+            const TXID_REGEX = new RegExp('^[0-9a-fA-F]{64}$');
+            if (item['hash']) {
+                checkHashMap.set(item['hash'], item);
+                continue;
+            }
+            if (TXID_REGEX.test(item)) {
+                checkHashMap.set(item, { hash: item });
+            }
+        }
+        for (const item of grouped) {
+            const hash = item.entity.content(true);
+            const matched = checkHashMap.get(hash);
+            if (matched) {
+                if (!matched.hash) {
+                    matched.hash = hash;
+                }
+                matched.boostpow = {
+                    // ranker: this,
+                    signals: this.serializeBoostSignals(item.signals, debug),
+                    totalDifficulty: item.totalDifficulty,
+                    lastSignalTime: item.lastSignalTime,
+                    recentSignalTime: item.recentSignalTime
+                };
+                console.log('matched', matched);
+                boostrank.push(matched);
+            }
+        }
+        return boostrank;
+    }
+    serializeBoostSignals(signals, debug) {
+        const boostSignalSummaries = [];
+        for (const item of signals) {
+            boostSignalSummaries.push({
+                boosthash: item.getBoostPowString().hash(),
+                boostPowString: item.getBoostPowString().toString(),
+                boostPowMetadata: item.getBoostMetadata().toString(),
+                boostPowJobId: item.getBoostJobId(),
+                boostPowJobProofId: item.getBoostJobProofId(),
+                contenthex: item.content(true),
+                category: item.category(),
+                categoryhex: item.category(true),
+                userNoncehex: item.userNonce(true),
+                additionalData: item.additionalData(),
+                additionalDatahex: item.additionalData(true),
+                tag: item.tag(),
+                taghex: item.tag(true),
+                metadataHash: item.metadataHash(),
+                minerPubKeyHash: item.minerPubKeyHash(),
+                time: item.time(),
+                difficulty: item.difficulty()
+            });
+        }
+        return boostSignalSummaries;
     }
     groupPrivate(field1) {
         if (!field1 || field1 === '') {

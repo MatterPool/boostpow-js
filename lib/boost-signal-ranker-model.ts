@@ -2,6 +2,35 @@
 import { BoostSignalModel } from './boost-signal-model';
 import { BoostSignalSummary } from './boost-signal-summary-model';
 
+export interface BoostSignalEntitySerialize {
+    boosthash: string,
+    content: string,
+    contenthex: string,
+    category: string,
+    categoryhex: string,
+    userNonce: string,
+    userNoncehex: string,
+    additionalData: string,
+    additionalDatahex: string,
+    tag: string,
+    taghex: string,
+    boostJobId: string,
+    boostJobProofId: string,
+    metadataHash: string,
+    minerPubKeyHash: string,
+    time: number,
+    difficulty: number,
+    energy: number,
+};
+
+export interface BoostSignalSummarySerialize {
+    totalDifficulty: number;
+    totalEnergy: number;
+    recentSignalTime?: number;
+    entity: BoostSignalEntitySerialize
+    signals: any[]
+};
+
 export class BoostSignalRankerModel {
     private lastSignalTime_ = 0;
     private recentSignalTime_ = 0;
@@ -95,6 +124,81 @@ export class BoostSignalRankerModel {
     }
     groupByAdditionalData(): BoostSignalSummary[] {
         return this.groupPrivate('additionalData');
+    }
+
+    /**
+     * Returns the Boost Rank for the list of transactions.
+     *
+     * Pass in an array of bsv.Transaction and get them ranked by boost!
+     *
+     * Pass in an array of txids/hashes and get back ranked by Boost
+     *
+     * @param txidsOrObjects ["txid1", { hash: "txid2" }, "txidn"]
+     */
+    rank(txidsOrObjects: any[] | Array<{ hash: string }>, debug?: boolean): Array<{ hash: string, boostpow: any}> {
+        const grouped = this.groupByContent();
+        const boostrank: any = [];
+        const checkHashMap = new Map();
+
+        // For fast lookup by hash whether it's a string or in the .hash property
+        for (const item of txidsOrObjects) {
+            const TXID_REGEX = new RegExp('^[0-9a-fA-F]{64}$');
+            if (item['hash']) {
+                checkHashMap.set(item['hash'], item);
+                continue;
+            }
+            if (TXID_REGEX.test(item)) {
+                checkHashMap.set(item, { hash: item });
+            }
+        }
+        for (const item of grouped) {
+
+            const hash = item.entity.content(true);
+            const matched = checkHashMap.get(hash);
+            if (matched) {
+                if (!matched.hash) {
+                    matched.hash = hash;
+                }
+
+
+                matched.boostpow = {
+                    // ranker: this,
+                    signals: this.serializeBoostSignals(item.signals, debug),
+                    totalDifficulty: item.totalDifficulty,
+                    lastSignalTime: item.lastSignalTime,
+                    recentSignalTime: item.recentSignalTime
+                }
+
+                console.log('matched', matched);
+                boostrank.push(matched);
+            }
+        }
+        return boostrank;
+    }
+    public serializeBoostSignals(signals: any, debug?: boolean): Array<BoostSignalEntitySerialize> {
+        const boostSignalSummaries: any = [];
+        for (const item of signals) {
+            boostSignalSummaries.push({
+                boosthash: item.getBoostPowString().hash(),
+                boostPowString: item.getBoostPowString().toString(),
+                boostPowMetadata: item.getBoostMetadata().toString(),
+                boostPowJobId: item.getBoostJobId(),
+                boostPowJobProofId: item.getBoostJobProofId(),
+                contenthex: item.content(true),
+                category: item.category(),
+                categoryhex: item.category(true),
+                userNoncehex: item.userNonce(true),
+                additionalData: item.additionalData(),
+                additionalDatahex: item.additionalData(true),
+                tag: item.tag(),
+                taghex: item.tag(true),
+                metadataHash: item.metadataHash(),
+                minerPubKeyHash: item.minerPubKeyHash(),
+                time: item.time(),
+                difficulty: item.difficulty()
+            });
+        }
+        return boostSignalSummaries;
     }
     private groupPrivate(field1: string): BoostSignalSummary[] {
         if (!field1 || field1 === '') {
