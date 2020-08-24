@@ -2,6 +2,8 @@
 > Boost Proof of Work Protocol
 > https://boostpow.com
 
+See also Boost Publisher:  [https://github.com/MatterPool/boostpow-publish](https://github.com/MatterPool/boostpow-publish) and [https://publish.boostpow.com/docs.html](https://publish.boostpow.com/docs.html) 
+
 Boost is a new type of content ranking system that enables users to increase the amount of energy required to mine or process their content. Users will boost their post as a way to signal to the network that they believe their information is valuable. Boosted posts will appear in the boost feed – ordered by the amount of energy requested for their information.
 
 ![header](header.png)
@@ -60,6 +62,8 @@ Boost is a new type of content ranking system that enables users to increase the
 - <a href='https://github.com/matterpool/boostpow-js'>Javascript SDK: boostpow-js</a>
 - <a href='https://github.com/matterpool/boostpow-api'>Standalone API Server: boostpow-api</a>
 - <a href='https://media.bitcoinfiles.org/52fb4bedc85854638af61a7f906bf8e93da847d2ddb522b1aec53cfc6a0b2023'>Whitepaper</a>
+
+>See also Boost Publisher:  [https://github.com/MatterPool/boostpow-publish](https://github.com/MatterPool/boostpow-publish) and [https://publish.boostpow.com/docs.html](https://publish.boostpow.com/docs.html) 
 
 ## MoneyButton, Relay, TwetchPay Integration
 
