@@ -90,6 +90,7 @@ export declare class BoostPowJobModel {
     getValue(): number | undefined;
     getScriptHash(): string;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobModel | undefined;
+    static fromTransactions(tx: bsv.Transaction): BoostPowJobModel[];
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined;
     /**
      * Create a transaction fragment that can be modified to redeem the boost job

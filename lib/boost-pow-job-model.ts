@@ -524,6 +524,21 @@ export class BoostPowJobModel {
         return undefined;
     }
 
+    static fromTransactions(tx: bsv.Transaction): BoostPowJobModel[] {
+        if (!tx) {
+            return [];
+        }
+        const boostJobs: BoostPowJobModel[] = [];
+        let o = 0;
+        for (const out of tx.outputs) {
+            if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
+                boostJobs.push(BoostPowJobModel.fromScript(out.script, tx.hash, o, out.satoshis));
+            }
+            o++;
+        }
+        return boostJobs;
+    }
+
     static fromRawTransaction(rawtx: string): BoostPowJobModel | undefined {
         if (!rawtx || rawtx === '') {
             return undefined;
