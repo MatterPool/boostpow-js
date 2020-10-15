@@ -393,20 +393,20 @@ class BoostPowJobModel {
         const buffer = Buffer.from(hex, 'hex');
         return bsv.crypto.Hash.sha256(buffer).reverse().toString('hex');
     }
-    static fromTransaction(tx) {
+    static fromTransaction(tx, vout = 0) {
         if (!tx) {
             return undefined;
         }
         let o = 0;
-        for (const out of tx.outputs) {
-            if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-                return BoostPowJobModel.fromScript(out.script, tx.hash, o, out.satoshis);
-            }
-            o++;
+        if (vout > tx.outputs.length - 1 || vout < 0 || vout === undefined || vout === null) {
+            return undefined;
+        }
+        if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf && tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
+            return BoostPowJobModel.fromScript(tx.outputs[vout].script, tx.hash, o, tx.outputs[vout].satoshis);
         }
         return undefined;
     }
-    static fromTransactions(tx) {
+    static fromTransactionGetAllOutputs(tx) {
         if (!tx) {
             return [];
         }
@@ -420,12 +420,12 @@ class BoostPowJobModel {
         }
         return boostJobs;
     }
-    static fromRawTransaction(rawtx) {
+    static fromRawTransaction(rawtx, vout) {
         if (!rawtx || rawtx === '') {
             return undefined;
         }
         const tx = new bsv.Transaction(rawtx);
-        return BoostPowJobModel.fromTransaction(tx);
+        return BoostPowJobModel.fromTransaction(tx, vout);
     }
     /**
      * Create a transaction fragment that can be modified to redeem the boost job
