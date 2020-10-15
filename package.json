@@ -1,6 +1,6 @@
 {
-  "name": "boostpow-js",
-  "version": "1.2.22",
+  "name": "@matterpool/boostpow-js",
+  "version": "1.2.23",
   "description": "BoostPow Javascript SDK - matterpool.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,7 +22,7 @@
     "url": "git+https://github.com/MatterPool/boostpow-js.git"
   },
   "author": "MatterPool Inc.",
-  "license": "Open BSV",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/MatterPool/boostpow-js/issues"
   },
@@ -88,5 +88,9 @@
   },
   "files": [
     "dist/*"
-  ]
+  ],
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
 }
