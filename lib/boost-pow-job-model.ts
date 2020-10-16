@@ -542,10 +542,11 @@ export class BoostPowJobModel {
         return boostJobs;
     }
 
-    static fromRawTransaction(rawtx: string, vout?: number): BoostPowJobModel | undefined {
-        if (!rawtx || rawtx === '') {
+    static fromRawTransaction(rawtx: string, vout: number = 0): BoostPowJobModel | undefined {
+        if (isNaN(vout)) {
             return undefined;
         }
+
         const tx = new bsv.Transaction(rawtx);
         return BoostPowJobModel.fromTransaction(tx, vout);
     }

@@ -420,8 +420,8 @@ class BoostPowJobModel {
         }
         return boostJobs;
     }
-    static fromRawTransaction(rawtx, vout) {
-        if (!rawtx || rawtx === '') {
+    static fromRawTransaction(rawtx, vout = 0) {
+        if (isNaN(vout)) {
             return undefined;
         }
         const tx = new bsv.Transaction(rawtx);

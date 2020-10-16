@@ -116,6 +116,8 @@ describe('boost #BoostPowJobProof', () => {
       expect(jobProof.getSpentVout()).to.eql(1);
    });
 
+   
+
    it('should success load job proof from scripthex', async () => {
       const jobProof = index.BoostPowJobProof.fromScript('483045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a977576412102f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe660462a3aeb004b851825e0800000000000000000446037ef11492e4d5ab4bb067f872d28f44d3e5433e56fca190');
       expect(jobProof.toObject()).to.eql({
