@@ -85,6 +85,42 @@ class BoostGraphApiClient {
             });
         });
     }
+    submitBatchBoostJobRequest(rawtx, params, callback) {
+        return new Promise((resolve, reject) => {
+            axios_1.default.post(this.options.graph_api_url + `/api/v1/main/service/pay`, Object.assign(Object.assign({}, params), { rawtx: rawtx }), {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
+    getBatchBoostJobRequestStatus(txid, callback) {
+        return new Promise((resolve, reject) => {
+            axios_1.default.get(this.options.graph_api_url + `/api/v1/main/service/jobs/${txid}`, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost job status error',
+                        error: 'BOOST_JOB_STATUS_ERROR'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
+        });
+    }
     submitBoostSolution(params, callback) {
         return new Promise((resolve, reject) => {
             axios_1.default.post(this.options.graph_api_url + `/api/v1/main/boost/submitsolution`, {
@@ -187,27 +223,6 @@ class BoostGraphApiClient {
             });
         });
     }
-    createBoostJob(params, callback) {
-        return new Promise((resolve, reject) => {
-            const re = /^[0-9A-Fa-f]+$/;
-            axios_1.default.post(this.fullUrl + `/boost/jobs`, {
-                hex: 'adsf'
-            }, {
-                headers: this.getHeaders()
-            }).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'boost submit error',
-                        error: 'BOOST_SUBMIT_ERROR'
-                    }), callback);
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
-            });
-        });
-    }
     loadBoostJob(txid, callback) {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;
@@ -265,6 +280,27 @@ class BoostGraphApiClient {
         }
         return new Promise((r, reject) => {
             return r(data);
+        });
+    }
+    createBoostJobs(params, callback) {
+        return new Promise((resolve, reject) => {
+            const re = /^[0-9A-Fa-f]+$/;
+            axios_1.default.post(this.fullUrl + `/boost/jobs`, {
+                hex: 'adsf'
+            }, {
+                headers: this.getHeaders()
+            }).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
+                    }), callback);
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
+            });
         });
     }
     /**

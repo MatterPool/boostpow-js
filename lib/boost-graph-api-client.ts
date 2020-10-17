@@ -143,6 +143,51 @@ export class BoostGraphApiClient {
         });
     }
 
+    submitBatchBoostJobRequest(rawtx: string, params: { content?: string, tag?: string, diff?: number, numOutputs?: number }, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            axios.post(this.options.graph_api_url + `/api/v1/main/service/pay`,
+                {
+                    ...params,
+                    rawtx: rawtx,
+                },
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+    getBatchBoostJobRequestStatus(txid: string, callback?: Function): Promise<any> {
+        return new Promise((resolve, reject) => {
+            axios.get(this.options.graph_api_url + `/api/v1/main/service/jobs/${txid}`,
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost job status error',
+                        error: 'BOOST_JOB_STATUS_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+            })
+        });
+    }
+
     submitBoostSolution(params: { txid: string, vout: number, time: number, nonce: number, extraNonce1: number, extraNonce2: string}, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
             axios.post(this.options.graph_api_url + `/api/v1/main/boost/submitsolution`,
@@ -260,47 +305,6 @@ export class BoostGraphApiClient {
         });
     }
 
-    createBoostJob(params: { boost: {
-        content: string,
-        diff: number,
-        // optional
-        tag: string,
-        type: string,
-        metadata: string,
-        unique: number,
-     },
-     pay: {
-        // rawtx: string, // paying tx
-        key: string,
-        value: number,
-        currency: 'satoshi' | undefined,
-     }}, callback?: Function): Promise<BoostPowJobModel> {
-        return new Promise((resolve, reject) => {
-            const re = /^[0-9A-Fa-f]+$/;
-
-            axios.post(this.fullUrl + `/boost/jobs`,
-                {
-                    hex: 'adsf'
-                },
-                {
-                    headers: this.getHeaders()
-                }
-            ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'boost submit error',
-                        error: 'BOOST_SUBMIT_ERROR'
-                    }), callback)
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
-
-            })
-        });
-    }
-
     loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
             const re = /^[0-9A-Fa-f]+$/;
@@ -361,6 +365,47 @@ export class BoostGraphApiClient {
         }
         return new Promise((r, reject) => {
             return r(data);
+        });
+    }
+
+    createBoostJobs(params: { boost: {
+        content: string,
+        diff: number,
+        // optional
+        tag: string,
+        type: string,
+        metadata: string,
+        unique: number,
+     },
+     pay: {
+        // rawtx: string, // paying tx
+        key: string,
+        value: number,
+        currency: 'satoshi' | undefined,
+     }}, callback?: Function): Promise<BoostPowJobModel> {
+        return new Promise((resolve, reject) => {
+            const re = /^[0-9A-Fa-f]+$/;
+
+            axios.post(this.fullUrl + `/boost/jobs`,
+                {
+                    hex: 'adsf'
+                },
+                {
+                    headers: this.getHeaders()
+                }
+            ).then((response) => {
+                return this.resolveOrCallback(resolve, response.data, callback);
+            }).catch((ex) => {
+                if (ex.code === 404) {
+                    return this.rejectOrCallback(reject, this.formatErrorResponse({
+                        code: ex.code,
+                        message: 'boost submit error',
+                        error: 'BOOST_SUBMIT_ERROR'
+                    }), callback)
+                }
+                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
+
+            })
         });
     }
 

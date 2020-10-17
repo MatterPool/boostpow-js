@@ -47,6 +47,13 @@ export declare class BoostGraphApiClient {
     broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel>;
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<BoostPowJobModel>;
+    submitBatchBoostJobRequest(rawtx: string, params: {
+        content?: string;
+        tag?: string;
+        diff?: number;
+        numOutputs?: number;
+    }, callback?: Function): Promise<BoostPowJobModel>;
+    getBatchBoostJobRequestStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostSolution(params: {
         txid: string;
         vout: number;
@@ -65,7 +72,15 @@ export declare class BoostGraphApiClient {
     static buildSignalRank(mined: any[]): BoostSignalRankerModel;
     search(q?: GraphSearchQuery, callback?: Function): Promise<BoostSignalRankerModel>;
     rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse>;
-    createBoostJob(params: {
+    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel>;
+    /**
+     * Resolve a promise and/or invoke a callback
+     * @param resolve Resolve function to call when done
+     * @param data Data to pass forward
+     * @param callback Invoke an optional callback first
+     */
+    private resolveOrCallback;
+    createBoostJobs(params: {
         boost: {
             content: string;
             diff: number;
@@ -80,14 +95,6 @@ export declare class BoostGraphApiClient {
             currency: 'satoshi' | undefined;
         };
     }, callback?: Function): Promise<BoostPowJobModel>;
-    loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel>;
-    /**
-     * Resolve a promise and/or invoke a callback
-     * @param resolve Resolve function to call when done
-     * @param data Data to pass forward
-     * @param callback Invoke an optional callback first
-     */
-    private resolveOrCallback;
     /**
     * Resolve a promise and/or invoke a callback
     * @param reject Reject function to call when done
