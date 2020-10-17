@@ -19,6 +19,13 @@ export declare class BoostGraphClient {
     search(q?: GraphSearchQuery, callback?: Function): Promise<any>;
     getBoostJobStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostJob(rawtx: string, callback?: Function): Promise<any>;
+    submitBatchBoostJobRequest(rawtx: string, params: {
+        content?: string;
+        tag?: string;
+        diff?: number;
+        numOutputs?: number;
+    }, callback?: Function): Promise<any>;
+    getBatchBoostJobRequestStatus(txid: string, callback?: Function): Promise<any>;
     submitBoostSolution(params: {
         txid: string;
         vout: number;

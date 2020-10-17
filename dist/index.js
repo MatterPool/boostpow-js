@@ -55,6 +55,14 @@ class BoostGraphClient {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.submitBoostJob(rawtx, callback);
     }
+    submitBatchBoostJobRequest(rawtx, params, callback) {
+        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
+        return apiClient.submitBatchBoostJobRequest(rawtx, params, callback);
+    }
+    getBatchBoostJobRequestStatus(txid, callback) {
+        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
+        return apiClient.getBatchBoostJobRequestStatus(txid, callback);
+    }
     submitBoostSolution(params, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.submitBoostSolution(params, callback);

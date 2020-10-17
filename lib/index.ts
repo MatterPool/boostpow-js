@@ -66,6 +66,16 @@ export class BoostGraphClient {
     return apiClient.submitBoostJob(rawtx, callback);
   }
 
+  submitBatchBoostJobRequest(rawtx: string, params: { content?: string, tag?: string, diff?: number, numOutputs?: number }, callback?: Function): Promise<any> {
+    const apiClient = new BoostGraphApiClient(this.options);
+    return apiClient.submitBatchBoostJobRequest(rawtx, params, callback);
+  }
+
+  getBatchBoostJobRequestStatus(txid: string, callback?: Function): Promise<any> {
+    const apiClient = new BoostGraphApiClient(this.options);
+    return apiClient.getBatchBoostJobRequestStatus(txid, callback);
+  }
+
   submitBoostSolution(params: { txid: string, vout: number, time: number, nonce: number, extraNonce1: number, extraNonce2: string}, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.submitBoostSolution(params, callback);
