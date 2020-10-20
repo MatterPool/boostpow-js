@@ -514,14 +514,13 @@ export class BoostPowJobModel {
         if (!tx) {
             return undefined;
         }
-        let o = 0;
 
         if (vout > tx.outputs.length - 1 || vout < 0 || vout === undefined || vout === null) {
             return undefined;
         }
 
         if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf && tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-            return BoostPowJobModel.fromScript(tx.outputs[vout].script, tx.hash, o, tx.outputs[vout].satoshis);
+            return BoostPowJobModel.fromScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis);
         }
 
         return undefined;

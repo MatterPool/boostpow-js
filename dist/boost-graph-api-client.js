@@ -243,15 +243,15 @@ class BoostGraphApiClient {
             axios_1.default.get(this.fullUrl + `/tx/${txid}`, {
                 headers: this.getHeaders()
             }).then((response) => {
-                const job = boost_pow_job_model_1.BoostPowJobModel.fromRawTransaction(response.data.rawtx);
-                if (!job) {
+                const jobs = boost_pow_job_model_1.BoostPowJobModel.fromTransactionGetAllOutputs(response.data.rawtx);
+                if (!jobs || !jobs.length) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: 400,
                         message: 'tx is not a valid boost output',
                         error: 'TX_INVALID_BOOST_OUTPUT'
                     }), callback);
                 }
-                return this.resolveOrCallback(resolve, job, callback);
+                return this.resolveOrCallback(resolve, jobs, callback);
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
