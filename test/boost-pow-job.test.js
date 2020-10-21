@@ -267,6 +267,7 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
       const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, false);
       expect(result.boostPowString.hash()).to.eql('0000000005fe6ee4cbb33d916681681e01740a6f7e79a862c80f7168c879560b');
       expect(result.boostPowMetadata.hash()).to.eql('11228da0fcf7e9aec957ff4e263350b2b35b1974b681397f9973722658387e0c');
+      expect(jobProof.txid).to.eql('6f1060446ad5cf56d2cf75c116be3b6b354cf0c7b3e8da57fb3a9d6b71780ad0');
       expect(result.boostPowString.metadataHash()).to.eql(result.boostPowMetadata.hash());
    });
 
