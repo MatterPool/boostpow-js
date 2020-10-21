@@ -265,9 +265,14 @@ describe('boost #BoostPowString tryValidateJobProof', () => {
      });
 
       const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, false);
+      expect(result.boostPowString.toString()).to.eql('000000004bd94af3e76f57ba13d790f02d5ff3ad7dd0451c2a31ecd2cb1fdbb0f3a932330c7e3858267273997f3981b674195bb3b25033264eff57c9aee9f7fca08d2211b7768f5fffff001d32000988');
       expect(result.boostPowString.hash()).to.eql('0000000005fe6ee4cbb33d916681681e01740a6f7e79a862c80f7168c879560b');
       expect(result.boostPowMetadata.hash()).to.eql('11228da0fcf7e9aec957ff4e263350b2b35b1974b681397f9973722658387e0c');
+      expect(result.boostPowMetadata.toString()).to.eql('65636e616e6966230000000000000000000000000af0c49c7e8c842243913bbea2491027cf4e6babb008b2f59702000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
       expect(jobProof.txid).to.eql('6f1060446ad5cf56d2cf75c116be3b6b354cf0c7b3e8da57fb3a9d6b71780ad0');
+      expect(jobObj.time).to.eql('5f8f76b7');
+      expect(
+         index.BoostSignal.fromHex(result.boostPowString.toString(), result.boostPowMetadata.toString()).time()).to.eql(1603237559);
       expect(result.boostPowString.metadataHash()).to.eql(result.boostPowMetadata.hash());
    });
 
