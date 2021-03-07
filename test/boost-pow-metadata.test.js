@@ -55,6 +55,41 @@ describe('boost #BoostPowMetadata tests', () => {
       expect(fromHex.hash()).to.eql('2dd2ce3a9bd404105a56433e1e0ce8cfa458e0a3669ce45f56132fc23d18a125');
    });
 
+   it('should return same utf8 values each time', async () => {
+      const abstract = index.BoostPowMetadata.fromObject({
+         tag: '010203',
+         minerPubKeyHash: '00000000000000000000000000000000000000a4',
+         extraNonce1: '014e',
+         extraNonce2: '21a0',
+         userNonce: '00091011',
+         additionalData: '0000000000000000000000000000000000000000000000000000000000404142',
+      });
+
+      const tagString1 = abstract.getTagUtf8();
+	  const tagString2 = abstract.getTagUtf8();
+	  
+	  const userNonceString1 = abstract.getUserNonceUtf8();
+	  const userNonceString2 = abstract.getUserNonceUtf8();
+	  
+	  const adataString1 = abstract.getAdditionalDataUtf8();
+	  const adataString2 = abstract.getAdditionalDataUtf8();
+	  
+      expect(tagString1).to.eql(tagString2);
+	  expect(userNonceString1).to.eql(userNonceString2);
+	  expect(adataString1).to.eql(adataString2);
+	  
+	  const obj = abstract.toObject();
+      expect(obj).to.eql({
+         tag: '0000000000000000000000000000000000010203',
+         minerPubKeyHash: '00000000000000000000000000000000000000a4',
+         extraNonce1: '0000014e',
+         extraNonce2: '000021a0',
+         userNonce: '00091011',
+         additionalData: '0000000000000000000000000000000000000000000000000000000000404142',
+      });
+   });
+
+
 });
 
 describe('boost #BoostPowJob createBoostPowMetadata', () => {
