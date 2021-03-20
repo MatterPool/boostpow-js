@@ -51,7 +51,7 @@ gulp.task("copy-html", function () {
       .pipe(gulp.dest("dist"));
 });
 
-gulp.task("build", ['copy-html'], function () {
+gulp.task("build", gulp.series('copy-html', function () {
   return browserify({
       basedir: '.',
       debug: true,
@@ -66,4 +66,4 @@ gulp.task("build", ['copy-html'], function () {
   .pipe(uglify())
   .pipe(header(banner, { pkg : pkg } ))
   .pipe(gulp.dest("dist"));
-});
+}));
