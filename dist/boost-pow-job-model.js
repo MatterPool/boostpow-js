@@ -6,7 +6,7 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-    constructor(content, difficulty, category, tag, additionalData, userNonce, 
+    constructor(content, difficulty, category, tag, additionalData, userNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
     txid, vout, value) {
         this.content = content;
@@ -15,6 +15,7 @@ class BoostPowJobModel {
         this.tag = tag;
         this.additionalData = additionalData;
         this.userNonce = userNonce;
+        this.useGeneralPurposeBits = useGeneralPurposeBits;
         this.txid = txid;
         this.vout = vout;
         this.value = value;
@@ -101,7 +102,7 @@ class BoostPowJobModel {
         if (params.additionalData && params.additionalData.length > 64) {
             throw new Error('additionalData too large. Max 32 bytes.');
         }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4));
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4), false);
     }
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
@@ -178,7 +179,7 @@ class BoostPowJobModel {
         buildOut.add(this.userNonce);
         buildOut.add(this.additionalData);
         // Add the rest of the script
-        for (const op of BoostPowJobModel.scriptOperations()) {
+        for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
             buildOut.add(op);
         }
         for (let i = 0; i < buildOut.chunks.length; i++) {
@@ -228,15 +229,13 @@ class BoostPowJobModel {
     getDifficulty() {
         return this.difficulty;
     }
-    static remainingOperationsMatchExactly(remainingChunks, start) {
+    static remainingOperationsMatchExactly(remainingChunks, start, expectedOps) {
         let i = 0;
-        const expectedOps = BoostPowJobModel.scriptOperations();
-        if (expectedOps.length !== (remainingChunks.length - 8)) {
-            console.log('length does not match', expectedOps[i].length, remainingChunks.length);
+        if ((remainingChunks.length - start) !== expectedOps.length) {
             return false;
         }
-        while (i < (remainingChunks.length - 8)) {
-            // console.log(' i < ', remainingChunks.length, expectedOps[i], remainingChunks[start + i]);
+        while (i < (remainingChunks.length - start)) {
+            // console.log(' i < ', remainingChunks.length, expectedOps[i], remainingChunks[i]);
             if ((
             // If it's a buffer, then ensure the value matches expect length
             remainingChunks[start + i].buf && (remainingChunks[start + i].len === expectedOps[i].length))
@@ -259,6 +258,7 @@ class BoostPowJobModel {
         let tag;
         let additionalData;
         let userNonce;
+        let useGeneralPurposeBits;
         // console.log('script.chunks', script.chunks,  script.chunks.length);
         if (
         // boostv01
@@ -282,8 +282,15 @@ class BoostPowJobModel {
             script.chunks[6].len === 4 &&
             // Additional Data
             script.chunks[7].buf &&
-            script.chunks[7].len === 32 &&
-            BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8)) {
+            script.chunks[7].len === 32) {
+            if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+                useGeneralPurposeBits = false;
+            }
+            else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+                useGeneralPurposeBits = true;
+            }
+            else
+                throw new Error('Not valid Boost Output');
             category = script.chunks[2].buf;
             content = script.chunks[3].buf;
             let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
@@ -295,7 +302,7 @@ class BoostPowJobModel {
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
             additionalData = script.chunks[7].buf;
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
-            return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, txid, vout, value);
+            return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, txid, vout, value);
         }
         throw new Error('Not valid Boost Output');
     }
@@ -307,6 +314,7 @@ class BoostPowJobModel {
         let tag;
         let additionalData;
         let userNonce;
+        let useGeneralPurposeBits;
         if (
         // boostv01
         script.chunks[0].buf.toString('utf8') === 'boostpow' &&
@@ -329,8 +337,15 @@ class BoostPowJobModel {
             script.chunks[6].len === 4 &&
             // Additional Data
             script.chunks[7].buf &&
-            script.chunks[7].len === 32 &&
-            BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8)) {
+            script.chunks[7].len === 32) {
+            if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+                useGeneralPurposeBits = false;
+            }
+            else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+                useGeneralPurposeBits = true;
+            }
+            else
+                throw new Error('Not valid Boost Output');
             category = script.chunks[2].buf;
             content = script.chunks[3].buf;
             let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
@@ -342,7 +357,7 @@ class BoostPowJobModel {
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
             additionalData = script.chunks[7].buf;
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
-            return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, txid, vout, value);
+            return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, txid, vout, value);
         }
         throw new Error('Not valid Boost Output');
     }
@@ -532,7 +547,12 @@ class BoostPowJobModel {
         }
         return concatOps;
     }
-    static scriptOperations() {
+    static scriptOperations(useGeneralPurposeBits) {
+        if (useGeneralPurposeBits)
+            return this.scriptOperationsV2ASICBoost();
+        return this.scriptOperationsV1NoASICBoost();
+    }
+    static scriptOperationsV1NoASICBoost() {
         return [
             // CAT SWAP
             bsv.Opcode.OP_CAT,
@@ -569,6 +589,85 @@ class BoostPowJobModel {
             bsv.Opcode.OP_SWAP,
             bsv.Opcode.OP_TOALTSTACK,
             bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_CAT,
+            // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // FROMALTSTACK CAT                           // attach target
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_CAT,
+            // SWAP SIZE {4} EQUALVERIFY CAT             // check size of nonce. Boost POW string is constructed.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // Take hash of work string and ensure that it is positive and minimally encoded.
+            bsv.Opcode.OP_HASH256, ...BoostPowJobModel.ensure_positive(),
+            bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.ensure_positive(),
+            // check that the hash of the Boost POW string is less than the target
+            bsv.Opcode.OP_LESSTHAN,
+            bsv.Opcode.OP_VERIFY,
+            // check that the given address matches the pubkey and check signature.
+            // DUP HASH160 FROMALTSTACK EQUALVERIFY CHECKSIG
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_HASH160,
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CHECKSIG,
+        ];
+    }
+    static scriptOperationsV2ASICBoost() {
+        return [
+            // CAT SWAP
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_SWAP,
+            // {5} ROLL DUP TOALTSTACK CAT                // copy mining pool’s pubkey hash to alt stack. A copy remains on the stack.
+            bsv.Opcode.OP_5,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_CAT,
+            // {2} PICK TOALTSTACK                         // copy target and push to altstack.
+            bsv.Opcode.OP_2,
+            bsv.Opcode.OP_PICK,
+            bsv.Opcode.OP_TOALTSTACK,
+            // {6} ROLL SIZE {4} EQUALVERIFY CAT          // check size of extra_nonce_1
+            bsv.Opcode.OP_6,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_4,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // {6} ROLL SIZE {8} EQUALVERIFY CAT          // check size of extra_nonce_2
+            bsv.Opcode.OP_6,
+            bsv.Opcode.OP_ROLL,
+            bsv.Opcode.OP_SIZE,
+            bsv.Opcode.OP_8,
+            bsv.Opcode.OP_EQUALVERIFY,
+            bsv.Opcode.OP_CAT,
+            // SWAP CAT HASH256                           // create metadata string and hash it.
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_HASH256,
+            // SWAP TOALTSTACK CAT CAT                    // target and content + merkleroot to altstack. 
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_CAT,
+            bsv.Opcode.OP_TOALTSTACK,
+            Buffer.from("ff1f00e0", "hex"),
+            bsv.Opcode.OP_DUP,
+            bsv.Opcode.OP_INVERT,
+            bsv.Opcode.OP_TOALTSTACK,
+            bsv.Opcode.OP_AND,
+            bsv.Opcode.OP_SWAP,
+            bsv.Opcode.OP_FROMALTSTACK,
+            bsv.Opcode.OP_AND,
+            bsv.Opcode.OP_OR,
+            bsv.Opcode.OP_FROMALTSTACK,
             bsv.Opcode.OP_CAT,
             // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
             bsv.Opcode.OP_SWAP,

@@ -10,6 +10,7 @@ export declare class BoostPowJobModel {
     private tag;
     private additionalData;
     private userNonce;
+    private useGeneralPurposeBits;
     private txid?;
     private vout?;
     private value?;
@@ -71,7 +72,7 @@ export declare class BoostPowJobModel {
      */
     static getDifficulty(bits: any): number;
     getDifficulty(): number;
-    static remainingOperationsMatchExactly(remainingChunks: any, start: number): boolean;
+    static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toASM(): string;
@@ -106,7 +107,9 @@ export declare class BoostPowJobModel {
         boostPowMetadata: BoostPowMetadataModel | null;
     };
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
-    static scriptOperations(): any[];
+    static scriptOperations(useGeneralPurposeBits: boolean): any[];
+    static scriptOperationsV1NoASICBoost(): any[];
+    static scriptOperationsV2ASICBoost(): any[];
     static expand_target(): any[];
     static ensure_positive(): any[];
     static reverse32(): any[];
