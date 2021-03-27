@@ -73,6 +73,7 @@ export declare class BoostPowJobModel {
     static getDifficulty(bits: any): number;
     getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;
+    static readScript(script: any, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     toASM(): string;
