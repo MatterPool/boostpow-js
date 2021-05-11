@@ -63,7 +63,7 @@ export class BoostPowMetadataModel {
         return this.tag;
     }
     getTagUtf8(): string {
-        return this.trimBufferString(this.tag.reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.tag).reverse().toString('hex'), true);
     }
     getMinerPubKeyHash(): Buffer {
         return this.minerPubKeyHash;
@@ -75,7 +75,7 @@ export class BoostPowMetadataModel {
         return this.userNonce;
     }
     getUserNonceUtf8(): string {
-        return this.trimBufferString(this.userNonce.reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.userNonce).reverse().toString('hex'), true);
     }
     getExtraNonce1(): Buffer {
         return this.extraNonce1;
@@ -87,7 +87,7 @@ export class BoostPowMetadataModel {
         return this.additionalData;
     }
     getAdditionalDataUtf8(): string {
-        return this.trimBufferString(this.additionalData.reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.additionalData).reverse().toString('hex'), true);
     }
 
     toString() {

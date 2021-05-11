@@ -83,16 +83,16 @@ describe('boost #BoostSignal tests', () => {
       expect(signal.content()).to.eql('Hello Boost Test9323');
       expect(signal.content(true)).to.eql('00000000000000000000000048656c6c6f20426f6f7374205465737439333233');
       expect(signal.tag()).to.eql('my tag');
-      expect(signal.tag(true)).to.eql('00000000000000000000000000006d7920746167');
+      expect(signal.tag(true)).to.eql('67617420796d0000000000000000000000000000');
       expect(signal.additionalData()).to.eql("{ type: \'testing\', foo: 432}");
-      expect(signal.additionalData(true)).to.eql('000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
+      expect(signal.additionalData(true)).to.eql('000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000');
       expect(signal.userNonce()).to.eql('');
       expect(signal.userNonce(true)).to.eql('00000000');
       expect(signal.time()).to.eql(1585630208);
       expect(signal.difficulty()).to.eql(1);
       expect(signal.energy()).to.eql(1);
       expect(signal.getBoostPowString().toString()).to.eql('0000000033323339747365542074736f6f42206f6c6c65480000000000000000000000001719080ea4eaa516315f887cde5188129f413e33ca0dd8dafd0c5848948d3bb500cc825effff001d08e93848');
-      expect(signal.getBoostMetadata().toString()).to.eql('00000000000000000000000000006d792074616792e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
+      expect(signal.getBoostMetadata().toString()).to.eql('67617420796d000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000');
    });
 
    it('should instantiate a signal with powstring and metadata in seperate arguments', async () => {
@@ -124,16 +124,16 @@ describe('boost #BoostSignal tests', () => {
       expect(signal.content()).to.eql('Hello Boost Test9323');
       expect(signal.content(true)).to.eql('00000000000000000000000048656c6c6f20426f6f7374205465737439333233');
       expect(signal.tag()).to.eql('my tag');
-      expect(signal.tag(true)).to.eql('00000000000000000000000000006d7920746167');
+      expect(signal.tag(true)).to.eql('67617420796d0000000000000000000000000000');
       expect(signal.additionalData()).to.eql("{ type: \'testing\', foo: 432}");
-      expect(signal.additionalData(true)).to.eql('000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
+      expect(signal.additionalData(true)).to.eql('000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000');
       expect(signal.userNonce()).to.eql('');
       expect(signal.userNonce(true)).to.eql('00000000');
       expect(signal.time()).to.eql(1585630208);
       expect(signal.difficulty()).to.eql(1);
       expect(signal.energy()).to.eql(1);
       expect(signal.getBoostPowString().toString()).to.eql('0000000033323339747365542074736f6f42206f6c6c65480000000000000000000000001719080ea4eaa516315f887cde5188129f413e33ca0dd8dafd0c5848948d3bb500cc825effff001d08e93848');
-      expect(signal.getBoostMetadata().toString()).to.eql('00000000000000000000000000006d792074616792e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007b20747970653a202774657374696e67272c20666f6f3a203433327d00000000');
+      expect(signal.getBoostMetadata().toString()).to.eql('67617420796d000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190460446750000000000000000000000007d323334203a6f6f66202c27676e697473657427203a65707974207b00000000');
    });
 
 });
