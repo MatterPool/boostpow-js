@@ -40,7 +40,7 @@ class BoostUtils {
     }
     static createBufferAndPad(buf, length, reverse = true) {
         if (!buf) {
-            const emptyBuffer = new Buffer(length);
+            const emptyBuffer = Buffer.alloc(length);
             emptyBuffer.fill(0);
             return emptyBuffer;
         }
@@ -64,7 +64,7 @@ class BoostUtils {
             }
         }
         if (paddedBuf.byteLength < length) {
-            const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
+            const emptyBuffer = Buffer.alloc(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
             return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]).reverse();
         }

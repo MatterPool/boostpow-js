@@ -38,7 +38,7 @@
 
     static createBufferAndPad(buf: any, length: number, reverse = true): any {
         if (!buf) {
-            const emptyBuffer = new Buffer(length);
+            const emptyBuffer = Buffer.alloc(length);
             emptyBuffer.fill(0);
             return emptyBuffer;
         }
@@ -61,7 +61,7 @@
             }
         }
         if (paddedBuf.byteLength < length) {
-            const emptyBuffer = new Buffer(length - paddedBuf.byteLength);
+            const emptyBuffer = Buffer.alloc(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
             return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]).reverse();
         } else {
