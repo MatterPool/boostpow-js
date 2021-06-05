@@ -517,6 +517,41 @@ describe('BoostPowJob', () => {
       expect(job.toObject()).to.eql(index.BoostPowJob.fromString(str).toObject());
    });
 
+   it('should handle additional data correctly', async () => {
+      expect(() => {
+         const correctJob = index.BoostPowJob.fromObject({
+            content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
+            diff: 21.00002253,
+            category: index.BoostUtilsHelper.createBufferAndPad('bill', 4).reverse().toString('hex'),
+            tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+            additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additionalData', 65535).reverse().toString('hex'),
+            userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+         });
+      }).to.not.throw();
+
+      expect(() => {
+         const correctJob = index.BoostPowJob.fromObject({
+            content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
+            diff: 21.00002253,
+            category: index.BoostUtilsHelper.createBufferAndPad('bill', 4).reverse().toString('hex'),
+            tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+            additionalData: index.BoostUtilsHelper.createBufferAndPad('', 0).reverse().toString('hex'),
+            userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+         });
+      }).to.not.throw();
+      expect(() => {
+         const correctJob = index.BoostPowJob.fromObject({
+            content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32).reverse().toString('hex'),
+            diff: 21.00002253,
+            category: index.BoostUtilsHelper.createBufferAndPad('bill', 4).reverse().toString('hex'),
+            tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+            additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additional data', 33).reverse().toString('hex'),
+            userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+         });
+      }).to.not.throw();
+
+   });
+
    it('should handle tag sizes correctly', async () => {
       expect(() => {
          const correctJob = index.BoostPowJob.fromObject({
