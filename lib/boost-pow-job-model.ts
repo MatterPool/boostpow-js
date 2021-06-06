@@ -12,7 +12,7 @@ export class BoostPowJobModel {
         private tag: Buffer,
         private additionalData: Buffer,
         private userNonce: Buffer,
-        private useGeneralPurposeBits: boolean, 
+        private useGeneralPurposeBits: boolean,
         // Optional tx information attached or not
         private txid?: string,
         private vout?: number,
@@ -50,11 +50,11 @@ export class BoostPowJobModel {
     }
 
     getCategoryNumber(): number {
-        return parseInt(this.getCategoryHex(), 16);
+        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
     }
 
     getCategoryHex(): string {
-        return (this.category.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.category.toString('hex'));
     }
 
     getCategoryString(trimLeadingNulls = true): string {
@@ -66,7 +66,7 @@ export class BoostPowJobModel {
     }
 
     getTagHex(): string {
-        return (this.tag.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.tag.toString('hex').match(/../g) || []).join('');
     }
 
     getTagBuffer(): Buffer {
@@ -78,7 +78,7 @@ export class BoostPowJobModel {
     }
 
     getAdditionalDataHex(): string {
-        return (this.additionalData.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.additionalData.toString('hex').match(/../g) || []).join('');
     }
 
     getAdditionalDataBuffer(): Buffer {
@@ -90,7 +90,7 @@ export class BoostPowJobModel {
     }
 
     getUserNonceNumber(): number {
-        return parseInt(this.getUserNonceHex(), 16);
+        return parseInt((this.getUserNonceHex().match(/../g) || []).reverse().join(''), 16);
     }
 
     getUserNonceBuffer(): Buffer {
@@ -98,7 +98,7 @@ export class BoostPowJobModel {
     }
 
     getUserNonceHex(): string {
-        return (this.userNonce.toString('hex').match(/../g) || []).reverse().join('');
+        return this.userNonce.toString('hex');
     }
 
     static fromObject(params: {
@@ -109,7 +109,6 @@ export class BoostPowJobModel {
         additionalData?: string,
         userNonce?: string,
     }): BoostPowJobModel {
-
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.')
         }
@@ -125,16 +124,13 @@ export class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
-        if (params.additionalData && params.additionalData.length > 64) {
-            throw new Error('additionalData too large. Max 32 bytes.')
-        }
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,
             BoostUtils.createBufferAndPad(params.category, 4),
             BoostUtils.createBufferAndPad(params.tag, 20),
-            BoostUtils.createBufferAndPad(params.additionalData, 32),
-            BoostUtils.createBufferAndPad(params.userNonce, 4), 
+            BoostUtils.createBufferAndPad(params.additionalData, params.additionalData?.length || 32),
+            BoostUtils.createBufferAndPad(params.userNonce, 4),
             false
         );
     }
@@ -318,7 +314,7 @@ export class BoostPowJobModel {
         let tag;
         let additionalData;
         let userNonce;
-        let useGeneralPurposeBits; 
+        let useGeneralPurposeBits;
         // console.log('script.chunks', script.chunks,  script.chunks.length);
         if (
             // boostv01
@@ -348,7 +344,7 @@ export class BoostPowJobModel {
             script.chunks[6].len === 4 &&
 
             // Additional Data
-            script.chunks[7].buf 
+            script.chunks[7].buf
 
         ) {
 
@@ -735,25 +731,25 @@ export class BoostPowJobModel {
         bsv.Opcode.OP_CAT,
         bsv.Opcode.OP_HASH256,
 
-        // SWAP TOALTSTACK CAT CAT                    // target and content + merkleroot to altstack. 
+        // SWAP TOALTSTACK CAT CAT                    // target and content + merkleroot to altstack.
         bsv.Opcode.OP_SWAP,
         bsv.Opcode.OP_TOALTSTACK,
         bsv.Opcode.OP_CAT,
         bsv.Opcode.OP_TOALTSTACK,
 
-        Buffer.from("ff1f00e0", "hex"),               // combine version/category with general purpose bits. 
-        bsv.Opcode.OP_DUP, 
-        bsv.Opcode.OP_INVERT, 
-        bsv.Opcode.OP_TOALTSTACK, 
-        bsv.Opcode.OP_AND, 
-            
-        bsv.Opcode.OP_SWAP,                           // general purpose bits 
-        bsv.Opcode.OP_FROMALTSTACK, 
-        bsv.Opcode.OP_AND, 
-        bsv.Opcode.OP_OR, 
+        Buffer.from("ff1f00e0", "hex"),               // combine version/category with general purpose bits.
+        bsv.Opcode.OP_DUP,
+        bsv.Opcode.OP_INVERT,
+        bsv.Opcode.OP_TOALTSTACK,
+        bsv.Opcode.OP_AND,
+
+        bsv.Opcode.OP_SWAP,                           // general purpose bits
+        bsv.Opcode.OP_FROMALTSTACK,
+        bsv.Opcode.OP_AND,
+        bsv.Opcode.OP_OR,
 
         bsv.Opcode.OP_FROMALTSTACK,                   // attach content + merkleroot
-        bsv.Opcode.OP_CAT, 
+        bsv.Opcode.OP_CAT,
 
         // SWAP SIZE {4} EQUALVERIFY CAT              // check size of timestamp.
         bsv.Opcode.OP_SWAP,
