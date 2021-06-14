@@ -45,7 +45,7 @@ class BoostPowJobModel {
         return this.category;
     }
     getCategoryNumber() {
-        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
+        return parseInt(this.getCategoryHex(), 16);
     }
     getCategoryHex() {
         return (this.category.toString('hex'));
@@ -75,7 +75,7 @@ class BoostPowJobModel {
         return parseInt(this.toObject().userNonce, 16);
     }
     getUserNonceNumber() {
-        return parseInt((this.getUserNonceHex().match(/../g) || []).reverse().join(''), 16);
+        return parseInt(this.getUserNonceHex(), 16);
     }
     getUserNonceBuffer() {
         return this.userNonce;
@@ -100,7 +100,7 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, ((_a = params.additionalData) === null || _a === void 0 ? void 0 : _a.length) || 32), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4), false);
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20, false), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, ((_a = params.additionalData) === null || _a === void 0 ? void 0 : _a.length) || 32, false), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
     }
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
@@ -120,10 +120,10 @@ class BoostPowJobModel {
         return {
             content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
             diff: this.difficulty,
-            category: (this.category.toString('hex').match(/../g) || []).reverse().join(''),
-            tag: (this.tag.toString('hex').match(/../g) || []).reverse().join(''),
-            additionalData: (this.additionalData.toString('hex').match(/../g) || []).reverse().join(''),
-            userNonce: (this.userNonce.toString('hex').match(/../g) || []).reverse().join(''),
+            category: this.category.toString('hex'),
+            tag: this.tag.toString('hex'),
+            additionalData: this.additionalData.toString('hex'),
+            userNonce: this.userNonce.toString('hex'),
         };
     }
     static difficulty2bits(difficulty) {

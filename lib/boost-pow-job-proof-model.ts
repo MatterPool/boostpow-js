@@ -55,10 +55,10 @@ export class BoostPowJobProofModel {
         return new BoostPowJobProofModel(
             Buffer.from(params.signature, 'hex'),
             BoostUtils.createBufferAndPad(params.minerPubKey, 33, false),
-            BoostUtils.createBufferAndPad(params.time, 4),
-            BoostUtils.createBufferAndPad(params.extraNonce1, 4),
+            BoostUtils.createBufferAndPad(params.time, 4,false),
+            BoostUtils.createBufferAndPad(params.extraNonce1, 4,false),
             BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.nonce, 4),
+            BoostUtils.createBufferAndPad(params.nonce, 4,false),
             BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false),
         );
     }
@@ -80,7 +80,7 @@ export class BoostPowJobProofModel {
     }
 
     getExtraNonce1Number(): number {
-        return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).join(''), 16);
+        return parseInt(this.extraNonce1.toString('hex'), 16);
     }
 
     getExtraNonce1(): Buffer {
@@ -88,7 +88,7 @@ export class BoostPowJobProofModel {
     }
 
     getExtraNonce2Number(): number {
-        return parseInt((this.extraNonce2.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return parseInt(this.extraNonce2.toString('hex'), 16);
     }
 
     getExtraNonce2(): Buffer {

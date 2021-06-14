@@ -5,6 +5,27 @@ var bsv = require('bsv');
 
 describe('boost #BoostPowJobProof', () => {
 
+   it('should properly orient specific parts', async () => {
+      const jobProof = index.BoostPowJobProof.fromObject({
+         signature: '0000000000000000000000000000000000000000000000000000000000000006',
+         minerPubKeyHash: '0000000000000000000000000000000000000001',
+         extraNonce1: "00000002",
+         extraNonce2: "0000000300000003",
+         minerPubKey: '000000000000000000000000000000000000000000000000000000000000000007',
+         time: '12300009',
+         nonce: '00000005',
+      });
+      var jobProofScript = jobProof.toASM();
+      //expect(jobProof.getExtraNonce1Number()).to.eql(2);
+      expect(jobProofScript).to.contain('0000000000000000000000000000000000000000000000000000000000000006');
+      expect(jobProofScript).to.contain('0000000000000000000000000000000000000000000000000000000000000007');
+      //expect(jobProofScript).to.contain('00000005');
+
+      expect(jobProofScript).to.eq(jobProof.toASM());
+      console.log();
+   });
+
+
    it('should success create hex ', async () => {
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
