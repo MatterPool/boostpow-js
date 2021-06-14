@@ -50,7 +50,7 @@ export class BoostPowJobModel {
     }
 
     getCategoryNumber(): number {
-        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
+        return parseInt(this.getCategoryHex(), 16);
     }
 
     getCategoryHex(): string {
@@ -90,7 +90,7 @@ export class BoostPowJobModel {
     }
 
     getUserNonceNumber(): number {
-        return parseInt((this.getUserNonceHex().match(/../g) || []).reverse().join(''), 16);
+        return parseInt(this.getUserNonceHex(), 16);
     }
 
     getUserNonceBuffer(): Buffer {
@@ -127,10 +127,10 @@ export class BoostPowJobModel {
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,
-            BoostUtils.createBufferAndPad(params.category, 4),
-            BoostUtils.createBufferAndPad(params.tag, 20),
-            BoostUtils.createBufferAndPad(params.additionalData, params.additionalData?.length || 32),
-            BoostUtils.createBufferAndPad(params.userNonce, 4),
+            BoostUtils.createBufferAndPad(params.category, 4,false),
+            BoostUtils.createBufferAndPad(params.tag, 20,false),
+            BoostUtils.createBufferAndPad(params.additionalData, params.additionalData?.length || 32,false),
+            BoostUtils.createBufferAndPad(params.userNonce, 4,false),
             false
         );
     }
@@ -157,10 +157,10 @@ export class BoostPowJobModel {
         return {
             content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
             diff: this.difficulty,
-            category: (this.category.toString('hex').match(/../g) || []).reverse().join(''),
-            tag: (this.tag.toString('hex').match(/../g) || []).reverse().join(''),
-            additionalData: (this.additionalData.toString('hex').match(/../g) || []).reverse().join(''),
-            userNonce: (this.userNonce.toString('hex').match(/../g) || []).reverse().join(''),
+            category: this.category.toString('hex'),
+            tag: this.tag.toString('hex'),
+            additionalData: this.additionalData.toString('hex'),
+            userNonce: this.userNonce.toString('hex'),
         };
     }
 
