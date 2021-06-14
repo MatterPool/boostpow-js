@@ -48,7 +48,7 @@ class BoostPowJobModel {
         return parseInt(this.getCategoryHex(), 16);
     }
     getCategoryHex() {
-        return (this.category.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.category.toString('hex'));
     }
     getCategoryString(trimLeadingNulls = true) {
         return this.trimBufferString(this.toObject().category, trimLeadingNulls);
@@ -57,7 +57,7 @@ class BoostPowJobModel {
         return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
     }
     getTagHex() {
-        return (this.tag.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.tag.toString('hex').match(/../g) || []).join('');
     }
     getTagBuffer() {
         return this.tag;
@@ -66,7 +66,7 @@ class BoostPowJobModel {
         return this.trimBufferString(this.toObject().additionalData, trimLeadingNulls);
     }
     getAdditionalDataHex() {
-        return (this.additionalData.toString('hex').match(/../g) || []).reverse().join('');
+        return (this.additionalData.toString('hex').match(/../g) || []).join('');
     }
     getAdditionalDataBuffer() {
         return this.additionalData;
@@ -81,9 +81,10 @@ class BoostPowJobModel {
         return this.userNonce;
     }
     getUserNonceHex() {
-        return (this.userNonce.toString('hex').match(/../g) || []).reverse().join('');
+        return this.userNonce.toString('hex');
     }
     static fromObject(params) {
+        var _a;
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.');
         }
@@ -99,10 +100,7 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
-        if (params.additionalData && params.additionalData.length > 64) {
-            throw new Error('additionalData too large. Max 32 bytes.');
-        }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, 32), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4), false);
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20, false), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, ((_a = params.additionalData) === null || _a === void 0 ? void 0 : _a.length) || 32, false), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
     }
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);
@@ -122,10 +120,10 @@ class BoostPowJobModel {
         return {
             content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
             diff: this.difficulty,
-            category: (this.category.toString('hex').match(/../g) || []).reverse().join(''),
-            tag: (this.tag.toString('hex').match(/../g) || []).reverse().join(''),
-            additionalData: (this.additionalData.toString('hex').match(/../g) || []).reverse().join(''),
-            userNonce: (this.userNonce.toString('hex').match(/../g) || []).reverse().join(''),
+            category: this.category.toString('hex'),
+            tag: this.tag.toString('hex'),
+            additionalData: this.additionalData.toString('hex'),
+            userNonce: this.userNonce.toString('hex'),
         };
     }
     static difficulty2bits(difficulty) {
@@ -280,8 +278,7 @@ class BoostPowJobModel {
             script.chunks[6].buf &&
             script.chunks[6].len === 4 &&
             // Additional Data
-            script.chunks[7].buf &&
-            script.chunks[7].len === 32) {
+            script.chunks[7].buf) {
             if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
                 useGeneralPurposeBits = false;
             }
@@ -603,7 +600,7 @@ class BoostPowJobModel {
             bsv.Opcode.OP_SWAP,
             bsv.Opcode.OP_CAT,
             bsv.Opcode.OP_HASH256,
-            // SWAP TOALTSTACK CAT CAT                    // target and content + merkleroot to altstack. 
+            // SWAP TOALTSTACK CAT CAT                    // target and content + merkleroot to altstack.
             bsv.Opcode.OP_SWAP,
             bsv.Opcode.OP_TOALTSTACK,
             bsv.Opcode.OP_CAT,

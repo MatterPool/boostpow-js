@@ -63,7 +63,7 @@
         if (paddedBuf.byteLength < length) {
             const emptyBuffer = Buffer.alloc(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
-            return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]).reverse();
+            return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]);
         } else {
             return reverse ? paddedBuf.reverse() : paddedBuf;
         }
