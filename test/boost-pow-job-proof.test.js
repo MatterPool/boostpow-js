@@ -199,6 +199,20 @@ describe('boost #BoostPowJobProof', () => {
       expect(jobProof.getMinerPubKeyHashHex()).to.eql('9fb8cb68b8850a13c7438e26e1d277b748be657a');
    });
 
+   it('converting to ASM should always return the same result',async() => {
+      const jobProof = index.BoostPowJobProof.fromObject({
+         signature: '0000000000000000000000000000000000000000000000000000000000000006',
+         minerPubKeyHash: '0000000000000000000000000000000000000001',
+         extraNonce1: "00000002",
+         extraNonce2: "0000000300000003",
+         minerPubKey: '000000000000000000000000000000000000000000000000000000000000000007',
+         time: '12300009',
+         nonce: '00000005',
+      });
+      var jobProofScript = jobProof.toASM();
+      expect(jobProofScript).to.eq(jobProof.toASM());
+   })
+
 });
 
 describe('BoostPowJobProof ', () => {
