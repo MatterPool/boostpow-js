@@ -629,5 +629,18 @@ describe('BoostPowJob', () => {
       });
       expect(job.getContentHex()).to.eql('35b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881');
    });
+   it('converting to ASM should always return the same result', async () => {
+      const hashed = index.BoostUtilsHelper.getSha256('Capitalists can spend more energy than socialists.');
+      const job = index.BoostPowJob.fromObject({
+         content: index.BoostUtilsHelper.createBufferAndPad(hashed, 32).toString('hex'),
+         diff: 21,
+         category: index.BoostUtilsHelper.createBufferAndPad('bill', 4).reverse().toString('hex'),
+         tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+         additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additionalData', 32).reverse().toString('hex'),
+         userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+      });
+      var jobScript=job.toASM();
+      expect(jobScript).to.eql(job.toASM());
+   });
 
 });
