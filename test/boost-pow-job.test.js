@@ -660,4 +660,17 @@ describe('BoostPowJob', () => {
       console.log(job.toScript(false).toString());
    });
 
+   it('only reverses content?', async ()=> {
+      const job = index.BoostPowJob.fromObject({
+         content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32,true).toString('hex'),
+         diff: 409786762471.9213,
+         category: Number(123).toString(16),
+         tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20,false).toString('hex'),
+         additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additionalData', 32,false).toString('hex'),
+         userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4,false).toString('hex')
+      });
+      console.log(job.toASM());
+      console.log(job.toScript(false).toString());
+   });
+
 });
