@@ -604,20 +604,70 @@ describe('BoostPowJob', () => {
    });
 
    it('should correctly orient specific parts', async () => {
+
+      let categoryHex = 'd2040000';
+      let categoryBuffer = new Buffer(categoryHex, 'hex');
+      let categoryNumber = categoryBuffer.readInt32LE();
+
+      let contentString = 'hello animal';
+      let contentBuffer = index.BoostUtilsHelper.createBufferAndPad(contentString, 32, false);
+      let contentHex = contentBuffer.reverse().toString('hex');
+
+      let difficulty = 0.0001;
+      let compactNumber = BoostUtilsHelper.difficulty2bits(difficulty);
+      let compactHex = '1e270fd8';
+
+      var tagString = 'this is a tag';
+      var tagBuffer = new Buffer(tagString, "ascii");
+      var tagHex = Buffer.from(tagBuffer, 'hex');
+
+      var dataString = 'this is more additionalData';
+      var tagBuffer = new Buffer(data_string, "ascii");
+      var tagHex = Buffer.from(data_buffer, 'hex');
+
+      let userNonceHex = 'd2040000';
+      let userNonceBuffer = new Buffer(userNonceHex, 'hex');
+      let userNonceNumber = categoryBuffer.readInt32LE();
+
       let job = index.BoostPowJob.fromObject({
-         content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32,true).reverse().toString('hex'),
-         diff: 0.0001,
-         category: index.BoostUtilsHelper.createBufferAndPad("04d2",4,true).toString('hex'),
-         tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
-         additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additionalData', 32).reverse().toString('hex'),
-         userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+         category: categoryHex,
+         content: contentHex,
+         diff: difficulty,
+         tag: tagHex,
+         additionalData: dataHex,
+         userNonce: userNonceHex
       });
-      let scriptJob=job.toScript(false).toASM();
-      expect(scriptJob).contain('d2040000');
-      expect(scriptJob).contain('6c616d696e61206f6c6c65680000000000000000000000000000000000000000');
-      expect(scriptJob).contain('0000000000000074686973206973206120746167');
-      expect(scriptJob).contain('000000000074686973206973206d6f7265206164646974696f6e616c44617461');
-      expect(scriptJob).contain('000001c8');
+
+      let scriptJob = job.toScript(false).toASM();
+
+      expect(scriptJob).contain(categoryHex);
+      expect(scriptJob).contain(contentHex);
+      expect(scriptJob).contain(compactHex);
+      expect(scriptJob).contain(tagHex);
+      expect(scriptJob).contain(dataHex);
+      expect(scriptJob).contain(userNonceHex);
+
+      expect(job.getCategoryHex()).to.eql(categoryHex);
+      expect(job.getCategoryNumber()).to.eql(categoryNumber);
+      expect(job.getCategoryBuffer()).to.eql(categoryBuffer);
+
+      expect(job.getContentHex()).to.eql(contentHex);
+      expect(job.getContentString()).to.eql(contentString);
+      expect(job.getContentBuffer()).to.eql(contentBuffer);
+
+      expect(job.getDiff()).to.eql(difficulty);
+
+      expect(job.getTagHex()).to.eql(tagHex);
+      expect(job.getTagString()).to.eql(tagString);
+      expect(job.getTagBuffer()).to.eql(tagBuffer);
+
+      expect(job.getAdditionalDataHex()).to.eql(dataHex);
+      expect(job.getAdditionalDataString()).to.eql(dataString);
+      expect(job.getAdditionalDataBuffer()).to.eql(dataBuffer);
+
+      expect(job.getUserNonceHex()).to.eql(userNonceHex);
+      expect(job.getUserNonceNumber()).to.eql(userNonceNumber);
+      expect(job.getUserNonceBuffer()).to.eql(userNonceBuffer);
 
    });
 
@@ -633,6 +683,7 @@ describe('BoostPowJob', () => {
       });
       expect(job.getContentHex()).to.eql('35b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881');
    });
+
    it('converting to ASM should always return the same result', async () => {
       const hashed = index.BoostUtilsHelper.getSha256('Capitalists can spend more energy than socialists.');
       const job = index.BoostPowJob.fromObject({
@@ -659,5 +710,30 @@ describe('BoostPowJob', () => {
       console.log(job.toASM());
       console.log(job.toScript(false).toString());
    });
+
+});
+
+describe('Convert difficulty to bits and back', () => {
+
+  // these numbers were generated from the c++ library Gigamonkey.
+  it('difficulty = ten thousandth', () => {
+
+    const difficulty = .0001;
+    const bits = 0x1e270fd8;
+
+    expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
+
+  });
+
+    it('difficulty = one thousand', () => {
+
+      const difficulty = 1000;
+      const bits = 0x1b4188f5;
+
+      expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
+      expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
+
+    });
 
 });
