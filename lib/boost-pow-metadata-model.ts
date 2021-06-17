@@ -23,12 +23,12 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            BoostUtils.createBufferAndPad(params.tag, 20),
-            BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20),
-            BoostUtils.createBufferAndPad(params.extraNonce1, 4),
-            BoostUtils.createBufferAndPad(params.extraNonce2, 4),
-            BoostUtils.createBufferAndPad(params.userNonce, 4),
-            BoostUtils.createBufferAndPad(params.additionalData, 32),
+            new Buffer(params.tag, 'hex'),
+            new Buffer(params.minerPubKeyHash, 'hex'),
+            BoostUtils.createBufferAndPad(params.extraNonce1, 4, false),
+            BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
+            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
+            new Buffer(params.additionalData, 'hex'),
         );
     }
 

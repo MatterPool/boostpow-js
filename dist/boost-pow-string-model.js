@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
-const boost_pow_job_model_1 = require("./boost-pow-job-model");
+const boost_utils_1 = require("./boost-utils");
 class BoostPowStringModel {
     constructor(blockheader, metadata) {
         this._blockheader = blockheader;
@@ -61,14 +61,14 @@ class BoostPowStringModel {
         return this.toObject().category;
     }
     static nBitsHexToDifficultyNumber(nbits) {
-        return boost_pow_job_model_1.BoostPowJobModel.getTargetDifficulty(parseInt(nbits, 16));
+        return boost_utils_1.BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
     }
     getTargetAsNumberBuffer() {
-        const i = boost_pow_job_model_1.BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty());
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
     static difficultyNumberToNBitsHex(diff) {
-        const bitsInt32 = boost_pow_job_model_1.BoostPowJobModel.difficulty2bits(diff);
+        const bitsInt32 = boost_utils_1.BoostUtils.difficulty2bits(diff);
         return bitsInt32.toString(16);
     }
     static validProofOfWorkFromBuffer(buf) {
