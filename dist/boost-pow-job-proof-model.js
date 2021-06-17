@@ -56,13 +56,13 @@ class BoostPowJobProofModel {
         return this.time;
     }
     getTimeNumber() {
-        return parseInt((this.time.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return this.time.readUInt32LE();
     }
     getTimeBuffer() {
         return this.time;
     }
     setTime(time) {
-        this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4);
+        this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4, false);
     }
     getExtraNonce1Number() {
         return parseInt(this.extraNonce1.toString('hex'), 16);
@@ -77,19 +77,19 @@ class BoostPowJobProofModel {
         return this.extraNonce2;
     }
     getNonceNumber() {
-        return parseInt((this.nonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return this.nonce.readUInt32LE();
     }
     getNonce() {
         return this.nonce;
     }
     setNonce(nonce) {
-        this.nonce = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+        this.nonce = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4, false);
     }
     setExtraNonce1(nonce) {
-        this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+        this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4, false);
     }
     setExtraNonce2(nonce) {
-        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 8);
+        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 8, false);
     }
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash() {
@@ -128,13 +128,13 @@ class BoostPowJobProofModel {
     toObject() {
         return {
             // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-            signature: (this.signature.toString('hex').match(/../g) || []).join(''),
-            minerPubKey: (this.minerPubKey.toString('hex').match(/../g) || []).join(''),
-            time: (this.time.toString('hex').match(/../g) || []).reverse().join(''),
-            nonce: (this.nonce.toString('hex').match(/../g) || []).reverse().join(''),
-            extraNonce1: (this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''),
-            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).join(''),
-            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).join(''),
+            signature: this.signature.toString('hex'),
+            minerPubKey: this.minerPubKey.toString('hex'),
+            time: this.time.toString('hex'),
+            nonce: this.nonce.toString('hex'),
+            extraNonce1: this.extraNonce1.toString('hex'),
+            extraNonce2: this.extraNonce2.toString('hex'),
+            minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
         };
     }
     toHex() {
@@ -148,9 +148,9 @@ class BoostPowJobProofModel {
         // Add miner pub key
         buildOut.add(this.minerPubKey);
         // Add miner nonce
-        buildOut.add(Buffer.from(this.nonce).reverse());
+        buildOut.add(Buffer.from(this.nonce));
         // Add time
-        buildOut.add(Buffer.from(this.time).reverse());
+        buildOut.add(Buffer.from(this.time));
         // Add extra nonce2
         buildOut.add(this.extraNonce2);
         // Add extra nonce 1
