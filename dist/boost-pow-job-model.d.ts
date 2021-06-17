@@ -54,7 +54,6 @@ export declare class BoostPowJobModel {
         additionalData: string;
         userNonce: string;
     };
-    static difficulty2bits(difficulty: any): number;
     getTargetAsNumberHex(): any;
     getTargetAsNumberBuffer(): any;
     getId(): string;

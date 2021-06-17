@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
+import { BoostUtils } from './boost-utils';
 
 export class BoostPowStringModel {
     private _blockheader;
@@ -78,12 +79,12 @@ export class BoostPowStringModel {
     }
 
     getTargetAsNumberBuffer(): any {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = BoostUtils.difficulty2bits(this.difficulty());
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
 
     static difficultyNumberToNBitsHex(diff: number): string {
-        const bitsInt32 = BoostPowJobModel.difficulty2bits(diff);
+        const bitsInt32 = BoostUtils.difficulty2bits(diff);
         return bitsInt32.toString(16);
     }
 

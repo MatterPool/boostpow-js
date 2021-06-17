@@ -734,14 +734,14 @@ describe('Convert difficulty to bits and back', () => {
 
   });
 
-    it('difficulty = one thousand', () => {
+  it('difficulty = one thousand', () => {
 
-      const difficulty = 1000;
-      const bits = 0x1b4188f5;
+    const difficulty = 1000;
+    const bits = 0x1b4188f5;
 
-      expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
-      expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
+    expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
 
-    });
+  });
 
 });
