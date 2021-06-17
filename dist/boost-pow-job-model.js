@@ -20,10 +20,10 @@ class BoostPowJobModel {
         this.vout = vout;
         this.value = value;
     }
-    trimBufferString(str, trimLeadingNulls = true) {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
+    trimBufferString(str, trimTrailingNulls = true) {
+        const content = str.toString('utf8');
+        if (trimTrailingNulls) {
+            return content.replace(/\0+$/g, '');
         }
         else {
             return content;
@@ -33,10 +33,11 @@ class BoostPowJobModel {
         return this.content;
     }
     getContentString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+        return this.trimBufferString(this.content, trimLeadingNulls);
     }
     getContentHex() {
-        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+        let content = this.content;
+        return content.reverse().toString('hex');
     }
     getDiff() {
         return this.difficulty;
@@ -45,16 +46,16 @@ class BoostPowJobModel {
         return this.category;
     }
     getCategoryNumber() {
-        return parseInt(this.getCategoryHex(), 16);
+        return this.category.readInt32LE();
     }
     getCategoryHex() {
-        return (this.category.toString('hex'));
+        return this.category.toString('hex');
     }
     getCategoryString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().category, trimLeadingNulls);
+        return this.trimBufferString(this.category, trimLeadingNulls);
     }
     getTagString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+        return this.trimBufferString(this.tag, trimLeadingNulls);
     }
     getTagHex() {
         return (this.tag.toString('hex').match(/../g) || []).join('');
@@ -63,19 +64,19 @@ class BoostPowJobModel {
         return this.tag;
     }
     getAdditionalDataString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().additionalData, trimLeadingNulls);
+        return this.trimBufferString(this.additionalData, trimLeadingNulls);
     }
     getAdditionalDataHex() {
-        return (this.additionalData.toString('hex').match(/../g) || []).join('');
+        return this.additionalData.toString('hex');
     }
     getAdditionalDataBuffer() {
         return this.additionalData;
     }
     getUserNonce() {
-        return parseInt(this.toObject().userNonce, 16);
+        return this.getUserNonceNumber();
     }
     getUserNonceNumber() {
-        return parseInt(this.getUserNonceHex(), 16);
+        return this.userNonce.readInt32LE();
     }
     getUserNonceBuffer() {
         return this.userNonce;
@@ -84,7 +85,6 @@ class BoostPowJobModel {
         return this.userNonce.toString('hex');
     }
     static fromObject(params) {
-        var _a;
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.');
         }
@@ -100,7 +100,9 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20, false), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, ((_a = params.additionalData) === null || _a === void 0 ? void 0 : _a.length) || 32, false), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0), 
+        // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
+        boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
     }
     getBits() {
         return BoostPowJobModel.difficulty2bits(this.difficulty);

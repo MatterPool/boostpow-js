@@ -8,7 +8,22 @@
         return h;
     }
 
-    static difficulty2bits(difficulty) {
+    static writeInt32LE(x: number): Buffer {
+        if (x > 0x7fffffff) throw "number too big to be an int32.";
+        if (x < -2147483648) throw "number too small to be an int32.";
+        let b: Buffer = new Buffer(4);
+        b.writeInt32LE(x);
+        return b;
+    }
+
+    static writeUInt32LE(x: number): Buffer {
+        if (x > 0xffffffff) throw "number too big to be a uint32."
+        let b: Buffer = new Buffer(4);
+        b.writeUInt32LE(x);
+        return b;
+    }
+
+    static difficulty2bits(difficulty: number): number {
         if (difficulty < 0) throw 'difficulty cannot be negative';
         if (!isFinite(difficulty)) {
             throw 'difficulty cannot be infinite';
@@ -36,6 +51,20 @@
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
 
+    // creates a buffer from a string with an optional parameter
+    // to determine the total length. The buffer will be padded with
+    // zeros to achieve this length. 
+    static stringToBuffer(str: string, length?: number): Buffer {
+        if (!length) {
+          return Buffer.from(str, 'ascii');
+        }
+
+        if (str.length > length) throw 'string is too big';
+        let buf = Buffer.from(str, 'ascii');
+        let pad = Buffer.alloc(length - str.length);
+        return Buffer.concat([buf, pad]);
+    }
+
     static createBufferAndPad(buf: any, length: number, reverse = true): any {
         if (!buf) {
             const emptyBuffer = Buffer.alloc(length);
@@ -53,9 +82,9 @@
             if (buf.length > (length*2)) {
                 throw new Error('The buffer is out of bounds: ' + length + ' bytes expected');
             }
-            var re = /^[0-9A-Fa-f]+$/g;
+            var re = /^([0-9A-Fa-f][0-9A-Fa-f])+$/g;
             if (!re.test(buf)) {
-                paddedBuf = Buffer.from(buf)
+                throw 'not a hex string';
             } else {
                 paddedBuf = Buffer.from(buf, 'hex');
             }
@@ -63,7 +92,7 @@
         if (paddedBuf.byteLength < length) {
             const emptyBuffer = Buffer.alloc(length - paddedBuf.byteLength);
             emptyBuffer.fill(0);
-            return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([emptyBuffer, paddedBuf]);
+            return reverse ? Buffer.concat([emptyBuffer, paddedBuf]).reverse() : Buffer.concat([paddedBuf, emptyBuffer]);
         } else {
             return reverse ? paddedBuf.reverse() : paddedBuf;
         }

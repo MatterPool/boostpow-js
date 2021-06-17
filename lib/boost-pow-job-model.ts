@@ -20,10 +20,10 @@ export class BoostPowJobModel {
     ) {
     }
 
-    private trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
+    private trimBufferString(str: Buffer, trimTrailingNulls = true): string {
+        const content = str.toString('utf8');
+        if (trimTrailingNulls) {
+            return content.replace(/\0+$/g, '');
         } else {
             return content;
         }
@@ -34,11 +34,12 @@ export class BoostPowJobModel {
     }
 
     getContentString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+        return this.trimBufferString(this.content, trimLeadingNulls);
     }
 
     getContentHex(): string {
-        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+        let content = this.content;
+        return content.reverse().toString('hex')
     }
 
     getDiff(): number {
@@ -50,19 +51,19 @@ export class BoostPowJobModel {
     }
 
     getCategoryNumber(): number {
-        return parseInt(this.getCategoryHex(), 16);
+        return this.category.readInt32LE();
     }
 
     getCategoryHex(): string {
-        return (this.category.toString('hex'));
+        return this.category.toString('hex');
     }
 
     getCategoryString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().category, trimLeadingNulls);
+        return this.trimBufferString(this.category, trimLeadingNulls);
     }
 
     getTagString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+        return this.trimBufferString(this.tag, trimLeadingNulls);
     }
 
     getTagHex(): string {
@@ -74,11 +75,11 @@ export class BoostPowJobModel {
     }
 
     getAdditionalDataString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().additionalData, trimLeadingNulls);
+        return this.trimBufferString(this.additionalData, trimLeadingNulls);
     }
 
     getAdditionalDataHex(): string {
-        return (this.additionalData.toString('hex').match(/../g) || []).join('');
+        return this.additionalData.toString('hex');
     }
 
     getAdditionalDataBuffer(): Buffer {
@@ -86,11 +87,11 @@ export class BoostPowJobModel {
     }
 
     getUserNonce(): number {
-        return parseInt(this.toObject().userNonce, 16);
+        return this.getUserNonceNumber();
     }
 
     getUserNonceNumber(): number {
-        return parseInt(this.getUserNonceHex(), 16);
+        return this.userNonce.readInt32LE();
     }
 
     getUserNonceBuffer(): Buffer {
@@ -127,10 +128,11 @@ export class BoostPowJobModel {
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,
-            BoostUtils.createBufferAndPad(params.category, 4,false),
-            BoostUtils.createBufferAndPad(params.tag, 20,false),
-            BoostUtils.createBufferAndPad(params.additionalData, params.additionalData?.length || 32,false),
-            BoostUtils.createBufferAndPad(params.userNonce, 4,false),
+            BoostUtils.createBufferAndPad(params.category, 4, false),
+            params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0),
+            params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0),
+            // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
+            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
             false
         );
     }
