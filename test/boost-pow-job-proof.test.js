@@ -6,25 +6,59 @@ var bsv = require('bsv');
 describe('boost #BoostPowJobProof', () => {
 
    it('should properly orient specific parts', async () => {
+     // this signature is in proper DER format but is not
+     // really a signature of anything.
+     let signatureHex = '300602010a02010b41';
+     let signatureBuffer = new Buffer(signatureHex, 'hex');
+
+     // properly formatted but not a real public key.
+     let minerPubKeyHex = '020000000000000000000000000000000000000000000000000000000000000007'
+     let minerPubKeyBuffer = new Buffer(minerPubKeyHex, 'hex');
+
+     let minerPubKeyHashHex = '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F';
+     let minerPubKeyHashBuffer = new Buffer(minerPubKeyHashHex, 'hex');
+     let minerPubKeyHashString = '13Qrdvv3cXys9aryjZho6vHxDW3PRgX5pm';
+
+     let extraNonce1Hex = "02000000";
+     let extraNonce1Buffer = new Buffer(extraNonce1Hex, 'hex');
+     let extraNonce1Number = extraNonce1Buffer.readUInt32BE();
+
+     let extraNonce2Hex = "0000000300000003";
+     let extraNonce2Buffer = new Buffer(extraNonce2Hex, 'hex');
+     let extraNonce2Number = extraNonce2Buffer.readBigUInt64BE();
+
+     let timeHex = '12300009';
+     let timeBuffer = new Buffer(timeHex, 'hex');
+     let timeNumber = timeBuffer.readUInt32LE();
+
+     let nonceHex = 'f8fc1600';
+     let nonceBuffer = new Buffer(nonceHex, 'hex');
+     let nonceNumber = nonceBuffer.readUInt32LE();
 
       const jobProof = index.BoostPowJobProof.fromObject({
-         signature: '300602010a02010b41',
-         minerPubKeyHash: '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F',
-         extraNonce1: "02000000",
-         extraNonce2: "0000000300000003",
-         minerPubKey: '020000000000000000000000000000000000000000000000000000000000000007',
-         time: '12300009',
-         nonce: 'f8fc1600',
+         signature: signatureHex,
+         minerPubKeyHash: minerPubkeyHashHex,
+         extraNonce1: extraNonce1Hex,
+         extraNonce2: extraNonce2Hex,
+         minerPubKey: minerPubKeyHex,
+         time: timeHex,
+         nonce: nonceHex,
       });
 
+      expect(jobProof.getExtraNonce1Number()).to.eql(extraNonce1Number);
+
       var jobProofScript = jobProof.toASM();
-      //expect(jobProof.getExtraNonce1Number()).to.eql(2);
-      expect(jobProofScript).to.contain('300602010a02010b41');
-      expect(jobProofScript).to.contain('020000000000000000000000000000000000000000000000000000000000000007');
-      //expect(jobProofScript).to.contain('00000005');
+      expect(jobProofScript).to.contain(signatureHex);
+      expect(jobProofScript).to.contain(minerPubkeyHex);
+      expect(jobProofScript).to.contain(nonceHex);
 
       expect(jobProofScript).to.eq(jobProof.toASM());
-      console.log();
+
+      expect(jobProofScript.toUpperCase()).to.eql('300602010A02010B41 ' +
+        '020000000000000000000000000000000000000000000000000000000000000007 ' +
+        'F8FC1600 12300009 0000000300000003 02000000 ' +
+        '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F');
+
    });
 
 
