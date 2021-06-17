@@ -49,10 +49,11 @@
         return target;
     }
 
-    // Daniel -- there are two difficulty functions below. The one that is
-    // uncommented is Attila's and the commented one is mine. They both
-    // cause different difficulty tests to fail. We need to make a version
-    // of this function that works for everything. 
+    // This function doesn't make much sense. It is a combinion of two functions
+    // by Daniel and Attila which both purport to solve the same problem. They
+    // each don't work quite right in different domains, but when they are
+    // combined they result in a successful function. I don't really know why
+    // it works this way, and it would be good if we had something simpler. 
 
     // https://bitcoin.stackexchange.com/questions/30467/what-are-the-equations-to-convert-between-bits-and-difficulty
     /**
@@ -60,18 +61,18 @@
      * @return {Number}
      */
     static difficulty (bits: number): number {
-        var difficulty1TargetBN = BoostUtils.getTargetDifficulty(BoostUtils.unitBits()).mul(new bsv.crypto.BN(Math.pow(10, 8)));
+        var difficulty1TargetBN = BoostUtils.getTargetDifficulty(BoostUtils.unitBits());
         var currentTargetBN = BoostUtils.getTargetDifficulty(bits);
-        var difficultyString = difficulty1TargetBN.div(currentTargetBN).toString(10);
+
+        if (currentTargetBN.gt(difficulty1TargetBN)) {
+          return parseFloat(difficulty1TargetBN.toString(10)) / parseFloat(currentTargetBN.toString(10));
+        }
+
+        var difficultyString = difficulty1TargetBN.mul(new bsv.crypto.BN(Math.pow(10, 8))).div(currentTargetBN).toString(10);
         var decimalPos = difficultyString.length - 8;
         difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos);
         return parseFloat(difficultyString);
     }
-    /*
-    static difficulty (bits: number): number {
-        return parseFloat(BoostUtils.getTargetDifficulty(BoostUtils.unitBits()).toString(10)) /
-          parseFloat(BoostUtils.getTargetDifficulty(bits).toString(10));
-    }*/
 
     static difficulty2bits(difficulty: number): number {
         if (difficulty < 0) throw 'difficulty cannot be negative';

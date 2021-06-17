@@ -496,11 +496,11 @@ describe('BoostPowJob', () => {
 
    it('check to string and from string', async () => {
       const job = index.BoostPowJob.fromObject({
-         content: index.BoostUtilsHelper.stringToBuffer('hello animal'.reverse(), 32).reverse().toString('hex'),
+         content: index.BoostUtilsHelper.stringToBuffer('lamina olleh', 32).reverse().toString('hex'),
          diff: 21.00002253,
-         category: index.BoostUtilsHelper.stringToBuffer('bill', 4).reverse().toString('hex'),
-         tag: index.BoostUtilsHelper.stringToBuffer('this is a tag', 20).reverse().toString('hex'),
-         additionalData: index.BoostUtilsHelper.stringToBuffer('this is more additionalData', 32).reverse().toString('hex'),
+         category: index.BoostUtilsHelper.stringToBuffer('bill', 4).toString('hex'),
+         tag: index.BoostUtilsHelper.stringToBuffer('gat a si siht', 20).reverse().toString('hex'),
+         additionalData: index.BoostUtilsHelper.stringToBuffer('ataDlanoitidda erom si siht', 64).reverse().toString('hex'),
          userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
       });
 
