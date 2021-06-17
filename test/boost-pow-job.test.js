@@ -83,9 +83,17 @@ describe('boost #BoostPowJob create various getters and setters', () => {
       });
 
       const outputScript = job.toHex();
-      expect(outputScript).to.eql('08626f6f7374706f7775040000013220646c726f77206f6c6c656800000000000000000000000000000000000000000004b3936a1a1400000000000000000000000000616e696d616c7304913914e3400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006164646974696f6e616c4461746120686572657e7c557a766b7e52796b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa01007e816c825488537f7681530121a5696b768100a0691d00000000000000000000000000000000000000000000000000000000007e6c539458959901007e819f6976a96c88ac');
+      expect(outputScript).to.eql(
+        '08626f6f7374706f7775' + // prefix
+        '0400000132' + // category
+        '20646c726f77206f6c6c6568000000000000000000000000000000000000000000' + // content
+        '04b3936a1a' + // target difficulty bits
+        '1400000000000000000000000000616e696d616c73' + // tag
+        '04913914e3' + // user nonce
+        '20000000000000000000000000006164646974696f6e616c446174612068657265' + // additional data
+        '7e7c557a766b7e52796b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa01007e816c825488537f7681530121a5696b768100a0691d00000000000000000000000000000000000000000000000000000000007e6c539458959901007e819f6976a96c88ac');
       const jobFromHex = index.BoostPowJob.fromHex(outputScript);
-      expect(jobFromHex.toObject()).to.eql(job.toObject());
+      expect(jobFromHex.toHex()).to.eql(outputScript);
    });
 
 
@@ -103,7 +111,11 @@ describe('boost #BoostPowJob create various getters and setters', () => {
       const jobFromHex = index.BoostPowJob.fromString(outputScript);
       expect(jobFromHex.toString()).to.eql(outputScript);
 
-      expect(outputScript).to.eql('8 0x626f6f7374706f77 OP_DROP 4 0x00000132 32 0x646c726f77206f6c6c6568000000000000000000000000000000000000000000 4 0xb3936a1a 20 0x00000000000000000000000000616e696d616c73 4 0x913914e3 64 0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006d657461646174612068657265 OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 1 0x00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 1 0x21 OP_WITHIN OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM OP_0 OP_GREATERTHAN OP_VERIFY 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 1 0x00 OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
+      expect(outputScript).to.eql('8 0x626f6f7374706f77 OP_DROP 4 0x01320000 ' +
+        '32 0x646c726f77206f6c6c6568000000000000000000000000000000000000000000 ' +
+        '4 0xb3936a1a 20 0x00000000000000000000000000616e696d616c73 4 0x913914e3 ' +
+        '32 0x000000000000000000000000000000000000006d657461646174612068657265 ' +
+        'OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 1 0x00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 1 0x21 OP_WITHIN OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM OP_0 OP_GREATERTHAN OP_VERIFY 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 1 0x00 OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
    });
 
    it('should generate same formatted bits as bitcoin block 0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca', async () => {
@@ -484,7 +496,7 @@ describe('BoostPowJob', () => {
 
    it('check to string and from string', async () => {
       const job = index.BoostPowJob.fromObject({
-         content: index.BoostUtilsHelper.stringToBuffer('hello animal', 32).reverse().toString('hex'),
+         content: index.BoostUtilsHelper.stringToBuffer('hello animal'.reverse(), 32).reverse().toString('hex'),
          diff: 21.00002253,
          category: index.BoostUtilsHelper.stringToBuffer('bill', 4).reverse().toString('hex'),
          tag: index.BoostUtilsHelper.stringToBuffer('this is a tag', 20).reverse().toString('hex'),
@@ -731,6 +743,25 @@ describe('Convert difficulty to bits and back', () => {
     const bits = 0x1b4188f5;
 
     expect(index.BoostUtilsHelper.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(index.BoostUtilsHelper.difficulty(bits))).to.eql(bits);
+
+  });
+
+  it('difficulty = one', () => {
+
+    const difficulty = 1;
+    const bits = 0x1d00ffff;
+
+    expect(index.BoostUtilsHelper.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(index.BoostUtilsHelper.difficulty(bits))).to.eql(bits);
+
+  });
+
+  it('difficulty = 157416.40184364', () => {
+
+    const difficulty = 157416.40184364;
+    const bits = index.BoostUtilsHelper.difficulty2bits(difficulty);
+
     expect(index.BoostUtilsHelper.difficulty2bits(index.BoostUtilsHelper.difficulty(bits))).to.eql(bits);
 
   });
