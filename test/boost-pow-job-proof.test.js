@@ -6,15 +6,17 @@ var bsv = require('bsv');
 describe('boost #BoostPowJobProof', () => {
 
    it('should properly orient specific parts', async () => {
+     
       const jobProof = index.BoostPowJobProof.fromObject({
-         signature: '0000000000000000000000000000000000000000000000000000000000000006',
-         minerPubKeyHash: '0000000000000000000000000000000000000001',
-         extraNonce1: "00000002",
+         signature: '300602010a02010b41',
+         minerPubKeyHash: '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F',
+         extraNonce1: "02000000",
          extraNonce2: "0000000300000003",
          minerPubKey: '000000000000000000000000000000000000000000000000000000000000000007',
          time: '12300009',
-         nonce: '00000005',
+         nonce: 'f8fc1600',
       });
+
       var jobProofScript = jobProof.toASM();
       //expect(jobProof.getExtraNonce1Number()).to.eql(2);
       expect(jobProofScript).to.contain('0000000000000000000000000000000000000000000000000000000000000006');
@@ -229,4 +231,3 @@ describe('BoostPowJobProof ', () => {
       });
    });
 });
-

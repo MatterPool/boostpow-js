@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
-const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowStringModel {
     constructor(blockheader, metadata) {
@@ -62,7 +61,7 @@ class BoostPowStringModel {
         return this.toObject().category;
     }
     static nBitsHexToDifficultyNumber(nbits) {
-        return boost_pow_job_model_1.BoostPowJobModel.getTargetDifficulty(parseInt(nbits, 16));
+        return boost_utils_1.BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
     }
     getTargetAsNumberBuffer() {
         const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty());

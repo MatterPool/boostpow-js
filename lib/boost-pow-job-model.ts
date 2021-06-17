@@ -33,8 +33,8 @@ export class BoostPowJobModel {
         return this.content;
     }
 
-    getContentString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.content, trimLeadingNulls);
+    getContentString(trimTrailingNulls = true): string {
+        return this.trimBufferString(this.content, trimTrailingNulls);
     }
 
     getContentHex(): string {
@@ -148,7 +148,7 @@ export class BoostPowJobModel {
     public static hexBitsToDifficulty(hexBits: string): number {
         let targetHex = (hexBits.match(/../g) || []).join('');
         let targetInt = parseInt(targetHex, 16);
-        return BoostPowJobModel.getDifficulty(targetInt);
+        return BoostUtils.difficulty(targetInt);
     }
 
     getBitsHex(): string {
@@ -157,7 +157,7 @@ export class BoostPowJobModel {
 
     toObject () {
         return {
-            content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
+            content: this.getContentHex(),
             diff: this.difficulty,
             category: this.category.toString('hex'),
             tag: this.tag.toString('hex'),
@@ -225,35 +225,6 @@ export class BoostPowJobModel {
         }
         // Return script
         return buildOut;
-    }
-
-    /**
-     * Returns the target difficulty for this block
-     * @param {Number} bits
-     * @returns {BN} An instance of BN with the decoded difficulty bits
-     */
-    public static getTargetDifficulty(bits) {
-        var target = new bsv.crypto.BN(bits & 0xffffff)
-        var mov = 8 * ((bits >>> 24) - 3)
-        while (mov-- > 0) {
-            target = target.mul(new bsv.crypto.BN(2))
-        }
-        return target
-    }
-
-    // https://bitcoin.stackexchange.com/questions/30467/what-are-the-equations-to-convert-between-bits-and-difficulty
-    /**
-     * @link https://en.bitcoin.it/wiki/Difficulty
-     * @return {Number}
-     */
-     static getDifficulty (bits) {
-        var GENESIS_BITS = 0x1d00ffff;
-        var difficulty1TargetBN = BoostPowJobModel.getTargetDifficulty(GENESIS_BITS).mul(new bsv.crypto.BN(Math.pow(10, 8)))
-        var currentTargetBN = BoostPowJobModel.getTargetDifficulty(bits)
-        var difficultyString = difficulty1TargetBN.div(currentTargetBN).toString(10);
-        var decimalPos = difficultyString.length - 8
-        difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos)
-        return parseFloat(difficultyString)
     }
 
     getDifficulty(): number {
@@ -337,7 +308,7 @@ export class BoostPowJobModel {
             content = script.chunks[3].buf;
             let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
             let targetInt = parseInt(targetHex, 16);
-            diff = BoostPowJobModel.getDifficulty(targetInt);
+            diff = BoostUtils.difficulty(targetInt);
 
             tag = script.chunks[5].buf;
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');

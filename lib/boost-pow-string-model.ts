@@ -75,7 +75,7 @@ export class BoostPowStringModel {
     }
 
     static nBitsHexToDifficultyNumber(nbits: string): number {
-        return BoostPowJobModel.getTargetDifficulty(parseInt(nbits, 16));
+        return BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
     }
 
     getTargetAsNumberBuffer(): any {

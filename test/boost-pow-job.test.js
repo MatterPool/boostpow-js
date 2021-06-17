@@ -101,16 +101,7 @@ describe('boost #BoostPowJob create various getters and setters', () => {
 
       const outputScript = job.toString();
       const jobFromHex = index.BoostPowJob.fromString(outputScript);
-      expect(jobFromHex.toObject()).to.eql(job.toObject());
-
-      expect(jobFromHex.toObject()).to.eql({
-         content: '00000000000000000000000000000000000000000068656c6c6f20776f726c64',
-         diff: 157416.40184364,
-         category: '01320000',
-         tag: '00000000000000000000000000616e696d616c73',
-         additionalData: '000000000000000000000000000000000000006d657461646174612068657265',
-         userNonce: '913914e3',
-      });
+      expect(jobFromHex.toString()).to.eql(outputScript);
 
       expect(outputScript).to.eql('8 0x626f6f7374706f77 OP_DROP 4 0x00000132 32 0x646c726f77206f6c6c6568000000000000000000000000000000000000000000 4 0xb3936a1a 20 0x00000000000000000000000000616e696d616c73 4 0x913914e3 64 0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006d657461646174612068657265 OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 1 0x00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 1 0x21 OP_WITHIN OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM OP_0 OP_GREATERTHAN OP_VERIFY 29 0x0000000000000000000000000000000000000000000000000000000000 OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 1 0x00 OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG');
    });
@@ -127,7 +118,7 @@ describe('boost #BoostPowJob create various getters and setters', () => {
 
       const outputScript = job.toString();
       const jobFromHex = index.BoostPowJob.fromString(outputScript);
-      expect(jobFromHex.toObject()).to.eql(job.toObject());
+      expect(jobFromHex.toString()).to.eql(outputScript);
 
       expect(jobFromHex.toObject()).to.eql({
          content: '0000000000000b60bc96a44724fd72daf9b92cf8ad00510b5224c6253ac40095',
@@ -620,8 +611,8 @@ describe('BoostPowJob', () => {
       let categoryNumber = categoryBuffer.readInt32LE();
 
       let contentString = 'hello animal';
-      let contentHex = '00000000000000000000000000000000000000006C616D696E61206F6C6C6568';
-      let contentBuffer = new Buffer(contentHex, "hex");
+      let contentBuffer = index.BoostUtilsHelper.stringToBuffer(contentString, 32);
+      let contentHex = contentBuffer.reverse().toString('hex');
 
       let difficulty = 0.0001;
       let compactNumber = index.BoostUtilsHelper.difficulty2bits(difficulty);
@@ -629,15 +620,15 @@ describe('BoostPowJob', () => {
 
       var tagString = 'this is a tag';
       var tagBuffer = new Buffer(tagString, "ascii");
-      var tagHex = Buffer.from(tagBuffer, 'hex');
+      var tagHex = tagBuffer.toString('hex');
 
       var dataString = 'this is more additionalData';
       var dataBuffer = new Buffer(dataString, "ascii");
       var dataHex = dataBuffer.toString('hex');
 
-      let userNonceHex = 'd2040000';
+      let userNonceHex = 'c8010000';
       let userNonceBuffer = new Buffer(userNonceHex, 'hex');
-      let userNonceNumber = categoryBuffer.readInt32LE();
+      let userNonceNumber = userNonceBuffer.readInt32LE();
 
       let job = index.BoostPowJob.fromObject({
          category: categoryHex,
@@ -672,7 +663,7 @@ describe('BoostPowJob', () => {
       expect(job.getCategoryNumber()).to.eql(categoryNumber);
       expect(job.getCategoryBuffer()).to.eql(categoryBuffer);
 
-      expect(job.getContentHex().toUpperCase()).to.eql(contentHex);
+      expect(job.getContentHex()).to.eql(contentHex);
       expect(job.getContentString()).to.eql(contentString);
       expect(job.getContentBuffer()).to.eql(contentBuffer);
 
@@ -729,8 +720,8 @@ describe('Convert difficulty to bits and back', () => {
     const difficulty = .0001;
     const bits = 0x1e270fd8;
 
-    expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
-    expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(index.BoostUtilsHelper.difficulty(bits))).to.eql(bits);
 
   });
 
@@ -739,8 +730,8 @@ describe('Convert difficulty to bits and back', () => {
     const difficulty = 1000;
     const bits = 0x1b4188f5;
 
-    expect(index.BoostPowJob.difficulty2bits(difficulty)).to.eql(bits);
-    expect(index.BoostPowJob.difficulty2bits(index.BoostPowJob.getDifficulty(bits))).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(difficulty)).to.eql(bits);
+    expect(index.BoostUtilsHelper.difficulty2bits(index.BoostUtilsHelper.difficulty(bits))).to.eql(bits);
 
   });
 

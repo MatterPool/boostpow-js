@@ -13,7 +13,7 @@ class BoostPowMetadataModel {
         this.additionalData = additionalData;
     }
     static fromObject(params) {
-        return new BoostPowMetadataModel(boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, 32));
+        return new BoostPowMetadataModel(new Buffer(params.tag, 'hex'), new Buffer(params.minerPubKeyHash, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), new Buffer(params.additionalData, 'hex'));
     }
     static fromBuffer(params) {
         return new BoostPowMetadataModel(params.tag, params.minerPubKeyHash, params.extraNonce1, params.extraNonce2, params.userNonce, params.additionalData);
