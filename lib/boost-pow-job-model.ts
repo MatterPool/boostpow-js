@@ -91,7 +91,7 @@ export class BoostPowJobModel {
     }
 
     getUserNonceNumber(): number {
-        return this.userNonce.readInt32LE();
+        return this.userNonce.readUInt32LE();
     }
 
     getUserNonceBuffer(): Buffer {

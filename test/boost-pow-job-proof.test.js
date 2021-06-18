@@ -25,7 +25,7 @@ describe('boost #BoostPowJobProof', () => {
 
      let extraNonce2Hex = "0000000300000003";
      let extraNonce2Buffer = new Buffer(extraNonce2Hex, 'hex');
-     let extraNonce2Number = extraNonce2Buffer.readBigUInt64BE();
+     let extraNonce2Number = 0x0300000003;
 
      let timeHex = '12300009';
      let timeBuffer = new Buffer(timeHex, 'hex');
@@ -37,7 +37,7 @@ describe('boost #BoostPowJobProof', () => {
 
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: signatureHex,
-         minerPubKeyHash: minerPubkeyHashHex,
+         minerPubKeyHash: minerPubKeyHashHex,
          extraNonce1: extraNonce1Hex,
          extraNonce2: extraNonce2Hex,
          minerPubKey: minerPubKeyHex,
@@ -45,11 +45,15 @@ describe('boost #BoostPowJobProof', () => {
          nonce: nonceHex,
       });
 
+      expect(jobProof.getNonceNumber()).to.eql(nonceNumber);
+      expect(jobProof.getNonce()).to.eql(nonceBuffer);
+
       expect(jobProof.getExtraNonce1Number()).to.eql(extraNonce1Number);
+      expect(jobProof.getExtraNonce2Number()).to.eql(extraNonce2Number);
 
       var jobProofScript = jobProof.toASM();
       expect(jobProofScript).to.contain(signatureHex);
-      expect(jobProofScript).to.contain(minerPubkeyHex);
+      expect(jobProofScript).to.contain(minerPubKeyHex);
       expect(jobProofScript).to.contain(nonceHex);
 
       expect(jobProofScript).to.eq(jobProof.toASM());
@@ -66,7 +70,7 @@ describe('boost #BoostPowJobProof', () => {
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
          minerPubKeyHash: '0000000000000000000000000000000000000001',
-         extraNonce1: "00000002",
+         extraNonce1: "02000000",
          extraNonce2: "0000000300000003",
          minerPubKey: '000000000000000000000000000000000000000000000000000000000000000006',
          time: '12300009',
@@ -76,7 +80,7 @@ describe('boost #BoostPowJobProof', () => {
       expect(jobObj).to.eql({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
          minerPubKeyHash: '0000000000000000000000000000000000000001',
-         extraNonce1: "00000002",
+         extraNonce1: "02000000",
          extraNonce2: "0000000300000003",
          minerPubKey: '000000000000000000000000000000000000000000000000000000000000000006',
          time: '12300009',
@@ -95,7 +99,7 @@ describe('boost #BoostPowJobProof', () => {
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
          minerPubKeyHash: '0000000000000000000000000000000000000001',
-         extraNonce1: "00000002",
+         extraNonce1: "02000000",
          extraNonce2: "0000000300000003",
          minerPubKey: '000000000000000000000000000000000000000000000000000000000000000006',
          time: '12300009',
@@ -106,7 +110,7 @@ describe('boost #BoostPowJobProof', () => {
       expect(jobObj).to.eql({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
          minerPubKeyHash: '0000000000000000000000000000000000000001',
-         extraNonce1: "00000002",
+         extraNonce1: "02000000",
          extraNonce2: "0000000300000003",
          minerPubKey: '000000000000000000000000000000000000000000000000000000000000000006',
          time: '12300009',
@@ -130,7 +134,7 @@ describe('boost #BoostPowJobProof', () => {
          minerPubKey: '0000000000000000000000000000000000000000000000000000000000000001',
          time: '12300009',
          nonce: '10000002',
-         minerPubKey: '0000000000000000000000000000000000000000000000000000000000000001',
+         minerPubKey: '010000000000000000000000000000000000000000000000000000000000000000',
       });
 
       // Important so we can create a mini cpu miner to just update the relevant sections quickly
@@ -146,6 +150,7 @@ describe('boost #BoostPowJobProof', () => {
          time: '12300009',
          nonce: '30000002',
       });
+
       expect(jobProof.toString()).to.eql('32 0x0000000000000000000000000000000000000000000000000000000000000001 33 0x010000000000000000000000000000000000000000000000000000000000000000 4 0x30000002 4 0x12300009 8 0x0000000300000003 4 0x00000000 20 0x0000000000000000000000000000000000000000');
    });
 
@@ -157,13 +162,13 @@ describe('boost #BoostPowJobProof', () => {
    it('should success load job proof from transaction', async () => {
       const jobProof = index.BoostPowJobProof.fromRawTransaction('01000000012e5286d9ab0a2007c944db26040bef4f96549e905f95e842948625b4e127797f0100000098483045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a977576412102f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe660462a3aeb004b851825e0800000000000000000446037ef11492e4d5ab4bb067f872d28f44d3e5433e56fca190ffffffff0181150000000000001976a91492e4d5ab4bb067f872d28f44d3e5433e56fca19088ac00000000');
       expect(jobProof.toObject()).to.eql({
-            "extraNonce1": "f17e0346",
+            "extraNonce1": "46037ef1",
             "extraNonce2": "0000000000000000",
             "minerPubKey": "02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66",
             "minerPubKeyHash": "92e4d5ab4bb067f872d28f44d3e5433e56fca190",
-            "nonce": "b0aea362",
+            "nonce": "62a3aeb0",
             "signature": "3045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a97757641",
-            "time": "5e8251b8",
+            "time": "b851825e",
       });
       expect(jobProof.getTimeNumber()).to.eql(1585598904);
       expect(jobProof.getNonceNumber()).to.eql(2964235106);
@@ -179,13 +184,13 @@ describe('boost #BoostPowJobProof', () => {
    it('should success load job proof from scripthex', async () => {
       const jobProof = index.BoostPowJobProof.fromScript('483045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a977576412102f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe660462a3aeb004b851825e0800000000000000000446037ef11492e4d5ab4bb067f872d28f44d3e5433e56fca190');
       expect(jobProof.toObject()).to.eql({
-            "extraNonce1": "f17e0346",
+            "extraNonce1": "46037ef1",
             "extraNonce2": "0000000000000000",
             "minerPubKey": "02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66",
             "minerPubKeyHash": "92e4d5ab4bb067f872d28f44d3e5433e56fca190",
-            "nonce": "b0aea362",
+            "nonce": "62a3aeb0",
             "signature": "3045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a97757641",
-            "time": "5e8251b8",
+            "time": "b851825e",
       });
       expect(jobProof.getTimeNumber()).to.eql(1585598904);
       expect(jobProof.getNonceNumber()).to.eql(2964235106);
@@ -199,7 +204,7 @@ describe('boost #BoostPowJobProof', () => {
          minerPubKeyHash: '0000000000000000000000000000000000000000',
          extraNonce1: "00000000",
          extraNonce2: "0000000300000003",
-         minerPubKey: '0000000000000000000000000000000000000000000000000000000000000001',
+         minerPubKey: '000000000000000000000000000000000000000000000000000000000000000001',
          time: '12300009',
          nonce: '30000002',
       });
@@ -259,9 +264,9 @@ describe('BoostPowJobProof ', () => {
          "extraNonce2": "ea000000",
          "minerPubKey": "02625da04587e77640a731637cb24b3965dcde3a05ce9ce837ffa217153f5f9ed8",
          "minerPubKeyHash": "ecf5e2164c52d081ef19fbf59c81c66babb02c55",
-         "nonce": "0000000b",
+         "nonce": "0b000000",
          "signature": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-         "time": "00000001",
+         "time": "01000000",
       });
    });
 });
