@@ -268,10 +268,7 @@ describe("boost integration test ", () => {
 
   // content corresponds to previous.
   const contentString = "hello animal";
-  const contentBuffer = index.BoostUtilsHelper.stringToBuffer(
-    contentString,
-    32
-  );
+  const contentBuffer = index.BoostUtilsHelper.stringToBuffer(contentString, 32);
   const contentHex = contentBuffer.reverse().toString("hex");
 
   const difficulty = 0.0001;
@@ -416,8 +413,8 @@ describe("boost integration test ", () => {
 
   it("should get content from locking script", async () => {
     expect(job.getContentHex()).to.eql(contentHex);
-    expect(job.getContentString()).to.eql(contentString);
     expect(job.getContentBuffer()).to.eql(contentBuffer);
+    expect(job.getContentString()).to.eql(contentString);
   });
 
   it("should get difficulty from locking script", async () => {
@@ -466,7 +463,7 @@ describe("boost integration test ", () => {
 
   it("should get miner pubkey hash from solution", async () => {
     expect(solution.getMinerPubKeyHash()).to.eql(minerPubKeyHashBuffer);
-    expect(solution.getMinerPubKeyHashHex()).to.eql(minerPubKeyHashHex);
+    expect(solution.getMinerPubKeyHashHex().toUpperCase()).to.eql(minerPubKeyHashHex);
   });
 
   it("should get extra nonce 1 from solution", async () => {
@@ -480,14 +477,14 @@ describe("boost integration test ", () => {
   });
 
   // check valid metadata
-  it("should generate correct metadta hash", async () => {
-    expect(metadata.hash()).to.eql(metadataHashHex);
+  it("should generate correct metadata hash", async () => {
+    expect(metadata.hash().toUpperCase()).to.eql(metadataHashHex);
     expect(metadata.hashAsBuffer()).to.eql(metadataHashBuffer);
   });
 
   it("should should read and write metadata from string", async () => {
-    expect(metadata.toString()).to.eql(metadataStringHex);
-    expect(this.BoostPowMetadata.fromString(this.metadataStringHex)).to.eql(
+    expect(metadata.toString().toUpperCase()).to.eql(metadataStringHex);
+    expect(index.BoostPowMetadata.fromString(metadataStringHex)).to.eql(
       metadata
     );
   });

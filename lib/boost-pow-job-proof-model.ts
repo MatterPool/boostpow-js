@@ -36,15 +36,19 @@ export class BoostPowJobProofModel {
         if (params.signature.length > 166) {
             throw new Error('signature too large. Max 83 bytes.')
         }
+
         if (params.minerPubKey.length != 66 && params.minerPubKey.length != 130) {
             throw new Error('minerPubKey too large. Max 65 bytes.');
         }
+
         if (params.nonce.length > 8) {
             throw new Error('nonce too large. Max 4 bytes.')
         }
+
         if (params.extraNonce1.length > 8) {
             throw new Error('extraNonce1 too large. Max 4 bytes.')
         }
+
         if (params.extraNonce2.length > 16) {
             throw new Error('extraNonce2 too large. Max 8 bytes.')
         }
@@ -66,7 +70,7 @@ export class BoostPowJobProofModel {
             BoostUtils.createBufferAndPad(params.time, 4, false),
             BoostUtils.createBufferAndPad(params.extraNonce1, 4,false),
             BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.nonce, 4,false),
+            BoostUtils.createBufferAndPad(params.nonce, 4, false),
             Buffer.from(minerPubKeyHash, 'hex'),
         );
     }

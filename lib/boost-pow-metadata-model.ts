@@ -139,7 +139,7 @@ export class BoostPowMetadataModel {
     }
 
     hashAsBuffer() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer()).reverse();
+        return bsv.crypto.Hash.sha256sha256(this.toBuffer());
     }
 
     toObject () {
