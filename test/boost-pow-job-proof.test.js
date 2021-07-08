@@ -22,7 +22,7 @@ describe('boost #BoostPowJobProof', () => {
       //expect(jobProofScript).to.contain('00000005');
 
       expect(jobProofScript).to.eq(jobProof.toASM());
-      console.log();
+      console.log(jobProofScript);
    });
 
 

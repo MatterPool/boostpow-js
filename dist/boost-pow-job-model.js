@@ -45,7 +45,7 @@ class BoostPowJobModel {
         return this.category;
     }
     getCategoryNumber() {
-        return parseInt(this.getCategoryHex(), 16);
+        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
     }
     getCategoryHex() {
         return (this.category.toString('hex'));

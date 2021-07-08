@@ -4,10 +4,18 @@ var index = require('../dist/index.js');
 var bsv = require('bsv');
 
 describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours to finish depending on cpu speed', () => {
-/*
+
    it('mine hello world', async () => {
       const debugLevel = 1; // Whether to show logs
-      const job = await index.Graph().loadBoostJob('4aef0afa290b0850e5f60d9830e6c261f6332abaa1d9d06140fa708d8bbcf3f4');
+      //const job = await index.Graph().loadBoostJob('4aef0afa290b0850e5f60d9830e6c261f6332abaa1d9d06140fa708d8bbcf3f4');
+       let job = index.BoostPowJob.fromObject({
+           content: index.BoostUtilsHelper.createBufferAndPad('hello animal', 32,true).reverse().toString('hex'),
+           diff: 0.0001,
+           category: index.BoostUtilsHelper.createBufferAndPad("04d2",4,true).toString('hex'),
+           tag: index.BoostUtilsHelper.createBufferAndPad('this is a tag', 20).reverse().toString('hex'),
+           additionalData: index.BoostUtilsHelper.createBufferAndPad('this is more additionalData', 32).reverse().toString('hex'),
+           userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
+       });
       const privKey = bsv.PrivateKey.fromRandom();
       const capital = Buffer.from('Capitalists can spend more energy than socialists.', 'utf8');
       console.log('sha256', bsv.crypto.Hash.sha256(capital).toString('hex'));
@@ -42,5 +50,4 @@ describe('BoostPowSimpleMiner. startMining. difficulty 1. Expect 3 to 10 hours t
       console.log('Boost Pow Job: ', result.boostPowJob);
       console.log('Boost Pow Job Proof: ', result.boostPowJobProof);
    });
-   */
 });

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.search = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = void 0;
+exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.search = exports.BoostPowSimpleMiner = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = void 0;
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
@@ -9,6 +9,7 @@ const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_ranker_model_1 = require("./boost-signal-ranker-model");
+const boost_pow_simple_miner_model_1 = require("./boost-pow-simple-miner-model");
 const defaultOptions = {
     graph_api_url: 'https://graph.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
@@ -119,6 +120,7 @@ exports.BoostUtilsHelper = boost_utils_1.BoostUtils;
 exports.BoostGraph = BoostGraphClient;
 exports.BoostSignal = boost_signal_model_1.BoostSignalModel;
 exports.BoostSignalRanker = boost_signal_ranker_model_1.BoostSignalRankerModel;
+exports.BoostPowSimpleMiner = boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
 function searchGraph(q, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
     return apiClient.search(q, callback);

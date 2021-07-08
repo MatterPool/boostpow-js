@@ -50,7 +50,7 @@ export class BoostPowJobModel {
     }
 
     getCategoryNumber(): number {
-        return parseInt(this.getCategoryHex(), 16);
+        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
     }
 
     getCategoryHex(): string {

@@ -613,7 +613,13 @@ describe('BoostPowJob', () => {
          userNonce: index.BoostUtilsHelper.createBufferAndPad('01c8', 4).reverse().toString('hex')
       });
       let scriptJob=job.toScript(false).toASM();
+      console.log(scriptJob);
       expect(scriptJob).contain('d2040000');
+      console.log(job.getCategoryNumber());
+
+      expect(job.getCategoryBuffer().toString('hex')).to.eql('d2040000');
+
+      //expect()
       expect(scriptJob).contain('6c616d696e61206f6c6c65680000000000000000000000000000000000000000');
       expect(scriptJob).contain('0000000000000074686973206973206120746167');
       expect(scriptJob).contain('000000000074686973206973206d6f7265206164646974696f6e616c44617461');
