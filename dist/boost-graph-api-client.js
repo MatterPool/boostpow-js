@@ -4,7 +4,6 @@ exports.BoostGraphApiClient = void 0;
 const axios_1 = require("axios");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const graph_search_query_1 = require("./graph-search-query");
-const _1 = require(".");
 const defaultOptions = {
     graph_api_url: 'https://graph.boostpow.com',
     api_url: 'https://api.mattercloud.net',
@@ -177,30 +176,6 @@ class BoostGraphApiClient {
             nextPaginationToken: response.data.nextPaginationToken,
             mined: response.data.mined
         };
-    }
-    static buildSignalRank(mined) {
-        return _1.BoostSignalRanker.fromArray(mined);
-    }
-    search(q, callback) {
-        return new Promise((resolve, reject) => {
-            let qString = '?';
-            qString += graph_search_query_1.GraphSearchQueryString.build(q);
-            axios_1.default.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`, {
-                headers: this.getHeaders()
-            }).then((response) => {
-                const signalRanker = BoostGraphApiClient.buildSignalRank(response.data.mined);
-                return this.resolveOrCallback(resolve, signalRanker, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'boost search error',
-                        error: 'BOOST_SEARCH_ERROR'
-                    }), callback);
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);
-            });
-        });
     }
     rawSearch(q, callback) {
         return new Promise((resolve, reject) => {

@@ -18,7 +18,7 @@ describe("boost #BoostPowMetadata tests", () => {
       tag: "01",
       minerPubKeyHash: "00000000000000000000000000000000000000a4",
       extraNonce1: "014e0000",
-      extraNonce2: "21a00000",
+      extraNonce2: "21a0000000000000",
       userNonce: "00000011",
       additionalData: "000000000000000000000000042",
     });
@@ -40,7 +40,7 @@ describe("boost #BoostPowMetadata tests", () => {
       tag: "0000000000000000000000000000000000000001",
       minerPubKeyHash: "00000000000000000000000000000000000000a4",
       extraNonce1: "4e010000",
-      extraNonce2: "a0210000",
+      extraNonce2: "a021000000000000",
       userNonce: "01000000",
       additionalData:
         "0000000000000000000000000000000000000000000000000000000000000042",
@@ -90,10 +90,10 @@ describe("boost #BoostPowMetadata tests", () => {
 
     const obj = abstract.toObject();
     expect(obj).to.eql({
-      tag: "0000000000000000000000000000000000010203",
+      tag: "010203",
       minerPubKeyHash: "00000000000000000000000000000000000000a4",
       extraNonce1: "0000014e",
-      extraNonce2: "000021a0",
+      extraNonce2: "000021a000000000",
       userNonce: "00091011",
       additionalData:
         "0000000000000000000000000000000000000000000000000000000000404142",

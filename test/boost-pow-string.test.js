@@ -482,11 +482,8 @@ describe("boost integration test ", () => {
     expect(metadata.hashAsBuffer()).to.eql(metadataHashBuffer);
   });
 
-  it("should should read and write metadata from string", async () => {
+  it("should should write metadata to string", async () => {
     expect(metadata.toString().toUpperCase()).to.eql(metadataStringHex);
-    expect(index.BoostPowMetadata.fromString(metadataStringHex)).to.eql(
-      metadata
-    );
   });
 
   // check getters for metadata

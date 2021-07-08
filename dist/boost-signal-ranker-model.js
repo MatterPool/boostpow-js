@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostSignalRankerModel = void 0;
-const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_summary_model_1 = require("./boost-signal-summary-model");
 ;
 ;
@@ -207,25 +206,6 @@ class BoostSignalRankerModel {
     }
     static fromSignals(signals) {
         return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals));
-    }
-    static fromArray(items) {
-        //  todo add filter restriction
-        if (!items) {
-            return new BoostSignalRankerModel([]);
-        }
-        const dedupItems = BoostSignalRankerModel.dedupPlainObjects(items);
-        let lister = [];
-        for (const item of dedupItems) {
-            if (!item || !item.boostPowString) {
-                throw new Error('invalid boost pow string');
-            }
-            const signal = boost_signal_model_1.BoostSignalModel.fromHex(item.boostPowString, item.boostPowMetadata, item.boostJobId, item.boostJobProofId);
-            if (!signal) {
-                throw new Error('invalid signal creation');
-            }
-            lister.push(signal);
-        }
-        return new BoostSignalRankerModel(lister);
     }
 }
 exports.BoostSignalRankerModel = BoostSignalRankerModel;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.search = exports.BoostPowSimpleMiner = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = void 0;
+exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.BoostPowSimpleMiner = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = void 0;
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
@@ -43,10 +43,6 @@ class BoostGraphClient {
     rawSearch(q, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
         return apiClient.rawSearch(q, callback);
-    }
-    search(q, callback) {
-        const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
-        return apiClient.search(q, callback);
     }
     getBoostJobStatus(txid, callback) {
         const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(this.options);
@@ -121,15 +117,10 @@ exports.BoostGraph = BoostGraphClient;
 exports.BoostSignal = boost_signal_model_1.BoostSignalModel;
 exports.BoostSignalRanker = boost_signal_ranker_model_1.BoostSignalRankerModel;
 exports.BoostPowSimpleMiner = boost_pow_simple_miner_model_1.BoostPowSimpleMinerModel;
-function searchGraph(q, callback) {
-    const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
-    return apiClient.search(q, callback);
-}
 function rawSearchGraph(q, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
-    return apiClient.search(q, callback);
+    return apiClient.rawSearch(q, callback);
 }
-exports.search = searchGraph;
 exports.rawSearch = rawSearchGraph;
 function submitBoostJobGraph(rawtx, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
