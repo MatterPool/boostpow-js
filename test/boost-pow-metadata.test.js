@@ -11,17 +11,17 @@ describe('boost #BoostPowMetadata tests', () => {
          extraNonce1: '014e',
          extraNonce2: '21a0',
          userNonce: '00000011',
-         additionalData: '0000000000000000000000000000000000000000000000000000000000000042',
+         additionalData: '000000000000000000000000042',
       });
 
       const obj = abstract.toObject();
       expect(obj).to.eql({
-         tag: '0000000000000000000000000000000000000001',
+         tag: '01',
          minerPubKeyHash: '00000000000000000000000000000000000000a4',
-         extraNonce1: '0000014e',
-         extraNonce2: '000021a0',
+         extraNonce1: '014e0000',
+         extraNonce2: '21a00000',
          userNonce: '00000011',
-         additionalData: '0000000000000000000000000000000000000000000000000000000000000042',
+         additionalData: '000000000000000000000000042',
       });
    });
 
@@ -29,9 +29,9 @@ describe('boost #BoostPowMetadata tests', () => {
       const abstract = index.BoostPowMetadata.fromObject({
          tag: '0000000000000000000000000000000000000001',
          minerPubKeyHash: '00000000000000000000000000000000000000a4',
-         extraNonce1: '014e',
-         extraNonce2: '21a0',
-         userNonce: '00000001',
+         extraNonce1: '4e01',
+         extraNonce2: 'a021',
+         userNonce: '01000000',
          additionalData: '0000000000000000000000000000000000000000000000000000000000000042',
       });
 
@@ -39,9 +39,9 @@ describe('boost #BoostPowMetadata tests', () => {
       expect(obj).to.eql({
          tag: '0000000000000000000000000000000000000001',
          minerPubKeyHash: '00000000000000000000000000000000000000a4',
-         extraNonce1: '0000014e',
-         extraNonce2: '000021a0',
-         userNonce: '00000001',
+         extraNonce1: '4e010000',
+         extraNonce2: 'a0210000',
+         userNonce: '01000000',
          additionalData: '0000000000000000000000000000000000000000000000000000000000000042',
       });
       expect(abstract.toHex()).to.eql(               '0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a0210000010000004200000000000000000000000000000000000000000000000000000000000000');
@@ -67,17 +67,17 @@ describe('boost #BoostPowMetadata tests', () => {
 
       const tagString1 = abstract.getTagUtf8();
 	  const tagString2 = abstract.getTagUtf8();
-	  
+
 	  const userNonceString1 = abstract.getUserNonceUtf8();
 	  const userNonceString2 = abstract.getUserNonceUtf8();
-	  
+
 	  const adataString1 = abstract.getAdditionalDataUtf8();
 	  const adataString2 = abstract.getAdditionalDataUtf8();
-	  
+
       expect(tagString1).to.eql(tagString2);
 	  expect(userNonceString1).to.eql(userNonceString2);
 	  expect(adataString1).to.eql(adataString2);
-	  
+
 	  const obj = abstract.toObject();
       expect(obj).to.eql({
          tag: '0000000000000000000000000000000000010203',

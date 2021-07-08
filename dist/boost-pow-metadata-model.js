@@ -33,6 +33,9 @@ class BoostPowMetadataModel {
     getTagUtf8() {
         return this.trimBufferString(Buffer.from(this.tag).reverse().toString('hex'), true);
     }
+    getTagString() {
+        return this.getTagUtf8();
+    }
     getMinerPubKeyHash() {
         return this.minerPubKeyHash;
     }
@@ -45,8 +48,17 @@ class BoostPowMetadataModel {
     getUserNonceUtf8() {
         return this.trimBufferString(Buffer.from(this.userNonce).reverse().toString('hex'), true);
     }
+    getUserNonceNumber() {
+        return this.userNonce.readUInt32LE();
+    }
+    getExtraNonce1Number() {
+        return parseInt(this.extraNonce1.toString('hex'), 16);
+    }
     getExtraNonce1() {
         return this.extraNonce1;
+    }
+    getExtraNonce2Number() {
+        return parseInt(this.extraNonce2.toString('hex'), 16);
     }
     getExtraNonce2() {
         return this.extraNonce2;
@@ -56,6 +68,9 @@ class BoostPowMetadataModel {
     }
     getAdditionalDataUtf8() {
         return this.trimBufferString(Buffer.from(this.additionalData).reverse().toString('hex'), true);
+    }
+    getAdditionalDataString() {
+        return this.getAdditionalDataUtf8();
     }
     toString() {
         return Buffer.concat([

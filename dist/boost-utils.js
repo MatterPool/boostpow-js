@@ -50,7 +50,7 @@ class BoostUtils {
     // by Daniel and Attila which both purport to solve the same problem. They
     // each don't work quite right in different domains, but when they are
     // combined they result in a successful function. I don't really know why
-    // it works this way, and it would be good if we had something simpler. 
+    // it works this way, and it would be good if we had something simpler.
     // https://bitcoin.stackexchange.com/questions/30467/what-are-the-equations-to-convert-between-bits-and-difficulty
     /**
      * @link https://en.bitcoin.it/wiki/Difficulty

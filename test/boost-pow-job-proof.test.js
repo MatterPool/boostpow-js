@@ -5,67 +5,6 @@ var bsv = require('bsv');
 
 describe('boost #BoostPowJobProof', () => {
 
-   it('should properly orient specific parts', async () => {
-     // this signature is in proper DER format but is not
-     // really a signature of anything.
-     let signatureHex = '300602010a02010b41';
-     let signatureBuffer = new Buffer(signatureHex, 'hex');
-
-     // properly formatted but not a real public key.
-     let minerPubKeyHex = '020000000000000000000000000000000000000000000000000000000000000007'
-     let minerPubKeyBuffer = new Buffer(minerPubKeyHex, 'hex');
-
-     let minerPubKeyHashHex = '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F';
-     let minerPubKeyHashBuffer = new Buffer(minerPubKeyHashHex, 'hex');
-     let minerPubKeyHashString = '13Qrdvv3cXys9aryjZho6vHxDW3PRgX5pm';
-
-     let extraNonce1Hex = "02000000";
-     let extraNonce1Buffer = new Buffer(extraNonce1Hex, 'hex');
-     let extraNonce1Number = extraNonce1Buffer.readUInt32BE();
-
-     let extraNonce2Hex = "0000000300000003";
-     let extraNonce2Buffer = new Buffer(extraNonce2Hex, 'hex');
-     let extraNonce2Number = 0x0300000003;
-
-     let timeHex = '12300009';
-     let timeBuffer = new Buffer(timeHex, 'hex');
-     let timeNumber = timeBuffer.readUInt32LE();
-
-     let nonceHex = 'f8fc1600';
-     let nonceBuffer = new Buffer(nonceHex, 'hex');
-     let nonceNumber = nonceBuffer.readUInt32LE();
-
-      const jobProof = index.BoostPowJobProof.fromObject({
-         signature: signatureHex,
-         minerPubKeyHash: minerPubKeyHashHex,
-         extraNonce1: extraNonce1Hex,
-         extraNonce2: extraNonce2Hex,
-         minerPubKey: minerPubKeyHex,
-         time: timeHex,
-         nonce: nonceHex,
-      });
-
-      expect(jobProof.getNonceNumber()).to.eql(nonceNumber);
-      expect(jobProof.getNonce()).to.eql(nonceBuffer);
-
-      expect(jobProof.getExtraNonce1Number()).to.eql(extraNonce1Number);
-      expect(jobProof.getExtraNonce2Number()).to.eql(extraNonce2Number);
-
-      var jobProofScript = jobProof.toASM();
-      expect(jobProofScript).to.contain(signatureHex);
-      expect(jobProofScript).to.contain(minerPubKeyHex);
-      expect(jobProofScript).to.contain(nonceHex);
-
-      expect(jobProofScript).to.eq(jobProof.toASM());
-
-      expect(jobProofScript.toUpperCase()).to.eql('300602010A02010B41 ' +
-        '020000000000000000000000000000000000000000000000000000000000000007 ' +
-        'F8FC1600 12300009 0000000300000003 02000000 ' +
-        '1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F');
-
-   });
-
-
    it('should success create hex ', async () => {
       const jobProof = index.BoostPowJobProof.fromObject({
          signature: '0000000000000000000000000000000000000000000000000000000000000006',
