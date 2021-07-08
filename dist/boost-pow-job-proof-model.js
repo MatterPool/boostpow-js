@@ -24,37 +24,45 @@ class BoostPowJobProofModel {
         this.spentVout = spentVout;
     }
     static fromObject(params) {
-        if (params.signature && params.signature.length > 166) {
+        if (params.signature.length > 166) {
             throw new Error('signature too large. Max 83 bytes.');
         }
-        if (params.minerPubKey && params.minerPubKey.length > 66) {
-            throw new Error('minerPubKey too large. Max 33 bytes.');
+        if (params.minerPubKey.length != 66 && params.minerPubKey.length != 130) {
+            throw new Error('minerPubKey too large. Max 65 bytes.');
         }
-        if (params.nonce && params.nonce.length > 8) {
+        if (params.nonce.length > 8) {
             throw new Error('nonce too large. Max 4 bytes.');
         }
-        if (params.extraNonce1 && params.extraNonce1.length > 8) {
+        if (params.extraNonce1.length > 8) {
             throw new Error('extraNonce1 too large. Max 4 bytes.');
         }
-        if (params.extraNonce2 && params.extraNonce2.length > 16) {
+        if (params.extraNonce2.length > 16) {
             throw new Error('extraNonce2 too large. Max 8 bytes.');
         }
-        if (params.minerPubKeyHash && params.minerPubKeyHash.length > 40) {
-            throw new Error('minerPubKeyHash too large. Max 20 bytes.');
+        let minerPubKey = Buffer.from(params.minerPubKey, 'hex');
+        let minerPubKeyHash;
+        if (params.minerPubKeyHash) {
+            if (params.minerPubKeyHash.length != 40) {
+                throw new Error('minerPubKeyHash too large. Max 20 bytes.');
+            }
+            minerPubKeyHash = params.minerPubKeyHash;
         }
-        return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKey, 33, false), boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false));
+        else {
+            minerPubKeyHash = bsv.crypto.hash.sha256ripemd160(minerPubKey).toString('hex');
+        }
+        return new BoostPowJobProofModel(Buffer.from(params.signature, 'hex'), minerPubKey, boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false), Buffer.from(minerPubKeyHash, 'hex'));
     }
     getTime() {
         return this.time;
     }
     getTimeNumber() {
-        return parseInt((this.time.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return this.time.readUInt32LE();
     }
     getTimeBuffer() {
         return this.time;
     }
     setTime(time) {
-        this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4);
+        this.time = boost_utils_1.BoostUtils.createBufferAndPad(time, 4, false);
     }
     getExtraNonce1Number() {
         return parseInt(this.extraNonce1.toString('hex'), 16);
@@ -69,19 +77,19 @@ class BoostPowJobProofModel {
         return this.extraNonce2;
     }
     getNonceNumber() {
-        return parseInt((this.nonce.toString('hex').match(/../g) || []).reverse().join(''), 16);
+        return this.nonce.readUInt32LE();
     }
     getNonce() {
         return this.nonce;
     }
     setNonce(nonce) {
-        this.nonce = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+        this.nonce = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4, false);
     }
     setExtraNonce1(nonce) {
-        this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4);
+        this.extraNonce1 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 4, false);
     }
     setExtraNonce2(nonce) {
-        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 8);
+        this.extraNonce2 = boost_utils_1.BoostUtils.createBufferAndPad(nonce, 8, false);
     }
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash() {
@@ -120,13 +128,13 @@ class BoostPowJobProofModel {
     toObject() {
         return {
             // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-            signature: (this.signature.toString('hex').match(/../g) || []).join(''),
-            minerPubKey: (this.minerPubKey.toString('hex').match(/../g) || []).join(''),
-            time: (this.time.toString('hex').match(/../g) || []).reverse().join(''),
-            nonce: (this.nonce.toString('hex').match(/../g) || []).reverse().join(''),
-            extraNonce1: (this.extraNonce1.toString('hex').match(/../g) || []).reverse().join(''),
-            extraNonce2: (this.extraNonce2.toString('hex').match(/../g) || []).join(''),
-            minerPubKeyHash: (this.minerPubKeyHash.toString('hex').match(/../g) || []).join(''),
+            signature: this.signature.toString('hex'),
+            minerPubKey: this.minerPubKey.toString('hex'),
+            time: this.time.toString('hex'),
+            nonce: this.nonce.toString('hex'),
+            extraNonce1: this.extraNonce1.toString('hex'),
+            extraNonce2: this.extraNonce2.toString('hex'),
+            minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
         };
     }
     toHex() {
@@ -140,9 +148,9 @@ class BoostPowJobProofModel {
         // Add miner pub key
         buildOut.add(this.minerPubKey);
         // Add miner nonce
-        buildOut.add(Buffer.from(this.nonce).reverse());
+        buildOut.add(Buffer.from(this.nonce));
         // Add time
-        buildOut.add(Buffer.from(this.time).reverse());
+        buildOut.add(Buffer.from(this.time));
         // Add extra nonce2
         buildOut.add(this.extraNonce2);
         // Add extra nonce 1

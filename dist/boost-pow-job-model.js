@@ -20,10 +20,10 @@ class BoostPowJobModel {
         this.vout = vout;
         this.value = value;
     }
-    trimBufferString(str, trimLeadingNulls = true) {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
+    trimBufferString(str, trimTrailingNulls = true) {
+        const content = str.toString('utf8');
+        if (trimTrailingNulls) {
+            return content.replace(/\0+$/g, '');
         }
         else {
             return content;
@@ -32,11 +32,12 @@ class BoostPowJobModel {
     getContentBuffer() {
         return this.content;
     }
-    getContentString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+    getContentString(trimTrailingNulls = true) {
+        return this.trimBufferString(this.content, trimTrailingNulls);
     }
     getContentHex() {
-        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+        let content = this.content;
+        return content.reverse().toString('hex');
     }
     getDiff() {
         return this.difficulty;
@@ -45,16 +46,16 @@ class BoostPowJobModel {
         return this.category;
     }
     getCategoryNumber() {
-        return parseInt((this.getCategoryHex().match(/../g) || []).reverse().join(''), 16);
+        return this.category.readInt32LE();
     }
     getCategoryHex() {
-        return (this.category.toString('hex'));
+        return this.category.toString('hex');
     }
     getCategoryString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().category, trimLeadingNulls);
+        return this.trimBufferString(this.category, trimLeadingNulls);
     }
     getTagString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+        return this.trimBufferString(this.tag, trimLeadingNulls);
     }
     getTagHex() {
         return (this.tag.toString('hex').match(/../g) || []).join('');
@@ -63,19 +64,19 @@ class BoostPowJobModel {
         return this.tag;
     }
     getAdditionalDataString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.toObject().additionalData, trimLeadingNulls);
+        return this.trimBufferString(this.additionalData, trimLeadingNulls);
     }
     getAdditionalDataHex() {
-        return (this.additionalData.toString('hex').match(/../g) || []).join('');
+        return this.additionalData.toString('hex');
     }
     getAdditionalDataBuffer() {
         return this.additionalData;
     }
     getUserNonce() {
-        return parseInt(this.toObject().userNonce, 16);
+        return this.getUserNonceNumber();
     }
     getUserNonceNumber() {
-        return parseInt(this.getUserNonceHex(), 16);
+        return this.userNonce.readUInt32LE();
     }
     getUserNonceBuffer() {
         return this.userNonce;
@@ -84,7 +85,6 @@ class BoostPowJobModel {
         return this.userNonce.toString('hex');
     }
     static fromObject(params) {
-        var _a;
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.');
         }
@@ -100,25 +100,27 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.tag, 20, false), boost_utils_1.BoostUtils.createBufferAndPad(params.additionalData, ((_a = params.additionalData) === null || _a === void 0 ? void 0 : _a.length) || 32, false), boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0), 
+        // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
+        boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
     }
     getBits() {
-        return BoostPowJobModel.difficulty2bits(this.difficulty);
+        return boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
     }
     bits() {
-        return BoostPowJobModel.difficulty2bits(this.difficulty);
+        return boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
     }
     static hexBitsToDifficulty(hexBits) {
         let targetHex = (hexBits.match(/../g) || []).join('');
         let targetInt = parseInt(targetHex, 16);
-        return BoostPowJobModel.getDifficulty(targetInt);
+        return boost_utils_1.BoostUtils.difficulty(targetInt);
     }
     getBitsHex() {
         return this.getTargetAsNumberHex();
     }
     toObject() {
         return {
-            content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
+            content: this.getContentHex(),
             diff: this.difficulty,
             category: this.category.toString('hex'),
             tag: this.tag.toString('hex'),
@@ -126,38 +128,12 @@ class BoostPowJobModel {
             userNonce: this.userNonce.toString('hex'),
         };
     }
-    static difficulty2bits(difficulty) {
-        if (difficulty < 0)
-            throw 'difficulty cannot be negative';
-        if (!isFinite(difficulty)) {
-            throw 'difficulty cannot be infinite';
-        }
-        for (var shiftBytes = 1; true; shiftBytes++) {
-            var word = (0x00ffff * Math.pow(0x100, shiftBytes)) / difficulty;
-            if (word >= 0xffff)
-                break;
-        }
-        word &= 0xffffff; // convert to int < 0xffffff
-        var size = 0x1d - shiftBytes;
-        // the 0x00800000 bit denotes the sign, so if it is already set, divide the
-        // mantissa by 0x100 and increase the size by a byte
-        if (word & 0x800000) {
-            word >>= 8;
-            size++;
-        }
-        if ((word & ~0x007fffff) != 0)
-            throw 'the \'bits\' \'word\' is out of bounds';
-        if (size > 0xff)
-            throw 'the \'bits\' \'size\' is out of bounds';
-        var bits = (size << 24) | word;
-        return bits;
-    }
     getTargetAsNumberHex() {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').toString('hex');
     }
     getTargetAsNumberBuffer() {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
     getId() {
@@ -196,33 +172,6 @@ class BoostPowJobModel {
         }
         // Return script
         return buildOut;
-    }
-    /**
-     * Returns the target difficulty for this block
-     * @param {Number} bits
-     * @returns {BN} An instance of BN with the decoded difficulty bits
-     */
-    static getTargetDifficulty(bits) {
-        var target = new bsv.crypto.BN(bits & 0xffffff);
-        var mov = 8 * ((bits >>> 24) - 3);
-        while (mov-- > 0) {
-            target = target.mul(new bsv.crypto.BN(2));
-        }
-        return target;
-    }
-    // https://bitcoin.stackexchange.com/questions/30467/what-are-the-equations-to-convert-between-bits-and-difficulty
-    /**
-     * @link https://en.bitcoin.it/wiki/Difficulty
-     * @return {Number}
-     */
-    static getDifficulty(bits) {
-        var GENESIS_BITS = 0x1d00ffff;
-        var difficulty1TargetBN = BoostPowJobModel.getTargetDifficulty(GENESIS_BITS).mul(new bsv.crypto.BN(Math.pow(10, 8)));
-        var currentTargetBN = BoostPowJobModel.getTargetDifficulty(bits);
-        var difficultyString = difficulty1TargetBN.div(currentTargetBN).toString(10);
-        var decimalPos = difficultyString.length - 8;
-        difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos);
-        return parseFloat(difficultyString);
     }
     getDifficulty() {
         return this.difficulty;
@@ -291,7 +240,7 @@ class BoostPowJobModel {
             content = script.chunks[3].buf;
             let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
             let targetInt = parseInt(targetHex, 16);
-            diff = BoostPowJobModel.getDifficulty(targetInt);
+            diff = boost_utils_1.BoostUtils.difficulty(targetInt);
             tag = script.chunks[5].buf;
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
             userNonce = script.chunks[6].buf;
