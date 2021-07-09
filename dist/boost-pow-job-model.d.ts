@@ -23,11 +23,11 @@ export declare class BoostPowJobModel {
     getCategoryBuffer(): Buffer;
     getCategoryNumber(): number;
     getCategoryHex(): string;
-    getCategoryString(trimLeadingNulls?: boolean): string;
-    getTagString(trimLeadingNulls?: boolean): string;
+    getCategoryString(trimTrailingNulls?: boolean): string;
+    getTagString(trimTrailingNulls?: boolean): string;
     getTagHex(): string;
     getTagBuffer(): Buffer;
-    getAdditionalDataString(trimLeadingNulls?: boolean): string;
+    getAdditionalDataString(trimTrailingNulls?: boolean): string;
     getAdditionalDataHex(): string;
     getAdditionalDataBuffer(): Buffer;
     getUserNonce(): number;

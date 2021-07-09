@@ -34,11 +34,12 @@ export class BoostPowJobModel {
     }
 
     getContentString(trimTrailingNulls = true): string {
+      console.log("getContentString...");
         return this.trimBufferString(this.content, trimTrailingNulls);
     }
 
     getContentHex(): string {
-        let content = this.content;
+        let content = new Buffer(this.content);
         return content.reverse().toString('hex')
     }
 
@@ -58,24 +59,24 @@ export class BoostPowJobModel {
         return this.category.toString('hex');
     }
 
-    getCategoryString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.category, trimLeadingNulls);
+    getCategoryString(trimTrailingNulls = true): string {
+        return this.trimBufferString(this.category, trimTrailingNulls);
     }
 
-    getTagString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.tag, trimLeadingNulls);
+    getTagString(trimTrailingNulls = true): string {
+        return this.trimBufferString(this.tag, trimTrailingNulls);
     }
 
     getTagHex(): string {
-        return (this.tag.toString('hex').match(/../g) || []).join('');
+        return this.tag.toString('hex');
     }
 
     getTagBuffer(): Buffer {
         return this.tag;
     }
 
-    getAdditionalDataString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.additionalData, trimLeadingNulls);
+    getAdditionalDataString(trimTrailingNulls = true): string {
+        return this.trimBufferString(this.additionalData, trimTrailingNulls);
     }
 
     getAdditionalDataHex(): string {
@@ -125,6 +126,7 @@ export class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
+
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,

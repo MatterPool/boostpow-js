@@ -95,10 +95,6 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       1
     );
 
-    const userNonce = "00006688";
-    const tag = "0000000000000000000000000000000000001223";
-    const additionalData =
-      "0000000000000000000000000000000000000000000000000000000000000094";
     const content =
       "0000000000000000000000000000000000000000000000000000000000935532";
     const extraNonce1Int = 1174405125;
@@ -111,9 +107,9 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       content: content,
       diff: 1,
       category: "78000000",
-      tag: tag,
-      additionalData: additionalData,
-      userNonce: userNonce,
+      tag: "2312000000000000000000000000000000000000",
+      additionalData: "9400000000000000000000000000000000000000000000000000000000000000",
+      userNonce: "88660000",
     });
 
     var expectedPubKeyHash = "92e4d5ab4bb067f872d28f44d3e5433e56fca190";

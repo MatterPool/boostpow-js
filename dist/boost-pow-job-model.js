@@ -33,10 +33,11 @@ class BoostPowJobModel {
         return this.content;
     }
     getContentString(trimTrailingNulls = true) {
+        console.log("getContentString...");
         return this.trimBufferString(this.content, trimTrailingNulls);
     }
     getContentHex() {
-        let content = this.content;
+        let content = new Buffer(this.content);
         return content.reverse().toString('hex');
     }
     getDiff() {
@@ -51,20 +52,20 @@ class BoostPowJobModel {
     getCategoryHex() {
         return this.category.toString('hex');
     }
-    getCategoryString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.category, trimLeadingNulls);
+    getCategoryString(trimTrailingNulls = true) {
+        return this.trimBufferString(this.category, trimTrailingNulls);
     }
-    getTagString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.tag, trimLeadingNulls);
+    getTagString(trimTrailingNulls = true) {
+        return this.trimBufferString(this.tag, trimTrailingNulls);
     }
     getTagHex() {
-        return (this.tag.toString('hex').match(/../g) || []).join('');
+        return this.tag.toString('hex');
     }
     getTagBuffer() {
         return this.tag;
     }
-    getAdditionalDataString(trimLeadingNulls = true) {
-        return this.trimBufferString(this.additionalData, trimLeadingNulls);
+    getAdditionalDataString(trimTrailingNulls = true) {
+        return this.trimBufferString(this.additionalData, trimTrailingNulls);
     }
     getAdditionalDataHex() {
         return this.additionalData.toString('hex');

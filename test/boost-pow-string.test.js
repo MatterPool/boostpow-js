@@ -269,7 +269,7 @@ describe("boost integration test ", () => {
   // content corresponds to previous.
   const contentString = "hello animal";
   const contentBuffer = index.BoostUtilsHelper.stringToBuffer(contentString, 32);
-  const contentHex = contentBuffer.reverse().toString("hex");
+  const contentHex = new Buffer(contentBuffer).reverse().toString("hex");
 
   const difficulty = 0.0001;
   const compactNumber = index.BoostUtilsHelper.difficulty2bits(difficulty);
