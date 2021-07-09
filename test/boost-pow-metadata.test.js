@@ -10,7 +10,7 @@ describe("boost #BoostPowMetadata tests", () => {
       extraNonce1: "014e",
       extraNonce2: "21a0",
       userNonce: "00000011",
-      additionalData: "000000000000000000000000042",
+      additionalData: "00000000000000000000000042",
     });
 
     const obj = abstract.toObject();
@@ -20,47 +20,33 @@ describe("boost #BoostPowMetadata tests", () => {
       extraNonce1: "014e0000",
       extraNonce2: "21a0000000000000",
       userNonce: "00000011",
-      additionalData: "000000000000000000000000042",
+      additionalData: "00000000000000000000000042",
     });
   });
 
   it("should success create hex ", async () => {
     const abstract = index.BoostPowMetadata.fromObject({
-      tag: "0000000000000000000000000000000000000001",
-      minerPubKeyHash: "00000000000000000000000000000000000000a4",
+      tag: "0100000000000000000000000000000000000000",
+      minerPubKeyHash: "a400000000000000000000000000000000000000",
       extraNonce1: "4e01",
       extraNonce2: "a021",
       userNonce: "01000000",
       additionalData:
-        "0000000000000000000000000000000000000000000000000000000000000042",
+        "4200000000000000000000000000000000000000000000000000000000000000",
     });
 
     const obj = abstract.toObject();
     expect(obj).to.eql({
-      tag: "0000000000000000000000000000000000000001",
-      minerPubKeyHash: "00000000000000000000000000000000000000a4",
+      tag: "0100000000000000000000000000000000000000",
+      minerPubKeyHash: "a400000000000000000000000000000000000000",
       extraNonce1: "4e010000",
       extraNonce2: "a021000000000000",
       userNonce: "01000000",
       additionalData:
-        "0000000000000000000000000000000000000000000000000000000000000042",
+        "4200000000000000000000000000000000000000000000000000000000000000",
     });
     expect(abstract.toHex()).to.eql(
-      "0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a0210000010000004200000000000000000000000000000000000000000000000000000000000000"
-    );
-    const fromHex = index.BoostPowMetadata.fromHex(
-      "0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a0210000010000004200000000000000000000000000000000000000000000000000000000000000"
-    );
-    expect(abstract.toHex()).to.eql(fromHex.toHex());
-    expect(fromHex.toObject()).to.eql(obj);
-  });
-
-  it("should success create and get hash of abstract", async () => {
-    const fromHex = index.BoostPowMetadata.fromHex(
-      "0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a0210000010000004200000000000000000000000000000000000000000000000000000000000000"
-    );
-    expect(fromHex.hash()).to.eql(
-      "2dd2ce3a9bd404105a56433e1e0ce8cfa458e0a3669ce45f56132fc23d18a125"
+      "0100000000000000000000000000000000000000a4000000000000000000000000000000000000004e010000a021000000000000010000004200000000000000000000000000000000000000000000000000000000000000"
     );
   });
 
@@ -92,8 +78,8 @@ describe("boost #BoostPowMetadata tests", () => {
     expect(obj).to.eql({
       tag: "010203",
       minerPubKeyHash: "00000000000000000000000000000000000000a4",
-      extraNonce1: "0000014e",
-      extraNonce2: "000021a000000000",
+      extraNonce1: "014e0000",
+      extraNonce2: "21a0000000000000",
       userNonce: "00091011",
       additionalData:
         "0000000000000000000000000000000000000000000000000000000000404142",
@@ -117,29 +103,32 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       "0000000000000000000000000000000000000000000000000000000000935532";
     const extraNonce1Int = 1174405125;
     const extraNonce1Hex = Buffer.from(extraNonce1Int.toString(16), "hex")
-      .reverse()
+      //.reverse()
       .toString("hex");
     const extraNonce2Hex = "0000000000000000";
+
     expect(job.toObject()).to.eql({
       content: content,
       diff: 1,
-      category: "00000078",
+      category: "78000000",
       tag: tag,
       additionalData: additionalData,
       userNonce: userNonce,
     });
+
     var expectedPubKeyHash = "92e4d5ab4bb067f872d28f44d3e5433e56fca190";
     const nonceHex = "e2731ee0";
     const timeHex = "5e802ed9";
+
     const jobProof = index.BoostPowJobProof.fromObject({
       signature: "00",
       minerPubKey:
         "02f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe66",
-      extraNonce1: Buffer.from(extraNonce1Hex, "hex").toString("hex"),
-      extraNonce2: Buffer.from(extraNonce2Hex, "hex").toString("hex"),
-      time: Buffer.from(timeHex, "hex").toString("hex"),
-      nonce: Buffer.from(nonceHex, "hex").toString("hex"),
-      minerPubKeyHash: Buffer.from(expectedPubKeyHash, "hex").toString("hex"),
+      extraNonce1: extraNonce1Hex,
+      extraNonce2: extraNonce2Hex,
+      time: timeHex,
+      nonce: nonceHex,
+      minerPubKeyHash: expectedPubKeyHash,
     });
 
     expect(jobProof.toObject()).to.eql({
@@ -152,6 +141,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       signature: "00",
       time: timeHex,
     });
+
     expect(
       index.BoostPowJob.createBoostPowMetadata(job, jobProof)
         .toBuffer()
