@@ -103,7 +103,7 @@ class BoostPowJobModel {
       isNaN(params.diff) ||
       typeof params.diff !== "number"
     ) {
-      throw new Error("diff must be a number starting at 1. Max 4 bytes.");
+      throw new Error("diff must be a positive number.");
     }
     if (params.category && params.category.length > 8) {
       throw new Error("category too large. Max 4 bytes.");
@@ -523,7 +523,7 @@ class BoostPowJobModel {
       );
       console.log(
         "boostPowMetadataCoinbaseString",
-        boostPowMetadataCoinbaseString.toBuffer().reverse().toString("hex"),
+        boostPowMetadataCoinbaseString.toBuffer().toString("hex"),
         boostPowMetadataCoinbaseString,
         boostPowMetadataCoinbaseString.hash()
       );
@@ -551,7 +551,7 @@ class BoostPowJobModel {
     const headerBuf = Buffer.concat([
       boostPowJob.getCategoryBuffer(),
       boostPowJob.getContentBuffer(),
-      boostPowMetadataCoinbaseString.hashAsBuffer().reverse(),
+      boostPowMetadataCoinbaseString.hashAsBuffer(),
       boostPowJobProof.getTime(),
       boostPowJob.getTargetAsNumberBuffer(),
       boostPowJobProof.getNonce(),

@@ -515,9 +515,7 @@
               if (t.content && t.content.length > 64)
                 throw new Error("content too large. Max 32 bytes.");
               if (t.diff <= 0 || isNaN(t.diff) || "number" != typeof t.diff)
-                throw new Error(
-                  "diff must be a number starting at 1. Max 4 bytes."
-                );
+                throw new Error("diff must be a positive number.");
               if (t.category && t.category.length > 8)
                 throw new Error("category too large. Max 4 bytes.");
               if (t.tag && t.tag.length > 40)
@@ -824,7 +822,7 @@
                 ),
                 console.log(
                   "boostPowMetadataCoinbaseString",
-                  s.toBuffer().reverse().toString("hex"),
+                  s.toBuffer().toString("hex"),
                   s,
                   s.hash()
                 ),
@@ -851,7 +849,7 @@
               const u = e.concat([
                   t.getCategoryBuffer(),
                   t.getContentBuffer(),
-                  s.hashAsBuffer().reverse(),
+                  s.hashAsBuffer(),
                   r.getTime(),
                   t.getTargetAsNumberBuffer(),
                   r.getNonce(),
