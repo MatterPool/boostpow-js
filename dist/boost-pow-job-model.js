@@ -90,7 +90,7 @@ class BoostPowJobModel {
             throw new Error('content too large. Max 32 bytes.');
         }
         if (params.diff <= 0 || isNaN(params.diff) || (typeof params.diff !== 'number')) {
-            throw new Error('diff must be a number starting at 1. Max 4 bytes.');
+            throw new Error('diff must be a positive number.');
         }
         if (params.category && params.category.length > 8) {
             throw new Error('category too large. Max 4 bytes.');
@@ -405,7 +405,7 @@ class BoostPowJobModel {
             console.log('BoostPowString.tryValidateJobProof');
             console.log('category', boostPowJob.getCategoryBuffer().toString('hex'), boostPowJob.getCategoryBuffer().byteLength);
             console.log('content', boostPowJob.getContentBuffer().toString('hex'), boostPowJob.getContentBuffer().byteLength);
-            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().reverse().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
+            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength);
@@ -414,7 +414,7 @@ class BoostPowJobModel {
         const headerBuf = Buffer.concat([
             boostPowJob.getCategoryBuffer(),
             boostPowJob.getContentBuffer(),
-            boostPowMetadataCoinbaseString.hashAsBuffer().reverse(),
+            boostPowMetadataCoinbaseString.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
             boostPowJobProof.getNonce(),
