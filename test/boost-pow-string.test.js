@@ -542,8 +542,6 @@ describe("boost integration test ", () => {
 
   it("should write as objects and back", async () => {
     expect(index.BoostPowJob.fromObject(job.toObject())).to.eql(job);
-    expect(index.BoostPowJob.fromObject(solution.toObject())).to.eql(solution);
-    expect(index.BoostPowJob.fromObject(metadata.toObject())).to.eql(metadata);
-    expect(index.BoostPowJob.fromObject(proof.toObject())).to.eql(proof);
+    expect(index.BoostPowMetadata.fromObject(metadata.toObject())).to.eql(metadata);
   });
 });
