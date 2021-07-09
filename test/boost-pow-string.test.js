@@ -534,4 +534,11 @@ describe("boost integration test ", () => {
     expect(proof.bits()).to.eql(compactNumber);
     expect(proof.metadataHash()).to.eql(metadataHashHex);
   });
+
+  it('should write as objects and back', async () => {
+    expect(index.BoostPowJob.fromObject(job.toObject())).to.eql(job);
+    expect(index.BoostPowJob.fromObject(solution.toObject())).to.eql(solution);
+    expect(index.BoostPowJob.fromObject(metadata.toObject())).to.eql(metadata);
+    expect(index.BoostPowJob.fromObject(proof.toObject())).to.eql(proof);
+  });
 });
