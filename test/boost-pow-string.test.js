@@ -268,7 +268,10 @@ describe("boost integration test ", () => {
 
   // content corresponds to previous.
   const contentString = "hello animal";
-  const contentBuffer = index.BoostUtilsHelper.stringToBuffer(contentString, 32);
+  const contentBuffer = index.BoostUtilsHelper.stringToBuffer(
+    contentString,
+    32
+  );
   const contentHex = new Buffer(contentBuffer).reverse().toString("hex");
 
   const difficulty = 0.0001;
@@ -463,7 +466,9 @@ describe("boost integration test ", () => {
 
   it("should get miner pubkey hash from solution", async () => {
     expect(solution.getMinerPubKeyHash()).to.eql(minerPubKeyHashBuffer);
-    expect(solution.getMinerPubKeyHashHex().toUpperCase()).to.eql(minerPubKeyHashHex);
+    expect(solution.getMinerPubKeyHashHex().toUpperCase()).to.eql(
+      minerPubKeyHashHex
+    );
   });
 
   it("should get extra nonce 1 from solution", async () => {
