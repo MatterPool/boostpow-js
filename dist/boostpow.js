@@ -75,16 +75,15 @@
         const i = t("axios"),
           n = t("./boost-pow-job-model"),
           o = t("./graph-search-query"),
-          s = t("."),
-          a = {
+          s = {
             graph_api_url: "https://graph.boostpow.com",
             api_url: "https://api.mattercloud.net",
             network: "main",
             version_path: "api/v3",
           };
-        class u {
+        class a {
           constructor(t) {
-            (this.options = a),
+            (this.options = s),
               (this.options = Object.assign({}, this.options, t)),
               (this.fullUrl = `${this.options.api_url}/${this.options.version_path}/${this.options.network}`);
           }
@@ -286,38 +285,6 @@
               mined: t.data.mined,
             };
           }
-          static buildSignalRank(t) {
-            return s.BoostSignalRanker.fromArray(t);
-          }
-          search(t, e) {
-            return new Promise((r, n) => {
-              let s = "?";
-              (s += o.GraphSearchQueryString.build(t)),
-                i.default
-                  .get(
-                    this.options.graph_api_url +
-                      `/api/v1/main/boost/search${s}`,
-                    { headers: this.getHeaders() }
-                  )
-                  .then((t) => {
-                    const i = u.buildSignalRank(t.data.mined);
-                    return this.resolveOrCallback(r, i, e);
-                  })
-                  .catch((t) =>
-                    404 === t.code
-                      ? this.rejectOrCallback(
-                          n,
-                          this.formatErrorResponse({
-                            code: t.code,
-                            message: "boost search error",
-                            error: "BOOST_SEARCH_ERROR",
-                          }),
-                          e
-                        )
-                      : this.rejectOrCallback(n, this.formatErrorResponse(t), e)
-                  );
-            });
-          }
           rawSearch(t, e) {
             return new Promise((r, n) => {
               let s = "?";
@@ -329,7 +296,7 @@
                     { headers: this.getHeaders() }
                   )
                   .then((t) => {
-                    const i = u.buildGraphSearchQueryResponse(t);
+                    const i = a.buildGraphSearchQueryResponse(t);
                     return this.resolveOrCallback(r, i, e);
                   })
                   .catch((t) =>
@@ -456,14 +423,9 @@
             };
           }
         }
-        r.BoostGraphApiClient = u;
+        r.BoostGraphApiClient = a;
       },
-      {
-        ".": 12,
-        "./boost-pow-job-model": 2,
-        "./graph-search-query": 11,
-        axios: 32,
-      },
+      { "./boost-pow-job-model": 2, "./graph-search-query": 11, axios: 32 },
     ],
     2: [
       function (t, e, r) {
@@ -496,10 +458,13 @@
               return this.content;
             }
             getContentString(t = !0) {
-              return this.trimBufferString(this.content, t);
+              return (
+                console.log("getContentString..."),
+                this.trimBufferString(this.content, t)
+              );
             }
             getContentHex() {
-              return this.content.reverse().toString("hex");
+              return new e(this.content).reverse().toString("hex");
             }
             getDiff() {
               return this.difficulty;
@@ -520,7 +485,7 @@
               return this.trimBufferString(this.tag, t);
             }
             getTagHex() {
-              return (this.tag.toString("hex").match(/../g) || []).join("");
+              return this.tag.toString("hex");
             }
             getTagBuffer() {
               return this.tag;
@@ -1502,7 +1467,7 @@
             static fromObject(t) {
               return new o(
                 new e(t.tag, "hex"),
-                new e(t.minerPubKeyHash, "hex"),
+                n.BoostUtils.createBufferAndPad(t.minerPubKeyHash, 20, !1),
                 n.BoostUtils.createBufferAndPad(t.extraNonce1, 4, !1),
                 n.BoostUtils.createBufferAndPad(t.extraNonce2, 8, !1),
                 n.BoostUtils.createBufferAndPad(t.userNonce, 4, !1),
@@ -1598,36 +1563,16 @@
                 .toString("hex");
             }
             hashAsBuffer() {
-              return i.crypto.Hash.sha256sha256(this.toBuffer()).reverse();
+              return i.crypto.Hash.sha256sha256(this.toBuffer());
             }
             toObject() {
               return {
-                tag: (this.tag.toString("hex").match(/../g) || [])
-                  .reverse()
-                  .join(""),
-                minerPubKeyHash: (
-                  this.minerPubKeyHash.toString("hex").match(/../g) || []
-                )
-                  .reverse()
-                  .join(""),
-                extraNonce1: (
-                  this.extraNonce1.toString("hex").match(/../g) || []
-                )
-                  .reverse()
-                  .join(""),
-                extraNonce2: (
-                  this.extraNonce2.toString("hex").match(/../g) || []
-                )
-                  .reverse()
-                  .join(""),
-                userNonce: (this.userNonce.toString("hex").match(/../g) || [])
-                  .reverse()
-                  .join(""),
-                additionalData: (
-                  this.additionalData.toString("hex").match(/../g) || []
-                )
-                  .reverse()
-                  .join(""),
+                tag: this.tag.toString("hex"),
+                minerPubKeyHash: this.minerPubKeyHash.toString("hex"),
+                extraNonce1: this.extraNonce1.toString("hex"),
+                extraNonce2: this.extraNonce2.toString("hex"),
+                userNonce: this.userNonce.toString("hex"),
+                additionalData: this.additionalData.toString("hex"),
               };
             }
             toBuffer() {
@@ -1642,19 +1587,6 @@
             }
             toHex() {
               return this.toBuffer().toString("hex");
-            }
-            static fromString(t) {
-              return o.fromHex(t);
-            }
-            static fromHex(t) {
-              return new o(
-                e.from(t.substr(0, 40), "hex"),
-                e.from(t.substr(40, 40), "hex"),
-                e.from(t.substr(80, 8), "hex"),
-                e.from(t.substr(88, 8), "hex"),
-                e.from(t.substr(96, 8), "hex"),
-                e.from(t.substr(104), "hex")
-              );
             }
           }
           r.BoostPowMetadataModel = o;
@@ -1861,19 +1793,17 @@
           "use strict";
           Object.defineProperty(r, "__esModule", { value: !0 }),
             (r.BoostSignalModel = void 0);
-          const i = t("./boost-pow-string-model"),
-            n = t("./boost-pow-metadata-model"),
-            o = t("bsv");
-          class s {
-            constructor(t, e, r, i) {
+          const i = t("bsv");
+          r.BoostSignalModel = class {
+            constructor(t, e, r, n) {
               if (
                 ((this.boostPowString = t),
                 (this.boostPowMetadata = e),
                 (this.boostJobId = r),
-                (this.boostJobProofId = i),
+                (this.boostJobProofId = n),
                 e &&
                   t.metadataHash() !==
-                    o.crypto.Hash.sha256sha256(e.toBuffer())
+                    i.crypto.Hash.sha256sha256(e.toBuffer())
                       .reverse()
                       .toString("hex"))
               )
@@ -1962,39 +1892,18 @@
                   : null,
               };
             }
-            static fromHex(t, e, r, o) {
-              if (!t) throw new Error("invalid argument");
-              if (t.length < 160) throw new Error("minimum 80 bytes hex");
-              if (t.length > 5e3) throw new Error("too large");
-              const a = i.BoostPowStringModel.fromHex(t.slice(0, 160));
-              let u;
-              if (e) {
-                if (e.length > 5e3) throw new Error("too large metadata");
-                u = n.BoostPowMetadataModel.fromHex(e);
-              } else
-                t.length > 160 &&
-                  (u = n.BoostPowMetadataModel.fromHex(t.slice(160)));
-              return new s(a, u, r, o);
-            }
-          }
-          r.BoostSignalModel = s;
+          };
         }.call(this, t("buffer").Buffer));
       },
-      {
-        "./boost-pow-metadata-model": 4,
-        "./boost-pow-string-model": 6,
-        bsv: 105,
-        buffer: 170,
-      },
+      { bsv: 105, buffer: 170 },
     ],
     8: [
       function (t, e, r) {
         "use strict";
         Object.defineProperty(r, "__esModule", { value: !0 }),
           (r.BoostSignalRankerModel = void 0);
-        const i = t("./boost-signal-model"),
-          n = t("./boost-signal-summary-model");
-        class o {
+        const i = t("./boost-signal-summary-model");
+        class n {
           constructor(t) {
             (this.boostSignals = t),
               (this.lastSignalTime_ = 0),
@@ -2051,7 +1960,7 @@
             }
             const e = [];
             for (const r in t)
-              t.hasOwnProperty(r) && e.push(new n.BoostSignalSummary(t[r]));
+              t.hasOwnProperty(r) && e.push(new i.BoostSignalSummary(t[r]));
             return (
               e.sort((t, e) =>
                 t.totalDifficulty > e.totalDifficulty ? -1 : 1
@@ -2129,7 +2038,7 @@
               e[r[t]()] || (e[r[t]()] = []), e[r[t]()].push(r);
             const r = [];
             for (const t in e)
-              e.hasOwnProperty(t) && r.push(new n.BoostSignalSummary(e[t]));
+              e.hasOwnProperty(t) && r.push(new i.BoostSignalSummary(e[t]));
             return (
               r.sort((t, e) =>
                 t.totalDifficulty > e.totalDifficulty ? -1 : 1
@@ -2155,30 +2064,12 @@
             return r;
           }
           static fromSignals(t) {
-            return new o(o.dedupSignalObjects(t));
-          }
-          static fromArray(t) {
-            if (!t) return new o([]);
-            const e = o.dedupPlainObjects(t);
-            let r = [];
-            for (const t of e) {
-              if (!t || !t.boostPowString)
-                throw new Error("invalid boost pow string");
-              const e = i.BoostSignalModel.fromHex(
-                t.boostPowString,
-                t.boostPowMetadata,
-                t.boostJobId,
-                t.boostJobProofId
-              );
-              if (!e) throw new Error("invalid signal creation");
-              r.push(e);
-            }
-            return new o(r);
+            return new n(n.dedupSignalObjects(t));
           }
         }
-        r.BoostSignalRankerModel = o;
+        r.BoostSignalRankerModel = n;
       },
-      { "./boost-signal-model": 7, "./boost-signal-summary-model": 9 },
+      { "./boost-signal-summary-model": 9 },
     ],
     9: [
       function (t, e, r) {
@@ -2423,7 +2314,6 @@
           (r.getJobStatus =
             r.submitJob =
             r.rawSearch =
-            r.search =
             r.BoostPowSimpleMiner =
             r.BoostSignalRanker =
             r.BoostSignal =
@@ -2476,9 +2366,6 @@
           }
           rawSearch(t, e) {
             return new u.BoostGraphApiClient(this.options).rawSearch(t, e);
-          }
-          search(t, e) {
-            return new u.BoostGraphApiClient(this.options).search(t, e);
           }
           getBoostJobStatus(t, e) {
             return new u.BoostGraphApiClient(this.options).getBoostJobStatus(
@@ -2550,11 +2437,8 @@
           (r.BoostSignal = f.BoostSignalModel),
           (r.BoostSignalRanker = h.BoostSignalRankerModel),
           (r.BoostPowSimpleMiner = c.BoostPowSimpleMinerModel),
-          (r.search = function (t, e) {
-            return new u.BoostGraphApiClient(d).search(t, e);
-          }),
           (r.rawSearch = function (t, e) {
-            return new u.BoostGraphApiClient(d).search(t, e);
+            return new u.BoostGraphApiClient(d).rawSearch(t, e);
           }),
           (r.submitJob = function (t, e) {
             return new u.BoostGraphApiClient(d).submitBoostJob(t, e);
