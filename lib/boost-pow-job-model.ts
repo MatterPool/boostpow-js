@@ -34,7 +34,6 @@ export class BoostPowJobModel {
     }
 
     getContentString(trimTrailingNulls = true): string {
-      console.log("getContentString...");
         return this.trimBufferString(this.content, trimTrailingNulls);
     }
 
@@ -111,18 +110,23 @@ export class BoostPowJobModel {
         additionalData?: string,
         userNonce?: string,
     }): BoostPowJobModel {
+
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.')
         }
+
         if (params.diff <= 0 || isNaN(params.diff) || (typeof params.diff !== 'number')) {
             throw new Error('diff must be a positive number.')
         }
+
         if (params.category && params.category.length > 8) {
             throw new Error('category too large. Max 4 bytes.')
         }
+
         if (params.tag && params.tag.length > 40) {
             throw new Error('tag too large. Max 20 bytes.')
         }
+
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
@@ -521,6 +525,8 @@ export class BoostPowJobModel {
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength)
             console.log('userNonce', boostPowJob.getUserNonceBuffer().toString('hex'), boostPowJob.getUserNonceBuffer().byteLength);
+
+            console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }
 
         const headerBuf = Buffer.concat([

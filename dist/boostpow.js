@@ -458,10 +458,7 @@
               return this.content;
             }
             getContentString(t = !0) {
-              return (
-                console.log("getContentString..."),
-                this.trimBufferString(this.content, t)
-              );
+              return this.trimBufferString(this.content, t);
             }
             getContentHex() {
               return new e(this.content).reverse().toString("hex");
@@ -845,6 +842,10 @@
                   "userNonce",
                   t.getUserNonceBuffer().toString("hex"),
                   t.getUserNonceBuffer().byteLength
+                ),
+                console.log(
+                  "metadata hash:",
+                  s.hashAsBuffer().toString("hex")
                 ));
               const u = e.concat([
                   t.getCategoryBuffer(),
