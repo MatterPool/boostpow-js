@@ -58,6 +58,7 @@ export declare class BoostPowJobModel {
     getTargetAsNumberBuffer(): any;
     getId(): string;
     toHex(): string;
+    private toOpCode;
     toScript(isHex?: boolean): bsv.Script;
     getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;

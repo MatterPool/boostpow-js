@@ -190,24 +190,33 @@ export class BoostPowJobModel {
         return this.toScript(true);
     }
 
+    private toOpCode(num:Buffer)  {
+        if(num.length == 1) {
+            if (num[0] >= 1 && num[0] <= 16) {
+                return bsv.Opcode.OP_1 + (num[0] - 1);
+            }
+        }
+        return num;
+    }
+
     toScript(isHex: boolean = false): bsv.Script {
         let buildOut = bsv.Script();
 
-        buildOut.add(Buffer.from('boostpow', 'utf8'));
+        buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
 
         buildOut.add(bsv.Opcode.OP_DROP);
 
-        buildOut.add(this.category);
+        buildOut.add(this.toOpCode(this.category));
 
-        buildOut.add(this.content);
+        buildOut.add(this.toOpCode(this.content));
 
-        buildOut.add(this.getTargetAsNumberBuffer());
+        buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
 
-        buildOut.add(this.tag);
+        buildOut.add(this.toOpCode(this.tag));
 
-        buildOut.add(this.userNonce);
+        buildOut.add(this.toOpCode(this.userNonce));
 
-        buildOut.add(this.additionalData);
+        buildOut.add(this.toOpCode(this.additionalData));
 
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
