@@ -114,8 +114,8 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
     });
 
     var expectedPubKeyHash = "92e4d5ab4bb067f872d28f44d3e5433e56fca190";
-    const nonceHex = "e2731ee0";
-    const timeHex = "5e802ed9";
+    const nonceHex = "e01e73e2";
+    const timeHex = "d92e805e";
 
     const jobProof = index.BoostPowJobProof.fromObject({
       signature: "00",
@@ -221,7 +221,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
     const powString = index.BoostPowJob.tryValidateJobProof(
       job,
       jobProof,
-      true
+      false
     );
 
     expect(powString).to.not.eql(null);
@@ -233,10 +233,5 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
     const powMetadata = index.BoostPowJob.createBoostPowMetadata(job, jobProof);
 
     expect(powString.boostPowString.metadataHash()).to.eql(powMetadata.hash());
-    expect(powString.boostPowString.metadataHash()).to.eql(
-      index.BoostPowMetadata.fromString(
-        powString.boostPowMetadata.toString()
-      ).hash()
-    );
   });
 });

@@ -357,8 +357,8 @@ describe("boost #BoostPowString tryValidateJobProof", () => {
         "02000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
       extraNonce1: "0a00000a",
       extraNonce2: "bf07000000000000",
-      time: "5e6dc081",
-      nonce: "1ca169e0",
+      time: "81c06d5e",
+      nonce: "e069a11c",
       minerPubKeyHash: "9fb8cb68b8850a13c7438e26e1d277b748be657a",
     });
 
@@ -446,8 +446,8 @@ describe("boost #BoostPowJob createRedeemTransaction", () => {
         "020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65",
       extraNonce1: "0a00000a",
       extraNonce2: "bf07000000000000",
-      time: "5e6dc081",
-      nonce: "1ca169e0",
+      time: "81c06d5e",
+      nonce: "e069a11c",
       minerPubKeyHash: "9fb8cb68b8850a13c7438e26e1d277b748be657a",
     });
 
@@ -457,20 +457,20 @@ describe("boost #BoostPowJob createRedeemTransaction", () => {
     expect(powString.boostPowString.toString()).to.eql(
       "0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588119401f4fd9d4279f4ead46f2bd3ccaabce904f7e17367338c08b2a4aefb9877681c06d5effff001de069a11c"
     );
-    
+
     expect(powString.boostPowString.hash()).to.eql(
       "0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35"
     );
 
     expect(jobProof.toObject()).to.eql({
+      signature: "00",
       extraNonce1: "0a00000a",
       extraNonce2: "bf07000000000000",
       minerPubKey:
         "020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65",
       minerPubKeyHash: "9fb8cb68b8850a13c7438e26e1d277b748be657a",
-      nonce: "1ca169e0",
-      signature: "00",
-      time: "5e6dc081",
+      time: "81c06d5e",
+      nonce: "e069a11c",
     });
 
     let tx = index.BoostPowJob.createRedeemTransaction(

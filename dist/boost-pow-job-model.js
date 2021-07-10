@@ -33,7 +33,6 @@ class BoostPowJobModel {
         return this.content;
     }
     getContentString(trimTrailingNulls = true) {
-        console.log("getContentString...");
         return this.trimBufferString(this.content, trimTrailingNulls);
     }
     getContentHex() {
@@ -410,6 +409,7 @@ class BoostPowJobModel {
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength);
             console.log('userNonce', boostPowJob.getUserNonceBuffer().toString('hex'), boostPowJob.getUserNonceBuffer().byteLength);
+            console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }
         const headerBuf = Buffer.concat([
             boostPowJob.getCategoryBuffer(),
