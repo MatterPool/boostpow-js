@@ -13,14 +13,13 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * 1 - The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software. 2 - The Software, and
- * any software that is derived from the Software or parts thereof, can only be
- * used on the Bitcoin SV blockchains. The Bitcoin SV blockchains are defined,
- * for purposes of this license, as the Bitcoin blockchain containing block
- * height #556767 with the hash
- * "000000000000000001d956714215d96ffc00e0afda4cd0a96c96f8d802b1662b" and the
- * test blockchains that are supported by the un-modified Software.
+ * 1 - The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 2 - The Software, and any software that is derived from the Software or parts thereof,
+ * can only be used on the Bitcoin SV blockchains. The Bitcoin SV blockchains are defined,
+ * for purposes of this license, as the Bitcoin blockchain containing block height #556767
+ * with the hash "000000000000000001d956714215d96ffc00e0afda4cd0a96c96f8d802b1662b" and
+ * the test blockchains that are supported by the un-modified Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

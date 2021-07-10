@@ -6,14 +6,7 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-  constructor(
-    content,
-    difficulty,
-    category,
-    tag,
-    additionalData,
-    userNonce,
-    useGeneralPurposeBits,
+    constructor(content, difficulty, category, tag, additionalData, userNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
     txid, vout, value) {
         this.content = content;
@@ -107,7 +100,7 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
-        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0),
+        return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0), 
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
         boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
     }
