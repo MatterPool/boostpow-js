@@ -7,7 +7,6 @@ import { BoostGraphApiClient } from './boost-graph-api-client';
 import { BoostSignalModel } from './boost-signal-model';
 import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 import { GraphSearchQuery } from './graph-search-query';
-import {BoostPowSimpleMinerModel} from "./boost-pow-simple-miner-model";
 
 const defaultOptions: any = {
   graph_api_url: 'https://graph.boostpow.com',
@@ -133,7 +132,6 @@ export var BoostUtilsHelper = BoostUtils;
 export var BoostGraph = BoostGraphClient;
 export var BoostSignal = BoostSignalModel;
 export var BoostSignalRanker = BoostSignalRankerModel;
-export var BoostPowSimpleMiner = BoostPowSimpleMinerModel;
 
 function rawSearchGraph(q?: GraphSearchQuery,callback?: Function): Promise<any> {
   const apiClient = new BoostGraphApiClient(defaultOptions);
