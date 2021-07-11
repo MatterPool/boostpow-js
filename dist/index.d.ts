@@ -6,7 +6,6 @@ import { BoostUtils } from './boost-utils';
 import { BoostSignalModel } from './boost-signal-model';
 import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 import { GraphSearchQuery } from './graph-search-query';
-import { BoostPowSimpleMinerModel } from "./boost-pow-simple-miner-model";
 export declare class BoostGraphClient {
     options: any;
     constructor(providedOptions?: any);
@@ -49,7 +48,6 @@ export declare var BoostUtilsHelper: typeof BoostUtils;
 export declare var BoostGraph: typeof BoostGraphClient;
 export declare var BoostSignal: typeof BoostSignalModel;
 export declare var BoostSignalRanker: typeof BoostSignalRankerModel;
-export declare var BoostPowSimpleMiner: typeof BoostPowSimpleMinerModel;
 declare function rawSearchGraph(q?: GraphSearchQuery, callback?: Function): Promise<any>;
 export declare var rawSearch: typeof rawSearchGraph;
 declare function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any>;
