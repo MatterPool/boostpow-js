@@ -24,6 +24,9 @@ export class BoostPowStringModel {
     boosthash(): string {
         return this._blockheader.hash;
     }
+    hashBuffer() : Buffer {
+        return Buffer.from(this._blockheader.hash,"hex");
+    }
 
     hash(): string {
         return this._blockheader.hash;

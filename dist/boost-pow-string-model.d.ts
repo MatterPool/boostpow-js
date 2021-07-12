@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as bsv from 'bsv';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowStringModel {
@@ -5,6 +6,7 @@ export declare class BoostPowStringModel {
     private _metadata;
     constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel);
     boosthash(): string;
+    hashBuffer(): Buffer;
     hash(): string;
     id(): string;
     contentHex(): string;

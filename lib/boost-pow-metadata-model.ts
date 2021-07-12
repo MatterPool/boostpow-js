@@ -64,7 +64,7 @@ export class BoostPowMetadataModel {
     }
 
     getTagUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.tag).reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.tag).toString('hex'), true);
     }
 
     getTagString(): string {
@@ -112,7 +112,7 @@ export class BoostPowMetadataModel {
     }
 
     getAdditionalDataUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.additionalData).reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.additionalData).toString('hex'), true);
     }
 
     getAdditionalDataString(): string {

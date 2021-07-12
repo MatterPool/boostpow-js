@@ -336,9 +336,7 @@ describe("boost integration test ", () => {
     "6F7265206164646974696F6E616C44617461";
 
   const proofStringHex =
-    "0016FCF81E270FD80900301268B24D6F0E88658FA05A5A63" +
-    "2BF69D1FC078F604EF6E5E6CBC42BBE770199BE5000000000000000000000000000000" +
-    "00000000006C616D696E61206F6C6C6568000004D2";
+    "D204000068656C6C6F20616E696D616C0000000000000000000000000000000000000000E59B1970E7BB42BC6C5E6EEF04F678C01F9DF62B635A5AA08F65880E6F4DB26812300009D80F271EF8FC1600";
 
   const expectedLockingScript =
     "626F6F7374706F77 OP_DROP D2040000 " +
@@ -494,12 +492,12 @@ describe("boost integration test ", () => {
   // check getters for metadata
   it("should get tag from metadata", async () => {
     expect(metadata.getTagString()).to.eql(tagString);
-    expect(metadata.getTagBuffer()).to.eql(tagBuffer);
+    expect(metadata.getTag()).to.eql(tagBuffer);
   });
 
   it("should get addational data from metadata", async () => {
     expect(metadata.getAdditionalDataString()).to.eql(dataString);
-    expect(metadata.getAdditionalDataBuffer()).to.eql(dataBuffer);
+    expect(metadata.getAdditionalData()).to.eql(dataBuffer);
   });
 
   it("should get user nonce from metadata", async () => {
@@ -524,10 +522,10 @@ describe("boost integration test ", () => {
   // check valid string
   it("should generate valid string", async () => {
     expect(proof).to.not.eql(null);
-
-    expect(proof.toString()).to.eql(proofStringHex);
-    expect(proof.hash()).to.eql(proofHashHex);
-    expect(proof.hashAsBuffer()).to.eql(proofHashBuffer);
+    let temp=proof.toString();
+    expect(proof.boostPowString.toString().toUpperCase()).to.eql(proofStringHex);
+    expect(proof.boostPowString.hash().toUpperCase()).to.eql(proofHashHex);
+    expect(proof.boostPowString.hashBuffer()).to.eql(proofHashBuffer);
 
     expect(proof.getContentHex()).to.eql(contentHex);
     expect(proof.getContentString()).to.eql(contentString);

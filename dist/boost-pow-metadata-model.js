@@ -31,7 +31,7 @@ class BoostPowMetadataModel {
         return this.tag;
     }
     getTagUtf8() {
-        return this.trimBufferString(Buffer.from(this.tag).reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.tag).toString('hex'), true);
     }
     getTagString() {
         return this.getTagUtf8();
@@ -67,7 +67,7 @@ class BoostPowMetadataModel {
         return this.additionalData;
     }
     getAdditionalDataUtf8() {
-        return this.trimBufferString(Buffer.from(this.additionalData).reverse().toString('hex'), true);
+        return this.trimBufferString(Buffer.from(this.additionalData).toString('hex'), true);
     }
     getAdditionalDataString() {
         return this.getAdditionalDataUtf8();
