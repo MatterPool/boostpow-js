@@ -22,7 +22,8 @@ class BoostPowStringModel {
         return this._blockheader.hash;
     }
     hashBuffer() {
-        return Buffer.from(this._blockheader.hash, "hex");
+        // todo: IS THIS THE RIGHT PLACE???
+        return Buffer.from(this._blockheader.hash, "hex").reverse();
     }
     hash() {
         return this._blockheader.hash;
@@ -34,10 +35,10 @@ class BoostPowStringModel {
         return this.toObject().content;
     }
     contentBuffer() {
-        return this.toObject().content;
+        return new Buffer(this.toObject().content, 'hex').reverse();
     }
     trimBufferString(str, trimLeadingNulls = true) {
-        const content = Buffer.from(str, 'hex').toString('utf8');
+        const content = Buffer.from(str, 'hex').reverse().toString('utf8');
         if (trimLeadingNulls) {
             return content.replace(/\0/g, '');
         }

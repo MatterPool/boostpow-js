@@ -25,7 +25,8 @@ export class BoostPowStringModel {
         return this._blockheader.hash;
     }
     hashBuffer() : Buffer {
-        return Buffer.from(this._blockheader.hash,"hex");
+        // todo: IS THIS THE RIGHT PLACE???
+        return Buffer.from(this._blockheader.hash,"hex").reverse();
     }
 
     hash(): string {
@@ -40,19 +41,18 @@ export class BoostPowStringModel {
         return this.toObject().content;
     }
 
-    contentBuffer(): string {
-        return this.toObject().content;
+    contentBuffer(): Buffer {
+        return new Buffer(this.toObject().content,'hex').reverse();
     }
 
     public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
+        const content = Buffer.from(str, 'hex').reverse().toString('utf8');
         if (trimLeadingNulls) {
             return content.replace(/\0/g, '');
         } else {
             return content;
         }
     }
-
     contentString(trimLeadingNulls = true): string {
         return this.trimBufferString(this.toObject().content, trimLeadingNulls);
     }

@@ -527,15 +527,15 @@ describe("boost integration test ", () => {
     expect(proof.boostPowString.hash().toUpperCase()).to.eql(proofHashHex);
     expect(proof.boostPowString.hashBuffer()).to.eql(proofHashBuffer);
 
-    expect(proof.getContentHex()).to.eql(contentHex);
-    expect(proof.getContentString()).to.eql(contentString);
-    expect(proof.getContentBuffer()).to.eql(contentBuffer);
+    expect(proof.boostPowString.contentHex()).to.eql(contentHex);
+    expect(proof.boostPowString.contentString()).to.eql(contentString);
+    expect(proof.boostPowString.contentBuffer()).to.eql(contentBuffer);
 
-    expect(proof.nonce()).to.eql(nonceNumber);
-    expect(proof.time()).to.eql(timeNumber);
-    expect(proof.category()).to.eql(categoryNumber);
-    expect(proof.bits()).to.eql(compactNumber);
-    expect(proof.metadataHash()).to.eql(metadataHashHex);
+    expect(proof.boostPowString.nonce()).to.eql(nonceNumber);
+    expect(proof.boostPowString.time()).to.eql(timeNumber);
+    expect(proof.boostPowString.category()).to.eql(categoryNumber);
+    expect(proof.boostPowString.bits()).to.eql(compactNumber);
+    expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(metadataHashHex);
   });
 
   it("should write as objects and back", async () => {
