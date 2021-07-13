@@ -150,6 +150,14 @@ class BoostPowJobModel {
         }
         return num;
     }
+    static fromOpCode(chunk) {
+        if (chunk.opcodenum >= bsv.Opcode.OP_1 && chunk.opcodenum <= bsv.Opcode.OP_16) {
+            return Buffer.from([(chunk.opcodenum - bsv.Opcode.OP_1) + 1]);
+        }
+        else {
+            return chunk.buf;
+        }
+    }
     toScript(isHex = false) {
         let buildOut = bsv.Script();
         buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
@@ -229,13 +237,13 @@ class BoostPowJobModel {
             script.chunks[4].buf &&
             script.chunks[4].len === 4 &&
             // Tag
-            script.chunks[5].buf &&
-            script.chunks[5].len === 20 &&
+            ((script.chunks[5].buf &&
+                script.chunks[5].len <= 20) || (script.chunks[5].opcodenum >= bsv.Opcode.OP_1 && script.chunks[5].opcodenum <= bsv.Opcode.OP_16)) &&
             // User Nonce
             script.chunks[6].buf &&
             script.chunks[6].len === 4 &&
             // Additional Data
-            script.chunks[7].buf) {
+            (script.chunks[7].buf || (script.chunks[7].opcodenum >= bsv.Opcode.OP_1 && script.chunks[7].opcodenum <= bsv.Opcode.OP_16))) {
             if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
                 useGeneralPurposeBits = false;
             }
@@ -244,16 +252,16 @@ class BoostPowJobModel {
             }
             else
                 throw new Error('Not valid Boost Output');
-            category = script.chunks[2].buf;
-            content = script.chunks[3].buf;
-            let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
+            category = this.fromOpCode(script.chunks[2]);
+            content = this.fromOpCode(script.chunks[3]);
+            let targetHex = (this.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('');
             let targetInt = parseInt(targetHex, 16);
             diff = boost_utils_1.BoostUtils.difficulty(targetInt);
-            tag = script.chunks[5].buf;
+            tag = this.fromOpCode(script.chunks[5]);
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
-            userNonce = script.chunks[6].buf;
+            userNonce = this.fromOpCode(script.chunks[6]);
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
-            additionalData = script.chunks[7].buf;
+            additionalData = this.fromOpCode(script.chunks[7]);
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
             return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, txid, vout, value);
         }
