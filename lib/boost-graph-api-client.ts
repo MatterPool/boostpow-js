@@ -254,33 +254,6 @@ export class BoostGraphApiClient {
         }
     }
 
-    static buildSignalRank(mined: any[]): BoostSignalRankerModel {
-        return BoostSignalRanker.fromArray(mined);
-    }
-
-    search(q?: GraphSearchQuery, callback?: Function): Promise<BoostSignalRankerModel> {
-        return new Promise((resolve, reject) => {
-            let qString = '?';
-            qString += GraphSearchQueryString.build(q);
-            axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`,
-                {
-                    headers: this.getHeaders()
-                }
-            ).then((response) => {
-                const signalRanker = BoostGraphApiClient.buildSignalRank(response.data.mined);
-                return this.resolveOrCallback(resolve, signalRanker, callback);
-            }).catch((ex) => {
-                if (ex.code === 404) {
-                    return this.rejectOrCallback(reject, this.formatErrorResponse({
-                        code: ex.code,
-                        message: 'boost search error',
-                        error: 'BOOST_SEARCH_ERROR'
-                    }), callback)
-                }
-                return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
-            })
-        });
-    }
     rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
             let qString = '?';

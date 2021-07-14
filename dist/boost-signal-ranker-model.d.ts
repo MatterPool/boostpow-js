@@ -68,10 +68,4 @@ export declare class BoostSignalRankerModel {
     static dedupPlainObjects(items: any): any[];
     static dedupSignalObjects(items: any[]): any[];
     static fromSignals(signals: BoostSignalModel[]): BoostSignalRankerModel;
-    static fromArray(items: Array<{
-        boostPowString: string;
-        boostPowMetadata: string;
-        boostJobId: string;
-        boostJobProofId: string;
-    }>): BoostSignalRankerModel;
 }

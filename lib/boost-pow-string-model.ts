@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
+import { BoostUtils } from './boost-utils';
 
 export class BoostPowStringModel {
     private _blockheader;
@@ -23,6 +24,10 @@ export class BoostPowStringModel {
     boosthash(): string {
         return this._blockheader.hash;
     }
+    hashBuffer() : Buffer {
+        // todo: IS THIS THE RIGHT PLACE???
+        return Buffer.from(this._blockheader.hash,"hex").reverse();
+    }
 
     hash(): string {
         return this._blockheader.hash;
@@ -36,21 +41,13 @@ export class BoostPowStringModel {
         return this.toObject().content;
     }
 
-    contentBuffer(): string {
-        return this.toObject().content;
-    }
-
-    public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
-        }
+    contentBuffer(): Buffer {
+        return new Buffer(this.toObject().content,'hex').reverse();
     }
 
     contentString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+        var content = new Buffer(this._blockheader.toObject().prevHash, 'hex');
+        return BoostUtils.trimBufferString(content.reverse(), trimLeadingNulls);
     }
 
     bits(): number {
@@ -74,16 +71,16 @@ export class BoostPowStringModel {
     }
 
     static nBitsHexToDifficultyNumber(nbits: string): number {
-        return BoostPowJobModel.getTargetDifficulty(parseInt(nbits, 16));
+        return BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
     }
 
     getTargetAsNumberBuffer(): any {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = BoostUtils.difficulty2bits(this.difficulty());
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
 
     static difficultyNumberToNBitsHex(diff: number): string {
-        const bitsInt32 = BoostPowJobModel.difficulty2bits(diff);
+        const bitsInt32 = BoostUtils.difficulty2bits(diff);
         return bitsInt32.toString(16);
     }
 

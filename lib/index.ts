@@ -51,11 +51,6 @@ export class BoostGraphClient {
     return apiClient.rawSearch(q, callback);
   }
 
-  search(q?: GraphSearchQuery, callback?: Function): Promise<any> {
-    const apiClient = new BoostGraphApiClient(this.options);
-    return apiClient.search(q, callback);
-  }
-
   getBoostJobStatus(txid: string, callback?: Function): Promise<any> {
     const apiClient = new BoostGraphApiClient(this.options);
     return apiClient.getBoostJobStatus(txid, callback);
@@ -138,18 +133,11 @@ export var BoostGraph = BoostGraphClient;
 export var BoostSignal = BoostSignalModel;
 export var BoostSignalRanker = BoostSignalRankerModel;
 
-
-function searchGraph(q?: GraphSearchQuery,callback?: Function): Promise<any> {
-  const apiClient = new BoostGraphApiClient(defaultOptions);
-  return apiClient.search(q,  callback);
-}
-
 function rawSearchGraph(q?: GraphSearchQuery,callback?: Function): Promise<any> {
   const apiClient = new BoostGraphApiClient(defaultOptions);
-  return apiClient.search(q,  callback);
+  return apiClient.rawSearch(q,  callback);
 }
 
-export var search = searchGraph;
 export var rawSearch = rawSearchGraph;
 
 function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any> {
