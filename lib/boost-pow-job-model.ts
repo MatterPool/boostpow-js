@@ -20,21 +20,12 @@ export class BoostPowJobModel {
     ) {
     }
 
-    private trimBufferString(str: Buffer, trimTrailingNulls = true): string {
-        const content = str.toString('utf8');
-        if (trimTrailingNulls) {
-            return content.replace(/\0+$/g, '');
-        } else {
-            return content;
-        }
-    }
-
     getContentBuffer(): Buffer {
         return this.content;
     }
 
     getContentString(trimTrailingNulls = true): string {
-        return this.trimBufferString(this.content, trimTrailingNulls);
+        return BoostUtils.trimBufferString(this.content, trimTrailingNulls);
     }
 
     getContentHex(): string {
@@ -59,11 +50,11 @@ export class BoostPowJobModel {
     }
 
     getCategoryString(trimTrailingNulls = true): string {
-        return this.trimBufferString(this.category, trimTrailingNulls);
+        return BoostUtils.trimBufferString(this.category, trimTrailingNulls);
     }
 
     getTagString(trimTrailingNulls = true): string {
-        return this.trimBufferString(this.tag, trimTrailingNulls);
+        return BoostUtils.trimBufferString(this.tag, trimTrailingNulls);
     }
 
     getTagHex(): string {
@@ -75,7 +66,7 @@ export class BoostPowJobModel {
     }
 
     getAdditionalDataString(trimTrailingNulls = true): string {
-        return this.trimBufferString(this.additionalData, trimTrailingNulls);
+        return BoostUtils.trimBufferString(this.additionalData, trimTrailingNulls);
     }
 
     getAdditionalDataHex(): string {

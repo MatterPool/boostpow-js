@@ -4,6 +4,7 @@ export declare class BoostUtils {
     static getSha256(str: any, encoding?: 'utf8' | 'hex'): any;
     static writeInt32LE(x: number): Buffer;
     static writeUInt32LE(x: number): Buffer;
+    static trimBufferString(str: Buffer, trimTrailingNulls?: boolean): string;
     static maxBits(): number;
     static minBits(): number;
     static unitBits(): number;

@@ -15,7 +15,6 @@ export declare class BoostPowJobModel {
     private vout?;
     private value?;
     private constructor();
-    private trimBufferString;
     getContentBuffer(): Buffer;
     getContentString(trimTrailingNulls?: boolean): string;
     getContentHex(): string;
