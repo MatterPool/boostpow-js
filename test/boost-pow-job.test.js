@@ -17,6 +17,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
     const job = index.BoostPowJob.fromObject({
       content: content,
       diff: 157416.40184364,
+      userNonce: "00000000"
     });
     const jobObj = job.toObject();
     expect(jobObj).to.eql({
@@ -51,6 +52,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
     const job = index.BoostPowJob.fromObject({
       content: Buffer.from("hello world", "ascii").toString("hex"),
       diff: 157416.40184364,
+      userNonce: "00000000"
     });
     const jobObj = job.toASM();
     expect(jobObj).to.eql(

@@ -121,6 +121,13 @@ export class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
+        if(!params.userNonce) {
+            let getRandomInt = (max) => {
+                return Math.floor(Math.random() * max);
+            }
+            let tempBuffer=Buffer.from([getRandomInt(0xff),getRandomInt(0xff),getRandomInt(0xff),getRandomInt(0xff)]);
+            params.userNonce = tempBuffer.toString('hex');
+        }
 
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
