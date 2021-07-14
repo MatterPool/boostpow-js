@@ -1,5 +1,6 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
@@ -7,6 +8,7 @@ import { BoostUtils } from './boost-utils';
 export class BoostPowStringModel {
     private _blockheader;
     private _metadata;
+    
     constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel) {
         this._blockheader = blockheader;
         if (!this._blockheader.validProofOfWork()) {
@@ -20,6 +22,7 @@ export class BoostPowStringModel {
             this._metadata = metadata;
         }
     }
+
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
     boosthash(): string {

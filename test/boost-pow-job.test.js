@@ -559,9 +559,9 @@ describe("BoostPowJob", () => {
     expect(!!job.getScriptHash()).to.eql(true);
     expect(!!job.getId()).to.eql(true);
     expect(job.getDiff()).to.eql(21);
-    expect(job.getUserNonceBuffer().toString("hex")).to.eql("c8010000");
-    expect(job.getUserNonceHex()).to.eql("c8010000");
-    expect(job.getUserNonce()).to.eql(456);
+    expect(job.userNonce().buffer().toString("hex")).to.eql("c8010000");
+    expect(job.userNonce().hex()).to.eql("c8010000");
+    expect(job.userNonce().number()).to.eql(456);
 
     expect(job.getContentString()).to.eql("hello animal");
     expect(job.getContentBuffer().toString("hex")).to.eql(
@@ -857,7 +857,7 @@ describe("BoostPowJob", () => {
     expect(job.getBitsHex()).to.eql("1d00ffff");
     expect(job.getBits().toString(16)).to.eql("1d00ffff");
     expect(job.category().number()).to.eql(123);
-    expect(job.getUserNonceNumber()).to.eql(456);
+    expect(job.userNonce().number()).to.eql(456);
 
     job = index.BoostPowJob.fromObject({
       content: content,

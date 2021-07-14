@@ -1,5 +1,6 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -12,7 +13,7 @@ export class BoostPowJobModel {
         private Category: Int32Little,
         private tag: Buffer,
         private additionalData: Buffer,
-        private userNonce: Buffer,
+        private UserNonce: UInt32Little,
         private useGeneralPurposeBits: boolean,
         // Optional tx information attached or not
         private txid?: string,
@@ -66,20 +67,8 @@ export class BoostPowJobModel {
         return this.additionalData;
     }
 
-    getUserNonce(): number {
-        return this.getUserNonceNumber();
-    }
-
-    getUserNonceNumber(): number {
-        return this.userNonce.readUInt32LE();
-    }
-
-    getUserNonceBuffer(): Buffer {
-        return this.userNonce;
-    }
-
-    getUserNonceHex(): string {
-        return this.userNonce.toString('hex');
+    userNonce(): UInt32Little {
+        return this.UserNonce;
     }
 
     static fromObject(params: {
@@ -125,7 +114,7 @@ export class BoostPowJobModel {
             params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0),
             params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0),
             // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
-            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
             false
         );
     }
@@ -155,7 +144,7 @@ export class BoostPowJobModel {
             category: this.Category.hex(),
             tag: this.tag.toString('hex'),
             additionalData: this.additionalData.toString('hex'),
-            userNonce: this.userNonce.toString('hex'),
+            userNonce: this.UserNonce.hex(),
         };
     }
 
@@ -216,7 +205,7 @@ export class BoostPowJobModel {
 
         buildOut.add(this.toOpCode(this.tag));
 
-        buildOut.add(this.toOpCode(this.userNonce));
+        buildOut.add(this.toOpCode(this.UserNonce.buffer()));
 
         buildOut.add(this.toOpCode(this.additionalData));
 
@@ -330,7 +319,7 @@ export class BoostPowJobModel {
             tag = this.fromOpCode(script.chunks[5]);
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
 
-            userNonce = this.fromOpCode(script.chunks[6]);
+            userNonce = new UInt32Little(this.fromOpCode(script.chunks[6]));
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
 
             additionalData = this.fromOpCode(script.chunks[7]);
@@ -522,7 +511,7 @@ export class BoostPowJobModel {
             minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
             extraNonce1: boostPowJobProof.getExtraNonce1(),
             extraNonce2: boostPowJobProof.getExtraNonce2(),
-            userNonce: boostPowJob.getUserNonceBuffer(),
+            userNonce: boostPowJob.userNonce().buffer(),
             additionalData: boostPowJob.getAdditionalDataBuffer(),
         });
     }
@@ -537,7 +526,7 @@ export class BoostPowJobModel {
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength)
-            console.log('userNonce', boostPowJob.getUserNonceBuffer().toString('hex'), boostPowJob.getUserNonceBuffer().byteLength);
+            console.log('userNonce', boostPowJob.userNonce().hex(), boostPowJob.userNonce().buffer().byteLength);
 
             console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }

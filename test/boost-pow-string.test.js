@@ -436,9 +436,9 @@ describe("boost integration test ", () => {
   });
 
   it("should get user nonce from locking script", async () => {
-    expect(job.getUserNonceHex()).to.eql(userNonceHex);
-    expect(job.getUserNonceNumber()).to.eql(userNonceNumber);
-    expect(job.getUserNonceBuffer()).to.eql(userNonceBuffer);
+    expect(job.userNonce().hex()).to.eql(userNonceHex);
+    expect(job.userNonce().number()).to.eql(userNonceNumber);
+    expect(job.userNonce().buffer()).to.eql(userNonceBuffer);
   });
 
   // check getters for solution

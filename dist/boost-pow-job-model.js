@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostPowJobModel = void 0;
 const bsv = require("bsv");
 const int32Little_1 = require("./fields/int32Little");
+const uint32Little_1 = require("./fields/uint32Little");
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-    constructor(content, difficulty, Category, tag, additionalData, userNonce, useGeneralPurposeBits, 
+    constructor(content, difficulty, Category, tag, additionalData, UserNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
     txid, vout, value) {
         this.content = content;
@@ -15,7 +16,7 @@ class BoostPowJobModel {
         this.Category = Category;
         this.tag = tag;
         this.additionalData = additionalData;
-        this.userNonce = userNonce;
+        this.UserNonce = UserNonce;
         this.useGeneralPurposeBits = useGeneralPurposeBits;
         this.txid = txid;
         this.vout = vout;
@@ -55,17 +56,8 @@ class BoostPowJobModel {
     getAdditionalDataBuffer() {
         return this.additionalData;
     }
-    getUserNonce() {
-        return this.getUserNonceNumber();
-    }
-    getUserNonceNumber() {
-        return this.userNonce.readUInt32LE();
-    }
-    getUserNonceBuffer() {
-        return this.userNonce;
-    }
-    getUserNonceHex() {
-        return this.userNonce.toString('hex');
+    userNonce() {
+        return this.UserNonce;
     }
     static fromObject(params) {
         if (params.content && params.content.length > 64) {
@@ -92,7 +84,7 @@ class BoostPowJobModel {
         }
         return new BoostPowJobModel(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32), params.diff, new int32Little_1.Int32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false)), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0), 
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
-        boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false), false);
+        new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), false);
     }
     getBits() {
         return boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
@@ -115,7 +107,7 @@ class BoostPowJobModel {
             category: this.Category.hex(),
             tag: this.tag.toString('hex'),
             additionalData: this.additionalData.toString('hex'),
-            userNonce: this.userNonce.toString('hex'),
+            userNonce: this.UserNonce.hex(),
         };
     }
     getTargetAsNumberHex() {
@@ -162,7 +154,7 @@ class BoostPowJobModel {
         buildOut.add(this.toOpCode(this.content));
         buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
         buildOut.add(this.toOpCode(this.tag));
-        buildOut.add(this.toOpCode(this.userNonce));
+        buildOut.add(this.toOpCode(this.UserNonce.buffer()));
         buildOut.add(this.toOpCode(this.additionalData));
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
@@ -255,7 +247,7 @@ class BoostPowJobModel {
             diff = boost_utils_1.BoostUtils.difficulty(targetInt);
             tag = this.fromOpCode(script.chunks[5]);
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
-            userNonce = this.fromOpCode(script.chunks[6]);
+            userNonce = new uint32Little_1.UInt32Little(this.fromOpCode(script.chunks[6]));
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
             additionalData = this.fromOpCode(script.chunks[7]);
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
@@ -406,7 +398,7 @@ class BoostPowJobModel {
             minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
             extraNonce1: boostPowJobProof.getExtraNonce1(),
             extraNonce2: boostPowJobProof.getExtraNonce2(),
-            userNonce: boostPowJob.getUserNonceBuffer(),
+            userNonce: boostPowJob.userNonce().buffer(),
             additionalData: boostPowJob.getAdditionalDataBuffer(),
         });
     }
@@ -420,7 +412,7 @@ class BoostPowJobModel {
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength);
-            console.log('userNonce', boostPowJob.getUserNonceBuffer().toString('hex'), boostPowJob.getUserNonceBuffer().byteLength);
+            console.log('userNonce', boostPowJob.userNonce().hex(), boostPowJob.userNonce().buffer().byteLength);
             console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }
         const headerBuf = Buffer.concat([
