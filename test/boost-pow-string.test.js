@@ -242,10 +242,10 @@ describe("BoostPowString", () => {
       "646c726f77206f6c6c6548000000000000000000000000000000000000000000"
     );
     expect(boostPowString.contentString(false)).to.eql(
-      "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000Hello world"
+      "dlrow olleH\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
     );
-    expect(boostPowString.contentString()).to.eql("Hello world");
-    expect(boostPowString.contentString(true)).to.eql("Hello world");
+    expect(boostPowString.contentString()).to.eql("dlrow olleH");
+    expect(boostPowString.contentString(true)).to.eql("dlrow olleH");
     expect(boostPowString.bits()).to.eql(486604799);
     expect(boostPowString.bits().toString(16)).to.eql("1d00ffff");
     expect(boostPowString.difficulty()).to.eql(1);
