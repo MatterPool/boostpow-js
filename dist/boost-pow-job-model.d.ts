@@ -15,19 +15,18 @@ export declare class BoostPowJobModel {
     private vout?;
     private value?;
     private constructor();
-    private trimBufferString;
     getContentBuffer(): Buffer;
-    getContentString(trimLeadingNulls?: boolean): string;
+    getContentString(trimTrailingNulls?: boolean): string;
     getContentHex(): string;
     getDiff(): number;
     getCategoryBuffer(): Buffer;
     getCategoryNumber(): number;
     getCategoryHex(): string;
-    getCategoryString(trimLeadingNulls?: boolean): string;
-    getTagString(trimLeadingNulls?: boolean): string;
+    getCategoryString(trimTrailingNulls?: boolean): string;
+    getTagString(trimTrailingNulls?: boolean): string;
     getTagHex(): string;
     getTagBuffer(): Buffer;
-    getAdditionalDataString(trimLeadingNulls?: boolean): string;
+    getAdditionalDataString(trimTrailingNulls?: boolean): string;
     getAdditionalDataHex(): string;
     getAdditionalDataBuffer(): Buffer;
     getUserNonce(): number;
@@ -54,23 +53,13 @@ export declare class BoostPowJobModel {
         additionalData: string;
         userNonce: string;
     };
-    static difficulty2bits(difficulty: any): number;
     getTargetAsNumberHex(): any;
     getTargetAsNumberBuffer(): any;
     getId(): string;
     toHex(): string;
+    private toOpCode;
+    private static fromOpCode;
     toScript(isHex?: boolean): bsv.Script;
-    /**
-     * Returns the target difficulty for this block
-     * @param {Number} bits
-     * @returns {BN} An instance of BN with the decoded difficulty bits
-     */
-    static getTargetDifficulty(bits: any): any;
-    /**
-     * @link https://en.bitcoin.it/wiki/Difficulty
-     * @return {Number}
-     */
-    static getDifficulty(bits: any): number;
     getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;
     static readScript(script: any, txid?: string, vout?: number, value?: number): BoostPowJobModel;

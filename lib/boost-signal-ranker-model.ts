@@ -250,25 +250,4 @@ export class BoostSignalRankerModel {
     static fromSignals(signals: BoostSignalModel[]): BoostSignalRankerModel {
         return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals));
     }
-
-    static fromArray(items: Array<{boostPowString: string, boostPowMetadata: string, boostJobId: string, boostJobProofId: string}>): BoostSignalRankerModel {
-      //  todo add filter restriction
-        if (!items) {
-            return new BoostSignalRankerModel([]);
-        }
-        const dedupItems = BoostSignalRankerModel.dedupPlainObjects(items);
-
-        let lister: BoostSignalModel[] = [];
-        for (const item of dedupItems) {
-            if (!item || !item.boostPowString) {
-                throw new Error('invalid boost pow string');
-            }
-            const signal = BoostSignalModel.fromHex(item.boostPowString, item.boostPowMetadata, item.boostJobId, item.boostJobProofId);
-            if (!signal) {
-                throw new Error('invalid signal creation');
-            }
-            lister.push(signal);
-        }
-        return new BoostSignalRankerModel(lister);
-    }
 }

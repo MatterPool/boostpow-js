@@ -24,7 +24,7 @@ export declare class BoostPowJobProofModel {
         nonce: string;
         extraNonce1: string;
         extraNonce2: string;
-        minerPubKeyHash: string;
+        minerPubKeyHash?: string;
     }): BoostPowJobProofModel;
     getTime(): Buffer;
     getTimeNumber(): number;

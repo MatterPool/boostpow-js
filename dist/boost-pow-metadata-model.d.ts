@@ -26,14 +26,19 @@ export declare class BoostPowMetadataModel {
     trimBufferString(str: string, trimLeadingNulls?: boolean): string;
     getTag(): Buffer;
     getTagUtf8(): string;
+    getTagString(): string;
     getMinerPubKeyHash(): Buffer;
     getMinerPubKeyHashUtf8(): string;
     getUserNonce(): Buffer;
     getUserNonceUtf8(): string;
+    getUserNonceNumber(): number;
+    getExtraNonce1Number(): number;
     getExtraNonce1(): Buffer;
+    getExtraNonce2Number(): number;
     getExtraNonce2(): Buffer;
     getAdditionalData(): Buffer;
     getAdditionalDataUtf8(): string;
+    getAdditionalDataString(): string;
     toString(): string;
     getCoinbaseString(): string;
     hash(): any;
@@ -48,6 +53,4 @@ export declare class BoostPowMetadataModel {
     };
     toBuffer(): Buffer;
     toHex(): string;
-    static fromString(str: string): BoostPowMetadataModel | null;
-    static fromHex(str: string): BoostPowMetadataModel | null;
 }

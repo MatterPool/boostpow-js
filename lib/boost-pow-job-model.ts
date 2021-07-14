@@ -20,25 +20,17 @@ export class BoostPowJobModel {
     ) {
     }
 
-    private trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
-        }
-    }
-
     getContentBuffer(): Buffer {
         return this.content;
     }
 
-    getContentString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+    getContentString(trimTrailingNulls = true): string {
+        return BoostUtils.trimBufferString(this.content, trimTrailingNulls);
     }
 
     getContentHex(): string {
-        return (this.content.toString('hex').match(/../g) || []).reverse().join('');
+        let content = new Buffer(this.content);
+        return content.reverse().toString('hex')
     }
 
     getDiff(): number {
@@ -50,35 +42,35 @@ export class BoostPowJobModel {
     }
 
     getCategoryNumber(): number {
-        return parseInt(this.getCategoryHex(), 16);
+        return this.category.readInt32LE();
     }
 
     getCategoryHex(): string {
-        return (this.category.toString('hex'));
+        return this.category.toString('hex');
     }
 
-    getCategoryString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().category, trimLeadingNulls);
+    getCategoryString(trimTrailingNulls = true): string {
+        return BoostUtils.trimBufferString(this.category, trimTrailingNulls);
     }
 
-    getTagString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().tag, trimLeadingNulls);
+    getTagString(trimTrailingNulls = true): string {
+        return BoostUtils.trimBufferString(this.tag, trimTrailingNulls);
     }
 
     getTagHex(): string {
-        return (this.tag.toString('hex').match(/../g) || []).join('');
+        return this.tag.toString('hex');
     }
 
     getTagBuffer(): Buffer {
         return this.tag;
     }
 
-    getAdditionalDataString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().additionalData, trimLeadingNulls);
+    getAdditionalDataString(trimTrailingNulls = true): string {
+        return BoostUtils.trimBufferString(this.additionalData, trimTrailingNulls);
     }
 
     getAdditionalDataHex(): string {
-        return (this.additionalData.toString('hex').match(/../g) || []).join('');
+        return this.additionalData.toString('hex');
     }
 
     getAdditionalDataBuffer(): Buffer {
@@ -86,11 +78,11 @@ export class BoostPowJobModel {
     }
 
     getUserNonce(): number {
-        return parseInt(this.toObject().userNonce, 16);
+        return this.getUserNonceNumber();
     }
 
     getUserNonceNumber(): number {
-        return parseInt(this.getUserNonceHex(), 16);
+        return this.userNonce.readUInt32LE();
     }
 
     getUserNonceBuffer(): Buffer {
@@ -109,44 +101,51 @@ export class BoostPowJobModel {
         additionalData?: string,
         userNonce?: string,
     }): BoostPowJobModel {
+
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.')
         }
+
         if (params.diff <= 0 || isNaN(params.diff) || (typeof params.diff !== 'number')) {
-            throw new Error('diff must be a number starting at 1. Max 4 bytes.')
+            throw new Error('diff must be a positive number.')
         }
+
         if (params.category && params.category.length > 8) {
             throw new Error('category too large. Max 4 bytes.')
         }
+
         if (params.tag && params.tag.length > 40) {
             throw new Error('tag too large. Max 20 bytes.')
         }
+
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
+
         return new BoostPowJobModel(
             BoostUtils.createBufferAndPad(params.content, 32),
             params.diff,
-            BoostUtils.createBufferAndPad(params.category, 4,false),
-            BoostUtils.createBufferAndPad(params.tag, 20,false),
-            BoostUtils.createBufferAndPad(params.additionalData, params.additionalData?.length || 32,false),
-            BoostUtils.createBufferAndPad(params.userNonce, 4,false),
+            BoostUtils.createBufferAndPad(params.category, 4, false),
+            params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0),
+            params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0),
+            // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
+            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
             false
         );
     }
 
     getBits(): number {
-        return BoostPowJobModel.difficulty2bits(this.difficulty);
+        return BoostUtils.difficulty2bits(this.difficulty);
     }
 
     bits(): number {
-        return BoostPowJobModel.difficulty2bits(this.difficulty);
+        return BoostUtils.difficulty2bits(this.difficulty);
     }
 
     public static hexBitsToDifficulty(hexBits: string): number {
         let targetHex = (hexBits.match(/../g) || []).join('');
         let targetInt = parseInt(targetHex, 16);
-        return BoostPowJobModel.getDifficulty(targetInt);
+        return BoostUtils.difficulty(targetInt);
     }
 
     getBitsHex(): string {
@@ -155,7 +154,7 @@ export class BoostPowJobModel {
 
     toObject () {
         return {
-            content: (this.content.toString('hex').match(/../g) || []).reverse().join(''),
+            content: this.getContentHex(),
             diff: this.difficulty,
             category: this.category.toString('hex'),
             tag: this.tag.toString('hex'),
@@ -164,36 +163,13 @@ export class BoostPowJobModel {
         };
     }
 
-    public static difficulty2bits(difficulty) {
-        if (difficulty < 0) throw 'difficulty cannot be negative';
-        if (!isFinite(difficulty)) {
-            throw 'difficulty cannot be infinite';
-        }
-        for (var shiftBytes = 1; true; shiftBytes++) {
-            var word = (0x00ffff * Math.pow(0x100, shiftBytes)) / difficulty;
-            if (word >= 0xffff) break;
-        }
-        word &= 0xffffff; // convert to int < 0xffffff
-        var size = 0x1d - shiftBytes;
-        // the 0x00800000 bit denotes the sign, so if it is already set, divide the
-        // mantissa by 0x100 and increase the size by a byte
-        if (word & 0x800000) {
-            word >>= 8;
-            size++;
-        }
-        if ((word & ~0x007fffff) != 0) throw 'the \'bits\' \'word\' is out of bounds';
-        if (size > 0xff) throw 'the \'bits\' \'size\' is out of bounds';
-        var bits = (size << 24) | word;
-        return bits;
-    }
-
     getTargetAsNumberHex(): any {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = BoostUtils.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').toString('hex');
     }
 
     getTargetAsNumberBuffer(): any {
-        const i = BoostPowJobModel.difficulty2bits(this.difficulty);
+        const i = BoostUtils.difficulty2bits(this.difficulty);
         return Buffer.from(i.toString(16), 'hex').reverse();
     }
 
@@ -205,24 +181,47 @@ export class BoostPowJobModel {
         return this.toScript(true);
     }
 
+    private toOpCode(num:Buffer)  {
+        if(num.length == 1) {
+            if (num[0] >= 1 && num[0] <= 16) {
+                return bsv.Opcode.OP_1 + (num[0] - 1);
+            }
+            if(num[0] == 0x81) {
+                return bsv.Opcode.OP_1NEGATE;
+            }
+        }
+        return num;
+    }
+
+    private static  fromOpCode(chunk) : Buffer {
+        if(chunk.opcodenum >= bsv.Opcode.OP_1 && chunk.opcodenum <= bsv.Opcode.OP_16)
+        {
+            return Buffer.from([(chunk.opcodenum - bsv.Opcode.OP_1) + 1]);
+        } else if(chunk.opcodenum == bsv.Opcode.OP_1NEGATE) {
+            return Buffer.from([0x81]);
+        }
+        else {
+            return chunk.buf;
+        }
+    }
     toScript(isHex: boolean = false): bsv.Script {
         let buildOut = bsv.Script();
 
-        buildOut.add(Buffer.from('boostpow', 'utf8'));
+        buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
 
         buildOut.add(bsv.Opcode.OP_DROP);
 
-        buildOut.add(this.category);
+        buildOut.add(this.toOpCode(this.category));
 
-        buildOut.add(this.content);
+        buildOut.add(this.toOpCode(this.content));
 
-        buildOut.add(this.getTargetAsNumberBuffer());
+        buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
 
-        buildOut.add(this.tag);
+        buildOut.add(this.toOpCode(this.tag));
 
-        buildOut.add(this.userNonce);
+        buildOut.add(this.toOpCode(this.userNonce));
 
-        buildOut.add(this.additionalData);
+        buildOut.add(this.toOpCode(this.additionalData));
 
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
@@ -246,35 +245,6 @@ export class BoostPowJobModel {
         }
         // Return script
         return buildOut;
-    }
-
-    /**
-     * Returns the target difficulty for this block
-     * @param {Number} bits
-     * @returns {BN} An instance of BN with the decoded difficulty bits
-     */
-    public static getTargetDifficulty(bits) {
-        var target = new bsv.crypto.BN(bits & 0xffffff)
-        var mov = 8 * ((bits >>> 24) - 3)
-        while (mov-- > 0) {
-            target = target.mul(new bsv.crypto.BN(2))
-        }
-        return target
-    }
-
-    // https://bitcoin.stackexchange.com/questions/30467/what-are-the-equations-to-convert-between-bits-and-difficulty
-    /**
-     * @link https://en.bitcoin.it/wiki/Difficulty
-     * @return {Number}
-     */
-     static getDifficulty (bits) {
-        var GENESIS_BITS = 0x1d00ffff;
-        var difficulty1TargetBN = BoostPowJobModel.getTargetDifficulty(GENESIS_BITS).mul(new bsv.crypto.BN(Math.pow(10, 8)))
-        var currentTargetBN = BoostPowJobModel.getTargetDifficulty(bits)
-        var difficultyString = difficulty1TargetBN.div(currentTargetBN).toString(10);
-        var decimalPos = difficultyString.length - 8
-        difficultyString = difficultyString.slice(0, decimalPos) + '.' + difficultyString.slice(decimalPos)
-        return parseFloat(difficultyString)
     }
 
     getDifficulty(): number {
@@ -336,15 +306,15 @@ export class BoostPowJobModel {
             script.chunks[4].len === 4 &&
 
             // Tag
-            script.chunks[5].buf &&
-            script.chunks[5].len === 20 &&
+            ((script.chunks[5].buf &&
+                script.chunks[5].len <= 20) || (script.chunks[5].opcodenum >= bsv.Opcode.OP_1 && script.chunks[5].opcodenum <= bsv.Opcode.OP_16)) &&
 
             // User Nonce
             script.chunks[6].buf &&
             script.chunks[6].len === 4 &&
 
             // Additional Data
-            script.chunks[7].buf
+            (script.chunks[7].buf || (script.chunks[7].opcodenum >= bsv.Opcode.OP_1 && script.chunks[7].opcodenum <= bsv.Opcode.OP_16))
 
         ) {
 
@@ -354,18 +324,20 @@ export class BoostPowJobModel {
                 useGeneralPurposeBits = true;
             } else throw new Error('Not valid Boost Output');
 
-            category = script.chunks[2].buf;
-            content = script.chunks[3].buf;
-            let targetHex = (script.chunks[4].buf.toString('hex').match(/../g) || []).reverse().join('');
+            category = this.fromOpCode(script.chunks[2]);
+            content = this.fromOpCode(script.chunks[3]);
+            let targetHex = (this.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('');
             let targetInt = parseInt(targetHex, 16);
-            diff = BoostPowJobModel.getDifficulty(targetInt);
+            diff = BoostUtils.difficulty(targetInt);
 
-            tag = script.chunks[5].buf;
+            tag = this.fromOpCode(script.chunks[5]);
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
 
-            userNonce = script.chunks[6].buf;
+            userNonce = this.fromOpCode(script.chunks[6]);
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
-            additionalData = script.chunks[7].buf;
+
+            additionalData = this.fromOpCode(script.chunks[7]);
+
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
 
             return new BoostPowJobModel(
@@ -564,17 +536,19 @@ export class BoostPowJobModel {
             console.log('BoostPowString.tryValidateJobProof')
             console.log('category', boostPowJob.getCategoryBuffer().toString('hex'), boostPowJob.getCategoryBuffer().byteLength);
             console.log('content', boostPowJob.getContentBuffer().toString('hex'), boostPowJob.getContentBuffer().byteLength);
-            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().reverse().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
+            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
             console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
             console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength)
             console.log('userNonce', boostPowJob.getUserNonceBuffer().toString('hex'), boostPowJob.getUserNonceBuffer().byteLength);
+
+            console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }
 
         const headerBuf = Buffer.concat([
             boostPowJob.getCategoryBuffer(),
             boostPowJob.getContentBuffer(),
-            boostPowMetadataCoinbaseString.hashAsBuffer().reverse(),
+            boostPowMetadataCoinbaseString.hashAsBuffer(),
             boostPowJobProof.getTime(),
             boostPowJob.getTargetAsNumberBuffer(),
             boostPowJobProof.getNonce(),
