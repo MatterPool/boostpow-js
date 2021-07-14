@@ -522,8 +522,10 @@ describe("boost integration test ", () => {
   // check valid string
   it("should generate valid string", async () => {
     expect(proof).to.not.eql(null);
-    let temp=proof.toString();
-    expect(proof.boostPowString.toString().toUpperCase()).to.eql(proofStringHex);
+    let temp = proof.toString();
+    expect(proof.boostPowString.toString().toUpperCase()).to.eql(
+      proofStringHex
+    );
     expect(proof.boostPowString.hash().toUpperCase()).to.eql(proofHashHex);
     expect(proof.boostPowString.hashBuffer()).to.eql(proofHashBuffer);
 
@@ -535,7 +537,9 @@ describe("boost integration test ", () => {
     expect(proof.boostPowString.time()).to.eql(timeNumber);
     expect(proof.boostPowString.category()).to.eql(categoryNumber);
     expect(proof.boostPowString.bits()).to.eql(compactNumber);
-    expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(metadataHashHex);
+    expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(
+      metadataHashHex
+    );
   });
 
   it("should write as objects and back", async () => {

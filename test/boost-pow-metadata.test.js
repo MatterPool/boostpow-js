@@ -161,64 +161,64 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       index.BoostPowJob.createBoostPowMetadata(job, jobProof).hash()
     ).to.eql(expectedMerkleRootMetaHash);
     /*
-             {"method": "mining.submit", "params": ["abra.001", "3",
-             "0000000000000000", "5e802ed9", "e2731ee0"], "id":4} Mar 29
-          05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.473852
-          15138 StratumServerBitcoinBoost.cc:303] coinbase:
-             231200000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190extra
-             nonce-> 460000050000000000000000<- extra nonce  user nonce
-             ->88660000<- user nonce
-             ->9400000000000000000000000000000000000000000000000000000000000000
+                {"method": "mining.submit", "params": ["abra.001", "3",
+                "0000000000000000", "5e802ed9", "e2731ee0"], "id":4} Mar 29
+             05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.473852
+             15138 StratumServerBitcoinBoost.cc:303] coinbase:
+                231200000000000000000000000000000000000092e4d5ab4bb067f872d28f44d3e5433e56fca190extra
+                nonce-> 460000050000000000000000<- extra nonce  user nonce
+                ->88660000<- user nonce
+                ->9400000000000000000000000000000000000000000000000000000000000000
+             Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
+             05:15:52.473984 15176 StratumServerBitcoinBoost.cc:610]
+             >>>>>>>>>>>>>>>>>>> FOUND BOOST HEADER FOUND >>>>>>>>>>>>>>>>>>>
           Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
-          05:15:52.473984 15176 StratumServerBitcoinBoost.cc:610]
-          >>>>>>>>>>>>>>>>>>> FOUND BOOST HEADER FOUND >>>>>>>>>>>>>>>>>>> Mar
-          29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.473999
-          15176 StratumServerBitcoinBoost.cc:615] CBlockHeader nVersion:
-          00000078, hashPrevBlock:
-             0000000000000000000000000000000000000000000000000000000000935532,
-             hashMerkleRoot:
-             fc6bee7b4b3be794c6f2a9a9e04786ec8ccedf118b31e3739e919e4e2841c484,
-             nTime: 5e802ed9, nBits: 1d00ffff, nNonce: e2731ee0, extraNonce1:
-             46000005, extraNonce2: 0000000000000000, tag:
-             2312000000000000000000000000000000000000, minerPubKeyHash:
-             92e4d5ab4bb067f872d28f44d3e5433e56fca190, additionalData:
-             9400000000000000000000000000000000000000000000000000000000000000,
-             userNonce: 88660000 Mar 29 05:15:52 ip-172-31-47-53
-             sserverboost[15138]: I0329 05:15:52.474097 15176
-             StratumServerBitcoinBoost.cc:761] >>>>
-          submitBoostSolutionBlockThread Mar 29 05:15:52 ip-172-31-47-53
-          sserverboost[15138]: I0329 05:15:52.474107 15176
-          StratumServerBitcoinBoost.cc:773] submit boost solution: Mar 29
-          05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474110
-          15176 StratumServerBitcoinBoost.cc:777] req: Mar 29 05:15:52
-          ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474114 15176
-          StratumServerBitcoinBoost.cc:779] extranonce1: Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474118 15176
-             StratumServerBitcoinBoost.cc:780] 1174405125 Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474123 15176
-             StratumServerBitcoinBoost.cc:781] extranonce2: Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474125 15176
-             StratumServerBitcoinBoost.cc:782] 0000000000000000 Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474128 15176
-             StratumServerBitcoinBoost.cc:783] time: Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474133 15176
-             StratumServerBitcoinBoost.cc:784] 1585458905 Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474135 15176
-             StratumServerBitcoinBoost.cc:785] boost job txid: Mar 29 05:15:52
-             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474138 15176
-             StratumServerBitcoinBoost.cc:786]
-             600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede
-          Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
-          05:15:52.474143 15176 StratumServerBitcoinBoost.cc:787] boost vout:
-          Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
-          05:15:52.474145 15176 StratumServerBitcoinBoost.cc:788] 1 Mar 29
-          05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474159
-          15176 StratumServerBitcoinBoost.cc:799] { "extraNonce1": 1174405125,
-             "extraNonce2": "0000000000000000", "time": 1585458905, "nonce":
-             3799195360, "txid":
-             "600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede",
-             "vout": 1 }
-        */
+          05:15:52.473999 15176 StratumServerBitcoinBoost.cc:615] CBlockHeader
+          nVersion: 00000078, hashPrevBlock:
+                0000000000000000000000000000000000000000000000000000000000935532,
+                hashMerkleRoot:
+                fc6bee7b4b3be794c6f2a9a9e04786ec8ccedf118b31e3739e919e4e2841c484,
+                nTime: 5e802ed9, nBits: 1d00ffff, nNonce: e2731ee0, extraNonce1:
+                46000005, extraNonce2: 0000000000000000, tag:
+                2312000000000000000000000000000000000000, minerPubKeyHash:
+                92e4d5ab4bb067f872d28f44d3e5433e56fca190, additionalData:
+                9400000000000000000000000000000000000000000000000000000000000000,
+                userNonce: 88660000 Mar 29 05:15:52 ip-172-31-47-53
+                sserverboost[15138]: I0329 05:15:52.474097 15176
+                StratumServerBitcoinBoost.cc:761] >>>>
+             submitBoostSolutionBlockThread Mar 29 05:15:52 ip-172-31-47-53
+             sserverboost[15138]: I0329 05:15:52.474107 15176
+             StratumServerBitcoinBoost.cc:773] submit boost solution: Mar 29
+             05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474110
+             15176 StratumServerBitcoinBoost.cc:777] req: Mar 29 05:15:52
+             ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474114 15176
+             StratumServerBitcoinBoost.cc:779] extranonce1: Mar 29 05:15:52
+                ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474118 15176
+                StratumServerBitcoinBoost.cc:780] 1174405125 Mar 29 05:15:52
+                ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474123 15176
+                StratumServerBitcoinBoost.cc:781] extranonce2: Mar 29 05:15:52
+                ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474125 15176
+                StratumServerBitcoinBoost.cc:782] 0000000000000000 Mar 29
+          05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474128
+          15176 StratumServerBitcoinBoost.cc:783] time: Mar 29 05:15:52
+                ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474133 15176
+                StratumServerBitcoinBoost.cc:784] 1585458905 Mar 29 05:15:52
+                ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474135 15176
+                StratumServerBitcoinBoost.cc:785] boost job txid: Mar 29
+          05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474138
+          15176 StratumServerBitcoinBoost.cc:786]
+                600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede
+             Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
+             05:15:52.474143 15176 StratumServerBitcoinBoost.cc:787] boost vout:
+             Mar 29 05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329
+             05:15:52.474145 15176 StratumServerBitcoinBoost.cc:788] 1 Mar 29
+             05:15:52 ip-172-31-47-53 sserverboost[15138]: I0329 05:15:52.474159
+             15176 StratumServerBitcoinBoost.cc:799] { "extraNonce1":
+          1174405125, "extraNonce2": "0000000000000000", "time": 1585458905,
+          "nonce": 3799195360, "txid":
+                "600834a5c14436aa1b369cf9780994f988a7f0bb30e9e4e0bc6dedc1598e8ede",
+                "vout": 1 }
+           */
     const powString = index.BoostPowJob.tryValidateJobProof(
       job,
       jobProof,

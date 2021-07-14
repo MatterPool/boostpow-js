@@ -3189,7 +3189,10 @@
           (n.prototype.wrapResult = function (t) {
             var e = this._reporterState;
             return e.options.partial
-              ? { result: this.isError(t) ? null : t, errors: e.errors }
+              ? {
+                  result: this.isError(t) ? null : t,
+                  errors: e.errors,
+                }
               : t;
           }),
           i(o, Error),
@@ -18176,7 +18179,13 @@
                 "internal error - need satoshisBN to verify FORKID transactions"
               );
             if (
-              (this.set({ script: e, tx: o, nin: s, flags: a, satoshisBN: u }),
+              (this.set({
+                script: e,
+                tx: o,
+                nin: s,
+                flags: a,
+                satoshisBN: u,
+              }),
               0 != (a & c.SCRIPT_VERIFY_SIGPUSHONLY) && !e.isPushOnly())
             )
               return (this.errstr = "SCRIPT_ERR_SIG_PUSHONLY"), !1;
