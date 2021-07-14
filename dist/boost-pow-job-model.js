@@ -147,12 +147,18 @@ class BoostPowJobModel {
             if (num[0] >= 1 && num[0] <= 16) {
                 return bsv.Opcode.OP_1 + (num[0] - 1);
             }
+            if (num[0] == 0x81) {
+                return bsv.Opcode.OP_1NEGATE;
+            }
         }
         return num;
     }
     static fromOpCode(chunk) {
         if (chunk.opcodenum >= bsv.Opcode.OP_1 && chunk.opcodenum <= bsv.Opcode.OP_16) {
             return Buffer.from([(chunk.opcodenum - bsv.Opcode.OP_1) + 1]);
+        }
+        else if (chunk.opcodenum == bsv.Opcode.OP_1NEGATE) {
+            return Buffer.from([0x81]);
         }
         else {
             return chunk.buf;
