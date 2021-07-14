@@ -24,6 +24,15 @@ class BoostUtils {
         b.writeUInt32LE(x);
         return b;
     }
+    static trimBufferString(str, trimTrailingNulls = true) {
+        const content = str.toString('utf8');
+        if (trimTrailingNulls) {
+            return content.replace(/\0+$/g, '');
+        }
+        else {
+            return content;
+        }
+    }
     static maxBits() {
         return 0x2100ffff;
     }

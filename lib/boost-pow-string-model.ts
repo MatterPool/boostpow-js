@@ -45,16 +45,9 @@ export class BoostPowStringModel {
         return new Buffer(this.toObject().content,'hex').reverse();
     }
 
-    public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').reverse().toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
-        }
-    }
     contentString(trimLeadingNulls = true): string {
-        return this.trimBufferString(this.toObject().content, trimLeadingNulls);
+        var content = new Buffer(this._blockheader.toObject().prevHash, 'hex');
+        return BoostUtils.trimBufferString(content.reverse(), trimLeadingNulls);
     }
 
     bits(): number {

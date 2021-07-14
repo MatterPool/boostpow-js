@@ -20,20 +20,11 @@ class BoostPowJobModel {
         this.vout = vout;
         this.value = value;
     }
-    trimBufferString(str, trimTrailingNulls = true) {
-        const content = str.toString('utf8');
-        if (trimTrailingNulls) {
-            return content.replace(/\0+$/g, '');
-        }
-        else {
-            return content;
-        }
-    }
     getContentBuffer() {
         return this.content;
     }
     getContentString(trimTrailingNulls = true) {
-        return this.trimBufferString(this.content, trimTrailingNulls);
+        return boost_utils_1.BoostUtils.trimBufferString(this.content, trimTrailingNulls);
     }
     getContentHex() {
         let content = new Buffer(this.content);
@@ -52,10 +43,10 @@ class BoostPowJobModel {
         return this.category.toString('hex');
     }
     getCategoryString(trimTrailingNulls = true) {
-        return this.trimBufferString(this.category, trimTrailingNulls);
+        return boost_utils_1.BoostUtils.trimBufferString(this.category, trimTrailingNulls);
     }
     getTagString(trimTrailingNulls = true) {
-        return this.trimBufferString(this.tag, trimTrailingNulls);
+        return boost_utils_1.BoostUtils.trimBufferString(this.tag, trimTrailingNulls);
     }
     getTagHex() {
         return this.tag.toString('hex');
@@ -64,7 +55,7 @@ class BoostPowJobModel {
         return this.tag;
     }
     getAdditionalDataString(trimTrailingNulls = true) {
-        return this.trimBufferString(this.additionalData, trimTrailingNulls);
+        return boost_utils_1.BoostUtils.trimBufferString(this.additionalData, trimTrailingNulls);
     }
     getAdditionalDataHex() {
         return this.additionalData.toString('hex');

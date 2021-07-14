@@ -23,6 +23,15 @@
         return b;
     }
 
+    static trimBufferString(str: Buffer, trimTrailingNulls = true): string {
+        const content = str.toString('utf8');
+        if (trimTrailingNulls) {
+            return content.replace(/\0+$/g, '');
+        } else {
+            return content;
+        }
+    }
+
     static maxBits(): number {
       return 0x2100ffff;
     }
