@@ -280,8 +280,7 @@ class BoostPowJobModel {
             script.chunks[6].buf &&
             script.chunks[6].len === 4 &&
             // Additional Data
-            script.chunks[7].buf &&
-            script.chunks[7].len === 32) {
+            script.chunks[7].buf) {
             if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
                 useGeneralPurposeBits = false;
             }

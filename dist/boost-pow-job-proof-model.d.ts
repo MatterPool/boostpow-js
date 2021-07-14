@@ -29,29 +29,18 @@ export declare class BoostPowJobProofModel {
     getTime(): Buffer;
     getTimeNumber(): number;
     getTimeBuffer(): Buffer;
-    setTime(time: string): void;
     getExtraNonce1Number(): number;
     getExtraNonce1(): Buffer;
     getExtraNonce2Number(): number;
     getExtraNonce2(): Buffer;
     getNonceNumber(): number;
     getNonce(): Buffer;
-    setNonce(nonce: string): void;
-    setExtraNonce1(nonce: string): void;
-    setExtraNonce2(nonce: string): void;
     getMinerPubKeyHash(): Buffer;
     getMinerPubKeyHashHex(): string;
-    setSignature(signature: string): void;
-    setSignatureBuffer(signature: Buffer): void;
     getSignature(): Buffer;
     getSignatureHex(): string;
     getMinerPubKey(): Buffer;
     getMinerPubKeyHex(): string;
-    /**
-     *
-     * @param publicKey The publicKey key string to use to redeem the Boost output
-     */
-    setMinerPubKeyAndHash(publicKey: string): void;
     toObject(): {
         signature: string;
         minerPubKey: string;

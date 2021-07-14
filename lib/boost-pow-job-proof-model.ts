@@ -75,10 +75,6 @@ export class BoostPowJobProofModel {
         return this.time;
     }
 
-    setTime(time: string) {
-        this.time = BoostUtils.createBufferAndPad(time, 4)
-    }
-
     getExtraNonce1Number(): number {
         return parseInt((this.extraNonce1.toString('hex').match(/../g) || []).join(''), 16);
     }
@@ -103,18 +99,6 @@ export class BoostPowJobProofModel {
         return this.nonce;
     }
 
-    setNonce(nonce: string) {
-        this.nonce = BoostUtils.createBufferAndPad(nonce, 4)
-    }
-
-    setExtraNonce1(nonce: string) {
-        this.extraNonce1 = BoostUtils.createBufferAndPad(nonce, 4)
-    }
-
-    setExtraNonce2(nonce: string) {
-        this.extraNonce2 = BoostUtils.createBufferAndPad(nonce, 8)
-    }
-
     // Should add bsv.Address version and string version too
     getMinerPubKeyHash(): Buffer {
         return this.minerPubKeyHash;
@@ -122,14 +106,6 @@ export class BoostPowJobProofModel {
 
     getMinerPubKeyHashHex(): string {
         return this.minerPubKeyHash.toString('hex');
-    }
-
-    setSignature(signature: string) {
-        this.signature = Buffer.from(signature, 'hex');
-    }
-
-    setSignatureBuffer(signature: Buffer) {
-        this.signature = signature;
     }
 
     getSignature(): Buffer {
@@ -146,16 +122,6 @@ export class BoostPowJobProofModel {
 
     getMinerPubKeyHex(): string {
         return this.minerPubKey.toString('hex');
-    }
-
-    /**
-     *
-     * @param publicKey The publicKey key string to use to redeem the Boost output
-     */
-    setMinerPubKeyAndHash(publicKey: string) {
-        const pubKey = new bsv.PublicKey(publicKey);
-        this.minerPubKey = pubKey.toBuffer();
-        this.minerPubKeyHash = pubKey.toAddress().toBuffer().slice(1);
     }
 
     toObject () {
