@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", {value : true});
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostSignalModel = void 0;
 const bsv = require("bsv");
 class BoostSignalModel {
@@ -18,20 +18,36 @@ class BoostSignalModel {
     // check that they belong together! Validate the proof of work here matches
     // the metadataHash because we trust no one!
     //
-    if (boostPowString.metadataHash() !==
-        bsv.crypto.Hash.sha256sha256(boostPowMetadata.toBuffer())
-            .reverse()
-            .toString('hex')) {
-      throw new Error('Fatal: Invalid metadata for the pow string');
+    if (
+      boostPowString.metadataHash() !==
+      bsv.crypto.Hash.sha256sha256(boostPowMetadata.toBuffer())
+        .reverse()
+        .toString("hex")
+    ) {
+      throw new Error("Fatal: Invalid metadata for the pow string");
     }
-  };
-  getBoostJobId() { return this.boostJobId; }
-  getBoostJobProofId() { return this.boostJobProofId; }
-  getBoostPowString() { return this.boostPowString; }
-  getBoostMetadata() { return this.boostPowMetadata; }
-  hash() { return this.boostPowString.hash(); }
-  difficulty() { return this.boostPowString.difficulty(); }
-  energy() { return this.difficulty(); }
+  }
+  getBoostJobId() {
+    return this.boostJobId;
+  }
+  getBoostJobProofId() {
+    return this.boostJobProofId;
+  }
+  getBoostPowString() {
+    return this.boostPowString;
+  }
+  getBoostMetadata() {
+    return this.boostPowMetadata;
+  }
+  hash() {
+    return this.boostPowString.hash();
+  }
+  difficulty() {
+    return this.boostPowString.difficulty();
+  }
+  energy() {
+    return this.difficulty();
+  }
   content(hex) {
     if (hex) {
       return this.boostPowString.contentHex();
@@ -43,19 +59,25 @@ class BoostSignalModel {
     const cat = Buffer.allocUnsafe(4);
     cat.writeUInt32BE(category, 0);
     if (hex) {
-      return cat.toString('hex');
+      return cat.toString("hex");
     }
-    return cat.toString('utf8');
+    return cat.toString("utf8");
   }
-  metadataHash() { return this.boostPowString.metadataHash(); }
-  time() { return this.boostPowString.time(); }
-  nonce() { return this.boostPowString.nonce(); }
+  metadataHash() {
+    return this.boostPowString.metadataHash();
+  }
+  time() {
+    return this.boostPowString.time();
+  }
+  nonce() {
+    return this.boostPowString.nonce();
+  }
   tag(hex) {
     if (!this.boostPowMetadata) {
       return null;
     }
     if (hex) {
-      return this.boostPowMetadata.getTag().toString('hex');
+      return this.boostPowMetadata.getTag().toString("hex");
     }
     return this.boostPowMetadata.getTagUtf8();
   }
@@ -64,7 +86,7 @@ class BoostSignalModel {
       return null;
     }
     if (hex) {
-      return this.boostPowMetadata.getUserNonce().toString('hex');
+      return this.boostPowMetadata.getUserNonce().toString("hex");
     }
     return this.boostPowMetadata.getUserNonceUtf8();
   }
@@ -73,7 +95,7 @@ class BoostSignalModel {
       return null;
     }
     if (hex) {
-      return this.boostPowMetadata.getAdditionalData().toString('hex');
+      return this.boostPowMetadata.getAdditionalData().toString("hex");
     }
     return this.boostPowMetadata.getAdditionalDataUtf8();
   }
@@ -81,7 +103,7 @@ class BoostSignalModel {
     if (!this.boostPowMetadata) {
       return null;
     }
-    return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
+    return this.boostPowMetadata.getMinerPubKeyHash().toString("hex");
   }
   toString() {
     let str = this.boostPowString.toString();
@@ -92,11 +114,12 @@ class BoostSignalModel {
   }
   toObject() {
     return {
-      boostJobId : this.boostJobId,
-      boostJobProofId : this.boostJobProofId,
-      boostPowString : this.boostPowString.toString(),
-      boostPowMetadata :
-          this.boostPowMetadata ? this.boostPowMetadata.toString() : null,
+      boostJobId: this.boostJobId,
+      boostJobProofId: this.boostJobProofId,
+      boostPowString: this.boostPowString.toString(),
+      boostPowMetadata: this.boostPowMetadata
+        ? this.boostPowMetadata.toString()
+        : null,
     };
   }
 }
