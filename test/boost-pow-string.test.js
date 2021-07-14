@@ -254,7 +254,7 @@ describe("BoostPowString", () => {
     );
     expect(boostPowString.time()).to.eql(1305200806);
     expect(boostPowString.nonce()).to.eql(3698479534);
-    expect(boostPowString.category()).to.eql(1);
+    expect(boostPowString.category().number()).to.eql(1);
   });
 });
 
@@ -407,9 +407,9 @@ describe("boost integration test ", () => {
 
   // check getters for job.
   it("should get category from locking script", async () => {
-    expect(job.getCategoryHex()).to.eql(categoryHex);
-    expect(job.getCategoryNumber()).to.eql(categoryNumber);
-    expect(job.getCategoryBuffer()).to.eql(categoryBuffer);
+    expect(job.category().hex()).to.eql(categoryHex);
+    expect(job.category().number()).to.eql(categoryNumber);
+    expect(job.category().buffer()).to.eql(categoryBuffer);
   });
 
   it("should get content from locking script", async () => {
@@ -535,7 +535,7 @@ describe("boost integration test ", () => {
 
     expect(proof.boostPowString.nonce()).to.eql(nonceNumber);
     expect(proof.boostPowString.time()).to.eql(timeNumber);
-    expect(proof.boostPowString.category()).to.eql(categoryNumber);
+    expect(proof.boostPowString.category().number()).to.eql(categoryNumber);
     expect(proof.boostPowString.bits()).to.eql(compactNumber);
     expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(
       metadataHashHex

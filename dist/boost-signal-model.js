@@ -50,13 +50,7 @@ class BoostSignalModel {
         return this.boostPowString.contentString();
     }
     category(hex) {
-        const category = this.boostPowString.category();
-        const cat = Buffer.allocUnsafe(4);
-        cat.writeUInt32BE(category, 0);
-        if (hex) {
-            return cat.toString('hex');
-        }
-        return cat.toString('utf8');
+        return this.boostPowString.category();
     }
     metadataHash() {
         return this.boostPowString.metadataHash();

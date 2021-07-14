@@ -1,12 +1,13 @@
 /// <reference types="node" />
 import * as bsv from 'bsv';
+import { Int32Little } from './fields/int32Little';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
     private content;
     private difficulty;
-    private category;
+    private Category;
     private tag;
     private additionalData;
     private userNonce;
@@ -15,14 +16,11 @@ export declare class BoostPowJobModel {
     private vout?;
     private value?;
     private constructor();
+    category(): Int32Little;
     getContentBuffer(): Buffer;
     getContentString(trimTrailingNulls?: boolean): string;
     getContentHex(): string;
     getDiff(): number;
-    getCategoryBuffer(): Buffer;
-    getCategoryNumber(): number;
-    getCategoryHex(): string;
-    getCategoryString(trimTrailingNulls?: boolean): string;
     getTagString(trimTrailingNulls?: boolean): string;
     getTagHex(): string;
     getTagBuffer(): Buffer;

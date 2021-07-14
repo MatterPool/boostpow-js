@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
+const int32Little_1 = require("./fields/int32Little");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowStringModel {
     constructor(blockheader, metadata) {
@@ -31,6 +32,9 @@ class BoostPowStringModel {
     id() {
         return this._blockheader.hash;
     }
+    category() {
+        return int32Little_1.Int32Little.fromNumber(this._blockheader.version);
+    }
     contentHex() {
         return this.toObject().content;
     }
@@ -52,9 +56,6 @@ class BoostPowStringModel {
     }
     time() {
         return this.toObject().time;
-    }
-    category() {
-        return this.toObject().category;
     }
     static nBitsHexToDifficultyNumber(nbits) {
         return boost_utils_1.BoostUtils.getTargetDifficulty(parseInt(nbits, 16));

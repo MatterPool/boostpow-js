@@ -1,4 +1,5 @@
 import * as bsv from 'bsv';
+import { Int32Little } from './fields/int32Little';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
@@ -24,6 +25,7 @@ export class BoostPowStringModel {
     boosthash(): string {
         return this._blockheader.hash;
     }
+
     hashBuffer() : Buffer {
         // todo: IS THIS THE RIGHT PLACE???
         return Buffer.from(this._blockheader.hash,"hex").reverse();
@@ -35,6 +37,10 @@ export class BoostPowStringModel {
 
     id(): string {
         return this._blockheader.hash;
+    }
+
+    category(): Int32Little {
+      return Int32Little.fromNumber(this._blockheader.version);
     }
 
     contentHex(): string {
@@ -64,10 +70,6 @@ export class BoostPowStringModel {
 
     time(): number {
         return this.toObject().time;
-    }
-
-    category(): number {
-        return this.toObject().category;
     }
 
     static nBitsHexToDifficultyNumber(nbits: string): number {
@@ -197,6 +199,7 @@ export class BoostPowStringModel {
     difficulty() : number {
         return this._blockheader.getDifficulty();
     }
+
     targetDifficulty(bits?: number) {
         return this._blockheader.getTargetDifficulty(bits);
     }
