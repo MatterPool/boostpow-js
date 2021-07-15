@@ -86,7 +86,7 @@ class BoostSignalModel {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
+        return this.boostPowMetadata.minerPubKeyHash();
     }
     toString() {
         let str = this.boostPowString.toString();

@@ -1,6 +1,7 @@
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import * as bsv from 'bsv';
@@ -100,11 +101,11 @@ export class BoostSignalModel {
         return this.boostPowMetadata.getAdditionalDataUtf8();
     }
 
-    public minerPubKeyHash(): string | null {
+    public minerPubKeyHash(): Digest20 | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
+        return this.boostPowMetadata.minerPubKeyHash();
     }
 
     public toString(): string {

@@ -491,7 +491,7 @@ export class BoostPowJobModel {
            .add(boostPowJobProof.time().buffer())
            .add(boostPowJobProof.extraNonce2().buffer())
            .add(boostPowJobProof.extraNonce1().buffer())
-           .add(boostPowJobProof.getMinerPubKeyHash());
+           .add(boostPowJobProof.minerPubKeyHash().buffer());
 
         tx.inputs[0].setScript(unlockingScript);
         return tx;
@@ -500,7 +500,7 @@ export class BoostPowJobModel {
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
         return BoostPowMetadataModel.fromBuffer({
             tag: boostPowJob.getTagBuffer(),
-            minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
+            minerPubKeyHash: boostPowJobProof.minerPubKeyHash().buffer(),
             extraNonce1: boostPowJobProof.extraNonce1().buffer(),
             extraNonce2: boostPowJobProof.extraNonce2().buffer(),
             userNonce: boostPowJob.userNonce().buffer(),

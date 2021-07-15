@@ -3,6 +3,7 @@ import { BoostUtils } from './boost-utils';
 import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
+import { Digest20 } from './fields/digest20';
 
 /**
  * Responsible for redeem script proof that work was done.
@@ -17,7 +18,7 @@ export class BoostPowJobProofModel {
         private ExtraNonce1: UInt32Big,
         private ExtraNonce2: UInt64Big,
         private Nonce: UInt32Little,
-        private minerPubKeyHash: Buffer,
+        private MinerPubKeyHash: Digest20,
         // Optional tx information attached or not
         private txid?: string,
         private vin?: number,
@@ -74,7 +75,7 @@ export class BoostPowJobProofModel {
             new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4,false)),
             new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
             new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
-            Buffer.from(minerPubKeyHash, 'hex'),
+            new Digest20(Buffer.from(minerPubKeyHash, 'hex')),
         );
     }
 
@@ -95,12 +96,8 @@ export class BoostPowJobProofModel {
     }
 
     // Should add bsv.Address version and string version too
-    getMinerPubKeyHash(): Buffer {
-        return this.minerPubKeyHash;
-    }
-
-    getMinerPubKeyHashHex(): string {
-        return this.minerPubKeyHash.toString('hex');
+    minerPubKeyHash(): Digest20 {
+        return this.MinerPubKeyHash;
     }
 
     getSignature(): Buffer {
@@ -128,7 +125,7 @@ export class BoostPowJobProofModel {
             nonce: this.Nonce.hex(),
             extraNonce1: this.ExtraNonce1.hex(),
             extraNonce2: this.ExtraNonce2.hex(),
-            minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
+            minerPubKeyHash: this.MinerPubKeyHash.hex(),
         };
     }
 
@@ -158,7 +155,7 @@ export class BoostPowJobProofModel {
         buildOut.add(this.ExtraNonce1.buffer());
 
         // Add miner address
-        buildOut.add(this.minerPubKeyHash);
+        buildOut.add(this.MinerPubKeyHash.buffer());
 
         for (let i = 0; i < buildOut.chunks.length ; i++) {
             if (!buildOut.checkMinimalPush(i)) {
@@ -246,7 +243,7 @@ export class BoostPowJobProofModel {
 
             extraNonce2 = new UInt32Big(script.chunks[4].buf);
             extraNonce1 = new UInt64Big(script.chunks[5].buf);
-            minerPubKeyHash = script.chunks[6].buf;
+            minerPubKeyHash = new Digest20(script.chunks[6].buf);
 
             return new BoostPowJobProofModel(
                 signature,
@@ -308,7 +305,7 @@ export class BoostPowJobProofModel {
 
             extraNonce2 = new UInt32Big(script.chunks[4].buf);
             extraNonce1 = new UInt64Big(script.chunks[5].buf);
-            minerPubKeyHash = script.chunks[6].buf;
+            minerPubKeyHash = new Digest20(script.chunks[6].buf);
 
             return new BoostPowJobProofModel(
                 signature,

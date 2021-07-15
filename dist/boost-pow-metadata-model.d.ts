@@ -3,9 +3,10 @@ import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
 import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
 export declare class BoostPowMetadataModel {
     private tag;
-    private minerPubKeyHash;
+    private MinerPubKeyHash;
     private ExtraNonce1;
     private ExtraNonce2;
     private UserNonce;
@@ -30,8 +31,7 @@ export declare class BoostPowMetadataModel {
     getTag(): Buffer;
     getTagUtf8(): string;
     getTagString(): string;
-    getMinerPubKeyHash(): Buffer;
-    getMinerPubKeyHashUtf8(): string;
+    minerPubKeyHash(): Digest20;
     userNonce(): UInt32Little;
     extraNonce1(): UInt32Big;
     extraNonce2(): UInt64Big;

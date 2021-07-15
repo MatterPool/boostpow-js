@@ -466,8 +466,8 @@ describe("boost integration test ", () => {
   });
 
   it("should get miner pubkey hash from solution", async () => {
-    expect(solution.getMinerPubKeyHash()).to.eql(minerPubKeyHashBuffer);
-    expect(solution.getMinerPubKeyHashHex().toUpperCase()).to.eql(
+    expect(solution.minerPubKeyHash().buffer()).to.eql(minerPubKeyHashBuffer);
+    expect(solution.minerPubKeyHash().hex().toUpperCase()).to.eql(
       minerPubKeyHashHex
     );
   });
@@ -508,7 +508,7 @@ describe("boost integration test ", () => {
   });
 
   it("should get miner pubkey hash from metadata", async () => {
-    expect(metadata.getMinerPubKeyHash()).to.eql(minerPubKeyHashBuffer);
+    expect(metadata.minerPubKeyHash().buffer()).to.eql(minerPubKeyHashBuffer);
   });
 
   it("should get extra nonce 1 from metadata", async () => {
