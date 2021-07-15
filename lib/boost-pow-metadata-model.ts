@@ -1,14 +1,16 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
 import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
 
 export class BoostPowMetadataModel {
 
     private constructor(
         private tag: Buffer,
         private minerPubKeyHash: Buffer,
-        private extraNonce1: Buffer,
-        private extraNonce2: Buffer,
+        private ExtraNonce1: UInt32Big,
+        private ExtraNonce2: UInt64Big,
         private UserNonce: UInt32Little,
         private additionalData: Buffer
     ) {
@@ -26,8 +28,8 @@ export class BoostPowMetadataModel {
         return new BoostPowMetadataModel(
             new Buffer(params.tag, 'hex'),
             BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false),
-            BoostUtils.createBufferAndPad(params.extraNonce1, 4, false),
-            BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
+            new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)),
+            new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
             new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
             new Buffer(params.additionalData, 'hex'),
         );
@@ -45,8 +47,8 @@ export class BoostPowMetadataModel {
         return new BoostPowMetadataModel(
             params.tag,
             params.minerPubKeyHash,
-            params.extraNonce1,
-            params.extraNonce2,
+            new UInt32Big(params.extraNonce1),
+            new UInt64Big(params.extraNonce2),
             new UInt32Little(params.userNonce),
             params.additionalData,
         );
@@ -76,20 +78,12 @@ export class BoostPowMetadataModel {
         return this.UserNonce;
     }
 
-    getExtraNonce1Number(): number {
-        return parseInt(this.extraNonce1.toString('hex'), 16);
+    extraNonce1(): UInt32Big {
+        return this.ExtraNonce1;
     }
 
-    getExtraNonce1(): Buffer {
-        return this.extraNonce1;
-    }
-
-    getExtraNonce2Number(): number {
-        return parseInt(this.extraNonce2.toString('hex'), 16);
-    }
-
-    getExtraNonce2(): Buffer {
-        return this.extraNonce2;
+    extraNonce2(): UInt64Big {
+        return this.ExtraNonce2;
     }
 
     getAdditionalData(): Buffer {
@@ -124,8 +118,8 @@ export class BoostPowMetadataModel {
         return {
             tag: this.tag.toString('hex'),
             minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
-            extraNonce1: this.extraNonce1.toString('hex'),
-            extraNonce2: this.extraNonce2.toString('hex'),
+            extraNonce1: this.ExtraNonce1.hex(),
+            extraNonce2: this.ExtraNonce2.hex(),
             userNonce: this.UserNonce.hex(),
             additionalData: this.additionalData.toString('hex'),
         };
@@ -135,8 +129,8 @@ export class BoostPowMetadataModel {
         return Buffer.concat([
             this.tag,
             this.minerPubKeyHash,
-            this.extraNonce1,
-            this.extraNonce2,
+            this.ExtraNonce1.buffer(),
+            this.ExtraNonce2.buffer(),
             this.UserNonce.buffer(),
             this.additionalData
         ]);

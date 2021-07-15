@@ -1,6 +1,8 @@
 /// <reference types="node" />
 import * as bsv from 'bsv';
 import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
 /**
  * Responsible for redeem script proof that work was done.
  * This gets combined with BoostPowJobModel
@@ -9,8 +11,8 @@ export declare class BoostPowJobProofModel {
     private signature;
     private minerPubKey;
     private Time;
-    private extraNonce1;
-    private extraNonce2;
+    private ExtraNonce1;
+    private ExtraNonce2;
     private Nonce;
     private minerPubKeyHash;
     private txid?;
@@ -28,10 +30,8 @@ export declare class BoostPowJobProofModel {
         minerPubKeyHash?: string;
     }): BoostPowJobProofModel;
     time(): UInt32Little;
-    getExtraNonce1Number(): number;
-    getExtraNonce1(): Buffer;
-    getExtraNonce2Number(): number;
-    getExtraNonce2(): Buffer;
+    extraNonce1(): UInt32Big;
+    extraNonce2(): UInt64Big;
     nonce(): UInt32Little;
     getMinerPubKeyHash(): Buffer;
     getMinerPubKeyHashHex(): string;

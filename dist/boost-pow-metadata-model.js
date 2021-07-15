@@ -4,20 +4,22 @@ exports.BoostPowMetadataModel = void 0;
 const bsv = require("bsv");
 const boost_utils_1 = require("./boost-utils");
 const uint32Little_1 = require("./fields/uint32Little");
+const uint32Big_1 = require("./fields/uint32Big");
+const uint64Big_1 = require("./fields/uint64Big");
 class BoostPowMetadataModel {
-    constructor(tag, minerPubKeyHash, extraNonce1, extraNonce2, UserNonce, additionalData) {
+    constructor(tag, minerPubKeyHash, ExtraNonce1, ExtraNonce2, UserNonce, additionalData) {
         this.tag = tag;
         this.minerPubKeyHash = minerPubKeyHash;
-        this.extraNonce1 = extraNonce1;
-        this.extraNonce2 = extraNonce2;
+        this.ExtraNonce1 = ExtraNonce1;
+        this.ExtraNonce2 = ExtraNonce2;
         this.UserNonce = UserNonce;
         this.additionalData = additionalData;
     }
     static fromObject(params) {
-        return new BoostPowMetadataModel(new Buffer(params.tag, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false), boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), new Buffer(params.additionalData, 'hex'));
+        return new BoostPowMetadataModel(new Buffer(params.tag, 'hex'), boost_utils_1.BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new uint64Big_1.UInt64Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), new Buffer(params.additionalData, 'hex'));
     }
     static fromBuffer(params) {
-        return new BoostPowMetadataModel(params.tag, params.minerPubKeyHash, params.extraNonce1, params.extraNonce2, new uint32Little_1.UInt32Little(params.userNonce), params.additionalData);
+        return new BoostPowMetadataModel(params.tag, params.minerPubKeyHash, new uint32Big_1.UInt32Big(params.extraNonce1), new uint64Big_1.UInt64Big(params.extraNonce2), new uint32Little_1.UInt32Little(params.userNonce), params.additionalData);
     }
     getTag() {
         return this.tag;
@@ -37,17 +39,11 @@ class BoostPowMetadataModel {
     userNonce() {
         return this.UserNonce;
     }
-    getExtraNonce1Number() {
-        return parseInt(this.extraNonce1.toString('hex'), 16);
+    extraNonce1() {
+        return this.ExtraNonce1;
     }
-    getExtraNonce1() {
-        return this.extraNonce1;
-    }
-    getExtraNonce2Number() {
-        return parseInt(this.extraNonce2.toString('hex'), 16);
-    }
-    getExtraNonce2() {
-        return this.extraNonce2;
+    extraNonce2() {
+        return this.ExtraNonce2;
     }
     getAdditionalData() {
         return this.additionalData;
@@ -74,8 +70,8 @@ class BoostPowMetadataModel {
         return {
             tag: this.tag.toString('hex'),
             minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
-            extraNonce1: this.extraNonce1.toString('hex'),
-            extraNonce2: this.extraNonce2.toString('hex'),
+            extraNonce1: this.ExtraNonce1.hex(),
+            extraNonce2: this.ExtraNonce2.hex(),
             userNonce: this.UserNonce.hex(),
             additionalData: this.additionalData.toString('hex'),
         };
@@ -84,8 +80,8 @@ class BoostPowMetadataModel {
         return Buffer.concat([
             this.tag,
             this.minerPubKeyHash,
-            this.extraNonce1,
-            this.extraNonce2,
+            this.ExtraNonce1.buffer(),
+            this.ExtraNonce2.buffer(),
             this.UserNonce.buffer(),
             this.additionalData
         ]);

@@ -470,13 +470,12 @@ describe("boost integration test ", () => {
   });
 
   it("should get extra nonce 1 from solution", async () => {
-    expect(solution.getExtraNonce1Number()).to.eql(extraNonce1Number);
-    expect(solution.getExtraNonce1()).to.eql(extraNonce1Buffer);
+    expect(solution.extraNonce1().number()).to.eql(extraNonce1Number);
+    expect(solution.extraNonce1().buffer()).to.eql(extraNonce1Buffer);
   });
 
   it("should get extra nonce 2 from solution", async () => {
-    expect(solution.getExtraNonce2Number()).to.eql(extraNonce2Number);
-    expect(solution.getExtraNonce2()).to.eql(extraNonce2Buffer);
+    expect(solution.extraNonce2().buffer()).to.eql(extraNonce2Buffer);
   });
 
   // check valid metadata
@@ -510,13 +509,12 @@ describe("boost integration test ", () => {
   });
 
   it("should get extra nonce 1 from metadata", async () => {
-    expect(metadata.getExtraNonce1Number()).to.eql(extraNonce1Number);
-    expect(metadata.getExtraNonce1()).to.eql(extraNonce1Buffer);
+    expect(metadata.extraNonce1().number()).to.eql(extraNonce1Number);
+    expect(metadata.extraNonce1().buffer()).to.eql(extraNonce1Buffer);
   });
 
   it("should get extra nonce 2 from metadata", async () => {
-    expect(metadata.getExtraNonce2Number()).to.eql(extraNonce2Number);
-    expect(metadata.getExtraNonce2()).to.eql(extraNonce2Buffer);
+    expect(metadata.extraNonce2().buffer()).to.eql(extraNonce2Buffer);
   });
 
   // check valid string

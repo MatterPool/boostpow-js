@@ -497,8 +497,8 @@ export class BoostPowJobModel {
            .add(privKey.toPublicKey().toBuffer())
            .add(boostPowJobProof.nonce().buffer())
            .add(boostPowJobProof.time().buffer())
-           .add(boostPowJobProof.getExtraNonce2())
-           .add(boostPowJobProof.getExtraNonce1())
+           .add(boostPowJobProof.extraNonce2().buffer())
+           .add(boostPowJobProof.extraNonce1().buffer())
            .add(boostPowJobProof.getMinerPubKeyHash());
 
         tx.inputs[0].setScript(unlockingScript);
@@ -509,8 +509,8 @@ export class BoostPowJobModel {
         return BoostPowMetadataModel.fromBuffer({
             tag: boostPowJob.getTagBuffer(),
             minerPubKeyHash: boostPowJobProof.getMinerPubKeyHash(),
-            extraNonce1: boostPowJobProof.getExtraNonce1(),
-            extraNonce2: boostPowJobProof.getExtraNonce2(),
+            extraNonce1: boostPowJobProof.extraNonce1().buffer(),
+            extraNonce2: boostPowJobProof.extraNonce2().buffer(),
             userNonce: boostPowJob.userNonce().buffer(),
             additionalData: boostPowJob.getAdditionalDataBuffer(),
         });
