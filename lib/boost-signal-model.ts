@@ -1,4 +1,5 @@
 import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import * as bsv from 'bsv';
@@ -66,10 +67,11 @@ export class BoostSignalModel {
     public metadataHash(): string {
         return this.boostPowString.metadataHash();
     }
-    public time(): number {
+
+    public time(): UInt32Little {
         return this.boostPowString.time();
     }
-    public nonce(): number {
+    public nonce(): UInt32Little {
         return this.boostPowString.nonce();
     }
 

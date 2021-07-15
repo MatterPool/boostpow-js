@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowStringModel {
     private _blockheader;
@@ -16,8 +17,8 @@ export declare class BoostPowStringModel {
     contentString(trimLeadingNulls?: boolean): string;
     bits(): number;
     metadataHash(): string;
-    nonce(): number;
-    time(): number;
+    nonce(): UInt32Little;
+    time(): UInt32Little;
     static nBitsHexToDifficultyNumber(nbits: string): number;
     getTargetAsNumberBuffer(): any;
     static difficultyNumberToNBitsHex(diff: number): string;

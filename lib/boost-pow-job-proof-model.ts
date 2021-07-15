@@ -1,5 +1,6 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
+import { UInt32Little } from './fields/uint32Little';
 
 /**
  * Responsible for redeem script proof that work was done.
@@ -10,10 +11,10 @@ export class BoostPowJobProofModel {
     private constructor(
         private signature: Buffer,
         private minerPubKey: Buffer,
-        private time: Buffer,
+        private Time: UInt32Little,
         private extraNonce1: Buffer,
         private extraNonce2: Buffer,
-        private nonce: Buffer,
+        private Nonce: UInt32Little,
         private minerPubKeyHash: Buffer,
         // Optional tx information attached or not
         private txid?: string,
@@ -67,24 +68,16 @@ export class BoostPowJobProofModel {
         return new BoostPowJobProofModel(
             Buffer.from(params.signature, 'hex'),
             minerPubKey,
-            BoostUtils.createBufferAndPad(params.time, 4, false),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.time, 4, false)),
             BoostUtils.createBufferAndPad(params.extraNonce1, 4,false),
             BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.nonce, 4, false),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
             Buffer.from(minerPubKeyHash, 'hex'),
         );
     }
 
-    getTime(): Buffer {
-        return this.time;
-    }
-
-    getTimeNumber(): number {
-        return this.time.readUInt32LE();
-    }
-
-    getTimeBuffer(): Buffer {
-        return this.time;
+    time(): UInt32Little {
+        return this.Time;
     }
 
     getExtraNonce1Number(): number {
@@ -103,12 +96,8 @@ export class BoostPowJobProofModel {
         return this.extraNonce2;
     }
 
-    getNonceNumber(): number {
-        return this.nonce.readUInt32LE();
-    }
-
-    getNonce(): Buffer {
-        return this.nonce;
+    nonce(): UInt32Little {
+        return this.Nonce;
     }
 
     // Should add bsv.Address version and string version too
@@ -141,8 +130,8 @@ export class BoostPowJobProofModel {
             // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
             signature: this.signature.toString('hex'),
             minerPubKey: this.minerPubKey.toString('hex'),
-            time: this.time.toString('hex'),
-            nonce: this.nonce.toString('hex'),
+            time: this.Time.hex(),
+            nonce: this.Nonce.hex(),
             extraNonce1: this.extraNonce1.toString('hex'),
             extraNonce2: this.extraNonce2.toString('hex'),
             minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
@@ -163,10 +152,10 @@ export class BoostPowJobProofModel {
         buildOut.add(this.minerPubKey);
 
         // Add miner nonce
-        buildOut.add(Buffer.from(this.nonce));
+        buildOut.add(this.Nonce.buffer());
 
         // Add time
-        buildOut.add(Buffer.from(this.time));
+        buildOut.add(this.Time.buffer());
 
         // Add extra nonce2
         buildOut.add(this.extraNonce2);
@@ -258,8 +247,8 @@ export class BoostPowJobProofModel {
         ) {
             signature = script.chunks[0].buf;
             minerPubKey = script.chunks[1].buf;
-            nonce = script.chunks[2].buf;
-            time = script.chunks[3].buf;
+            nonce = new UInt32Little(script.chunks[2].buf);
+            time = new UInt32Little(script.chunks[3].buf);
 
             extraNonce2 = script.chunks[4].buf;
             extraNonce1 = script.chunks[5].buf;
@@ -320,8 +309,8 @@ export class BoostPowJobProofModel {
         ) {
             signature = script.chunks[0].buf;
             minerPubKey = script.chunks[1].buf;
-            nonce = script.chunks[2].buf;
-            time = script.chunks[3].buf;
+            nonce = new UInt32Little(script.chunks[2].buf);
+            time = new UInt32Little(script.chunks[3].buf);
 
             extraNonce2 = script.chunks[4].buf;
             extraNonce1 = script.chunks[5].buf;

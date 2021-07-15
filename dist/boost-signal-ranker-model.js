@@ -15,11 +15,11 @@ class BoostSignalRankerModel {
             this.totalDifficulty_ += signal.difficulty();
         }
         for (const sig of this.boostSignals) {
-            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time()) {
-                this.lastSignalTime_ = sig.time();
+            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time().number()) {
+                this.lastSignalTime_ = sig.time().number();
             }
-            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time()) {
-                this.recentSignalTime_ = sig.time();
+            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time().number()) {
+                this.recentSignalTime_ = sig.time().number();
             }
         }
     }

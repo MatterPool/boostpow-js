@@ -252,8 +252,8 @@ describe("BoostPowString", () => {
     expect(boostPowString.metadataHash()).to.eql(
       "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a"
     );
-    expect(boostPowString.time()).to.eql(1305200806);
-    expect(boostPowString.nonce()).to.eql(3698479534);
+    expect(boostPowString.time().number()).to.eql(1305200806);
+    expect(boostPowString.nonce().number()).to.eql(3698479534);
     expect(boostPowString.category().number()).to.eql(1);
   });
 });
@@ -453,13 +453,13 @@ describe("boost integration test ", () => {
   });
 
   it("should get nonce", async () => {
-    expect(solution.getNonceNumber()).to.eql(nonceNumber);
-    expect(solution.getNonce()).to.eql(nonceBuffer);
+    expect(solution.nonce().number()).to.eql(nonceNumber);
+    expect(solution.nonce().buffer()).to.eql(nonceBuffer);
   });
 
   it("should get time", async () => {
-    expect(solution.getTimeNumber()).to.eql(timeNumber);
-    expect(solution.getTime()).to.eql(timeBuffer);
+    expect(solution.time().number()).to.eql(timeNumber);
+    expect(solution.time().buffer()).to.eql(timeBuffer);
   });
 
   it("should get miner pubkey hash from solution", async () => {
@@ -533,8 +533,8 @@ describe("boost integration test ", () => {
     expect(proof.boostPowString.contentString()).to.eql(contentString);
     expect(proof.boostPowString.contentBuffer()).to.eql(contentBuffer);
 
-    expect(proof.boostPowString.nonce()).to.eql(nonceNumber);
-    expect(proof.boostPowString.time()).to.eql(timeNumber);
+    expect(proof.boostPowString.nonce().number()).to.eql(nonceNumber);
+    expect(proof.boostPowString.time().number()).to.eql(timeNumber);
     expect(proof.boostPowString.category().number()).to.eql(categoryNumber);
     expect(proof.boostPowString.bits()).to.eql(compactNumber);
     expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(

@@ -384,8 +384,8 @@ class BoostPowJobModel {
             Buffer.from([sigtype & 0xff])
         ]))
             .add(privKey.toPublicKey().toBuffer())
-            .add(boostPowJobProof.getNonce())
-            .add(boostPowJobProof.getTime())
+            .add(boostPowJobProof.nonce().buffer())
+            .add(boostPowJobProof.time().buffer())
             .add(boostPowJobProof.getExtraNonce2())
             .add(boostPowJobProof.getExtraNonce1())
             .add(boostPowJobProof.getMinerPubKeyHash());
@@ -409,9 +409,9 @@ class BoostPowJobModel {
             console.log('category', boostPowJob.category().hex(), boostPowJob.category().buffer().byteLength);
             console.log('content', boostPowJob.getContentBuffer().toString('hex'), boostPowJob.getContentBuffer().byteLength);
             console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
-            console.log('time', boostPowJobProof.getTime().toString('hex'), boostPowJobProof.getTime().byteLength);
+            console.log('time', boostPowJobProof.time().hex(), boostPowJobProof.time().buffer().byteLength);
             console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
-            console.log('nonce', boostPowJobProof.getNonce().toString('hex'), boostPowJobProof.getNonce().byteLength);
+            console.log('nonce', boostPowJobProof.nonce().hex(), boostPowJobProof.nonce().buffer().byteLength);
             console.log('userNonce', boostPowJob.userNonce().hex(), boostPowJob.userNonce().buffer().byteLength);
             console.log("metadata hash:", boostPowMetadataCoinbaseString.hashAsBuffer().toString('hex'));
         }
@@ -419,9 +419,9 @@ class BoostPowJobModel {
             boostPowJob.category().buffer(),
             boostPowJob.getContentBuffer(),
             boostPowMetadataCoinbaseString.hashAsBuffer(),
-            boostPowJobProof.getTime(),
+            boostPowJobProof.time().buffer(),
             boostPowJob.getTargetAsNumberBuffer(),
-            boostPowJobProof.getNonce(),
+            boostPowJobProof.nonce().buffer(),
         ]);
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
         if (debug) {

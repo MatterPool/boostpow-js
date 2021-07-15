@@ -8,7 +8,7 @@ import { BoostUtils } from './boost-utils';
 export class BoostPowStringModel {
     private _blockheader;
     private _metadata;
-    
+
     constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel) {
         this._blockheader = blockheader;
         if (!this._blockheader.validProofOfWork()) {
@@ -67,12 +67,12 @@ export class BoostPowStringModel {
         return this.toObject().metadataHash;
     }
 
-    nonce(): number {
-        return this.toObject().nonce;
+    nonce(): UInt32Little {
+        return UInt32Little.fromNumber(this._blockheader.nonce);
     }
 
-    time(): number {
-        return this.toObject().time;
+    time(): UInt32Little {
+        return UInt32Little.fromNumber(this._blockheader.time);
     }
 
     static nBitsHexToDifficultyNumber(nbits: string): number {
