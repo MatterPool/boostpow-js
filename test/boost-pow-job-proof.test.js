@@ -16,6 +16,7 @@ describe("boost #BoostPowJobProof", () => {
       time: "12300009",
       nonce: "00000005",
     });
+
     const jobObj = jobProof.toObject();
     expect(jobObj).to.eql({
       signature:
@@ -28,9 +29,11 @@ describe("boost #BoostPowJobProof", () => {
       time: "12300009",
       nonce: "00000005",
     });
+
     expect(jobProof.toHex()).to.eql(
       "20000000000000000000000000000000000000000000000000000000000000000621000000000000000000000000000000000000000000000000000000000000000006040000000504123000090800000003000000030402000000140000000000000000000000000000000000000001"
     );
+
     const fromHex = index.BoostPowJobProof.fromHex(
       "20000000000000000000000000000000000000000000000000000000000000000621000000000000000000000000000000000000000000000000000000000000000006040000000504123000090800000003000000030402000000140000000000000000000000000000000000000001"
     );
@@ -100,8 +103,8 @@ describe("boost #BoostPowJobProof", () => {
         "3045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a97757641",
       time: "b851825e",
     });
-    expect(jobProof.getTimeNumber()).to.eql(1585598904);
-    expect(jobProof.getNonceNumber()).to.eql(2964235106);
+    expect(jobProof.time().number()).to.eql(1585598904);
+    expect(jobProof.nonce().number()).to.eql(2964235106);
     expect(jobProof.getTxid()).to.eql(
       "5fc289d2b04e98ca9ffb0156f5c66b9dac38af65630ea45ac8508a716af1e9b3"
     );
@@ -128,8 +131,8 @@ describe("boost #BoostPowJobProof", () => {
         "3045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a97757641",
       time: "b851825e",
     });
-    expect(jobProof.getTimeNumber()).to.eql(1585598904);
-    expect(jobProof.getNonceNumber()).to.eql(2964235106);
+    expect(jobProof.time().number()).to.eql(1585598904);
+    expect(jobProof.nonce().number()).to.eql(2964235106);
     expect(jobProof.getTxid()).to.eql(undefined);
     expect(jobProof.getVin()).to.eql(undefined);
   });
@@ -176,14 +179,15 @@ describe("boost #BoostPowJobProof", () => {
       time: "12300009",
       nonce: "30000002",
     });
-    expect(jobProof.getSignatureHex()).to.eql(
+    expect(jobProof.signature().hex()).to.eql(
       "0000000000000000000000000000000000000000000000000000000000000001"
     );
 
-    expect(jobProof.getMinerPubKeyHex()).to.eql(
+    expect(jobProof.minerPubKey().hex()).to.eql(
       "020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65"
     );
-    expect(jobProof.getMinerPubKeyHashHex()).to.eql(
+
+    expect(jobProof.minerPubKeyHash().hex()).to.eql(
       "9fb8cb68b8850a13c7438e26e1d277b748be657a"
     );
   });

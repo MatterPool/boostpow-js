@@ -1,15 +1,21 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
+import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
+import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 
 export class BoostPowMetadataModel {
 
     private constructor(
-        private tag: Buffer,
-        private minerPubKeyHash: Buffer,
-        private extraNonce1: Buffer,
-        private extraNonce2: Buffer,
-        private userNonce: Buffer,
-        private additionalData: Buffer
+        private Tag: Bytes,
+        private MinerPubKeyHash: Digest20,
+        private ExtraNonce1: UInt32Big,
+        private ExtraNonce2: UInt64Big,
+        private UserNonce: UInt32Little,
+        private AdditionalData: Bytes
     ) {
     }
 
@@ -23,12 +29,12 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            new Buffer(params.tag, 'hex'),
-            BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false),
-            BoostUtils.createBufferAndPad(params.extraNonce1, 4, false),
-            BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
-            new Buffer(params.additionalData, 'hex'),
+            new Bytes(new Buffer(params.tag, 'hex')),
+            new Digest20(BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false)),
+            new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)),
+            new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
+            new Bytes(new Buffer(params.additionalData, 'hex')),
         );
     }
 
@@ -42,125 +48,70 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            params.tag,
-            params.minerPubKeyHash,
-            params.extraNonce1,
-            params.extraNonce2,
-            params.userNonce,
-            params.additionalData,
+            new Bytes(params.tag),
+            new Digest20(params.minerPubKeyHash),
+            new UInt32Big(params.extraNonce1),
+            new UInt64Big(params.extraNonce2),
+            new UInt32Little(params.userNonce),
+            new Bytes(params.additionalData),
         );
     }
-    public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
-        }
+
+    tag(): Bytes {
+        return this.Tag;
     }
 
-    getTag(): Buffer {
-        return this.tag;
+    minerPubKeyHash(): Digest20 {
+        return this.MinerPubKeyHash;
     }
 
-    getTagUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.tag).toString('hex'), true);
+    userNonce(): UInt32Little {
+        return this.UserNonce;
     }
 
-    getTagString(): string {
-        return this.getTagUtf8();
+    extraNonce1(): UInt32Big {
+        return this.ExtraNonce1;
     }
 
-    getMinerPubKeyHash(): Buffer {
-        return this.minerPubKeyHash;
+    extraNonce2(): UInt64Big {
+        return this.ExtraNonce2;
     }
 
-    getMinerPubKeyHashUtf8(): string {
-        return this.minerPubKeyHash.toString('hex');
+    additionalData(): Bytes {
+        return this.AdditionalData;
     }
 
-    getUserNonce(): Buffer {
-        return this.userNonce;
-    }
-
-    getUserNonceUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.userNonce).reverse().toString('hex'), true);
-    }
-
-    getUserNonceNumber(): number {
-        return this.userNonce.readUInt32LE();
-    }
-
-    getExtraNonce1Number(): number {
-        return parseInt(this.extraNonce1.toString('hex'), 16);
-    }
-
-    getExtraNonce1(): Buffer {
-        return this.extraNonce1;
-    }
-
-    getExtraNonce2Number(): number {
-        return parseInt(this.extraNonce2.toString('hex'), 16);
-    }
-
-    getExtraNonce2(): Buffer {
-        return this.extraNonce2;
-    }
-
-    getAdditionalData(): Buffer {
-        return this.additionalData;
-    }
-
-    getAdditionalDataUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.additionalData).toString('hex'), true);
-    }
-
-    getAdditionalDataString(): string {
-        return this.getAdditionalDataUtf8();
-    }
-
-    toString() {
-        return Buffer.concat([
-            this.tag,
-            this.minerPubKeyHash,
-            this.extraNonce1,
-            this.extraNonce2,
-            this.userNonce,
-            this.additionalData
-        ]).toString('hex');
+    toString(): string {
+        return this.toBuffer().toString('hex');
     }
 
     getCoinbaseString() {
         return this.toString();
     }
 
-    hash() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer()).reverse().toString('hex');
-    }
-
-    hashAsBuffer() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer());
+    hash(): Digest32 {
+        return new Digest32(bsv.crypto.Hash.sha256sha256(this.toBuffer()));
     }
 
     toObject () {
         return {
-            tag: this.tag.toString('hex'),
-            minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
-            extraNonce1: this.extraNonce1.toString('hex'),
-            extraNonce2: this.extraNonce2.toString('hex'),
-            userNonce: this.userNonce.toString('hex'),
-            additionalData: this.additionalData.toString('hex'),
+            tag: this.Tag.hex(),
+            minerPubKeyHash: this.MinerPubKeyHash.hex(),
+            extraNonce1: this.ExtraNonce1.hex(),
+            extraNonce2: this.ExtraNonce2.hex(),
+            userNonce: this.UserNonce.hex(),
+            additionalData: this.AdditionalData.hex(),
         };
     }
 
     toBuffer(): Buffer {
         return Buffer.concat([
-            this.tag,
-            this.minerPubKeyHash,
-            this.extraNonce1,
-            this.extraNonce2,
-            this.userNonce,
-            this.additionalData
+            this.Tag.buffer(),
+            this.MinerPubKeyHash.buffer(),
+            this.ExtraNonce1.buffer(),
+            this.ExtraNonce2.buffer(),
+            this.UserNonce.buffer(),
+            this.AdditionalData.buffer()
         ]);
     }
 

@@ -1,4 +1,7 @@
 import * as bsv from 'bsv';
+import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
@@ -6,6 +9,7 @@ import { BoostUtils } from './boost-utils';
 export class BoostPowStringModel {
     private _blockheader;
     private _metadata;
+
     constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel) {
         this._blockheader = blockheader;
         if (!this._blockheader.validProofOfWork()) {
@@ -13,36 +17,33 @@ export class BoostPowStringModel {
         }
 
         if (metadata) {
-            if (!this._blockheader.merkleRoot !== metadata.hash()) {
+            if (this._blockheader.merkleRoot !== metadata.hash().hex()) {
                 throw new Error('INVALID_METADATA');
             }
             this._metadata = metadata;
         }
     }
+
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
-    boosthash(): string {
-        return this._blockheader.hash;
-    }
-    hashBuffer() : Buffer {
-        // todo: IS THIS THE RIGHT PLACE???
-        return Buffer.from(this._blockheader.hash,"hex").reverse();
+    boostHash(): Digest32 {
+        return this.hash();
     }
 
-    hash(): string {
-        return this._blockheader.hash;
+    hash(): Digest32 {
+        return Digest32.fromHex(this._blockheader.hash);
     }
 
-    id(): string {
-        return this._blockheader.hash;
+    id(): Digest32 {
+        return this.hash();
     }
 
-    contentHex(): string {
-        return this.toObject().content;
+    category(): Int32Little {
+      return Int32Little.fromNumber(this._blockheader.version);
     }
 
-    contentBuffer(): Buffer {
-        return new Buffer(this.toObject().content,'hex').reverse();
+    content(): Digest32 {
+        return new Digest32(new Buffer(this.toObject().content,'hex').reverse());
     }
 
     contentString(trimLeadingNulls = true): string {
@@ -54,20 +55,16 @@ export class BoostPowStringModel {
         return this.toObject().bits;
     }
 
-    metadataHash(): string {
-        return this.toObject().metadataHash;
+    metadataHash(): Digest32 {
+        return new Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
     }
 
-    nonce(): number {
-        return this.toObject().nonce;
+    nonce(): UInt32Little {
+        return UInt32Little.fromNumber(this._blockheader.nonce);
     }
 
-    time(): number {
-        return this.toObject().time;
-    }
-
-    category(): number {
-        return this.toObject().category;
+    time(): UInt32Little {
+        return UInt32Little.fromNumber(this._blockheader.time);
     }
 
     static nBitsHexToDifficultyNumber(nbits: string): number {
@@ -197,6 +194,7 @@ export class BoostPowStringModel {
     difficulty() : number {
         return this._blockheader.getDifficulty();
     }
+
     targetDifficulty(bits?: number) {
         return this._blockheader.getTargetDifficulty(bits);
     }

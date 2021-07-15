@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
+const int32Little_1 = require("./fields/int32Little");
+const uint32Little_1 = require("./fields/uint32Little");
+const digest32_1 = require("./fields/digest32");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowStringModel {
     constructor(blockheader, metadata) {
@@ -10,7 +13,7 @@ class BoostPowStringModel {
             throw new Error('INVALID_POW');
         }
         if (metadata) {
-            if (!this._blockheader.merkleRoot !== metadata.hash()) {
+            if (this._blockheader.merkleRoot !== metadata.hash().hex()) {
                 throw new Error('INVALID_METADATA');
             }
             this._metadata = metadata;
@@ -18,24 +21,20 @@ class BoostPowStringModel {
     }
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
-    boosthash() {
-        return this._blockheader.hash;
-    }
-    hashBuffer() {
-        // todo: IS THIS THE RIGHT PLACE???
-        return Buffer.from(this._blockheader.hash, "hex").reverse();
+    boostHash() {
+        return this.hash();
     }
     hash() {
-        return this._blockheader.hash;
+        return digest32_1.Digest32.fromHex(this._blockheader.hash);
     }
     id() {
-        return this._blockheader.hash;
+        return this.hash();
     }
-    contentHex() {
-        return this.toObject().content;
+    category() {
+        return int32Little_1.Int32Little.fromNumber(this._blockheader.version);
     }
-    contentBuffer() {
-        return new Buffer(this.toObject().content, 'hex').reverse();
+    content() {
+        return new digest32_1.Digest32(new Buffer(this.toObject().content, 'hex').reverse());
     }
     contentString(trimLeadingNulls = true) {
         var content = new Buffer(this._blockheader.toObject().prevHash, 'hex');
@@ -45,16 +44,13 @@ class BoostPowStringModel {
         return this.toObject().bits;
     }
     metadataHash() {
-        return this.toObject().metadataHash;
+        return new digest32_1.Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
     }
     nonce() {
-        return this.toObject().nonce;
+        return uint32Little_1.UInt32Little.fromNumber(this._blockheader.nonce);
     }
     time() {
-        return this.toObject().time;
-    }
-    category() {
-        return this.toObject().category;
+        return uint32Little_1.UInt32Little.fromNumber(this._blockheader.time);
     }
     static nBitsHexToDifficultyNumber(nbits) {
         return boost_utils_1.BoostUtils.getTargetDifficulty(parseInt(nbits, 16));

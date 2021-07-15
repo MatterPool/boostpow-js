@@ -1,5 +1,10 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
+import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
+import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 
 /**
  * Responsible for redeem script proof that work was done.
@@ -8,13 +13,13 @@ import { BoostUtils } from './boost-utils';
 export class BoostPowJobProofModel {
 
     private constructor(
-        private signature: Buffer,
-        private minerPubKey: Buffer,
-        private time: Buffer,
-        private extraNonce1: Buffer,
-        private extraNonce2: Buffer,
-        private nonce: Buffer,
-        private minerPubKeyHash: Buffer,
+        private Signature: Bytes,
+        private MinerPubKey: Bytes,
+        private Time: UInt32Little,
+        private ExtraNonce1: UInt32Big,
+        private ExtraNonce2: UInt64Big,
+        private Nonce: UInt32Little,
+        private MinerPubKeyHash: Digest20,
         // Optional tx information attached or not
         private txid?: string,
         private vin?: number,
@@ -65,87 +70,55 @@ export class BoostPowJobProofModel {
         }
 
         return new BoostPowJobProofModel(
-            Buffer.from(params.signature, 'hex'),
-            minerPubKey,
-            BoostUtils.createBufferAndPad(params.time, 4, false),
-            BoostUtils.createBufferAndPad(params.extraNonce1, 4,false),
-            BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.nonce, 4, false),
-            Buffer.from(minerPubKeyHash, 'hex'),
+            new Bytes(Buffer.from(params.signature, 'hex')),
+            new Bytes(minerPubKey),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.time, 4, false)),
+            new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4,false)),
+            new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
+            new Digest20(Buffer.from(minerPubKeyHash, 'hex')),
         );
     }
 
-    getTime(): Buffer {
-        return this.time;
+    time(): UInt32Little {
+        return this.Time;
     }
 
-    getTimeNumber(): number {
-        return this.time.readUInt32LE();
+    extraNonce1(): UInt32Big {
+        return this.ExtraNonce1;
     }
 
-    getTimeBuffer(): Buffer {
-        return this.time;
+    extraNonce2(): UInt64Big {
+        return this.ExtraNonce2;
     }
 
-    getExtraNonce1Number(): number {
-        return parseInt(this.extraNonce1.toString('hex'), 16);
-    }
-
-    getExtraNonce1(): Buffer {
-        return this.extraNonce1;
-    }
-
-    getExtraNonce2Number(): number {
-        return parseInt(this.extraNonce2.toString('hex'), 16);
-    }
-
-    getExtraNonce2(): Buffer {
-        return this.extraNonce2;
-    }
-
-    getNonceNumber(): number {
-        return this.nonce.readUInt32LE();
-    }
-
-    getNonce(): Buffer {
-        return this.nonce;
+    nonce(): UInt32Little {
+        return this.Nonce;
     }
 
     // Should add bsv.Address version and string version too
-    getMinerPubKeyHash(): Buffer {
-        return this.minerPubKeyHash;
+    minerPubKeyHash(): Digest20 {
+        return this.MinerPubKeyHash;
     }
 
-    getMinerPubKeyHashHex(): string {
-        return this.minerPubKeyHash.toString('hex');
+    signature(): Bytes {
+        return this.Signature;
     }
 
-    getSignature(): Buffer {
-        return this.signature;
-    }
-
-    getSignatureHex(): string {
-        return this.signature.toString('hex');
-    }
-
-    getMinerPubKey(): Buffer {
-        return this.minerPubKey;
-    }
-
-    getMinerPubKeyHex(): string {
-        return this.minerPubKey.toString('hex');
+    minerPubKey(): Bytes {
+        return this.MinerPubKey;
     }
 
     toObject () {
         return {
             // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-            signature: this.signature.toString('hex'),
-            minerPubKey: this.minerPubKey.toString('hex'),
-            time: this.time.toString('hex'),
-            nonce: this.nonce.toString('hex'),
-            extraNonce1: this.extraNonce1.toString('hex'),
-            extraNonce2: this.extraNonce2.toString('hex'),
-            minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
+            signature: this.Signature.hex(),
+            minerPubKey: this.MinerPubKey.hex(),
+            time: this.Time.hex(),
+            nonce: this.Nonce.hex(),
+            extraNonce1: this.ExtraNonce1.hex(),
+            extraNonce2: this.ExtraNonce2.hex(),
+            minerPubKeyHash: this.MinerPubKeyHash.hex(),
         };
     }
 
@@ -153,29 +126,29 @@ export class BoostPowJobProofModel {
 
         let buildOut = bsv.Script();
         // Add signature
-     buildOut.add(this.signature);
+     buildOut.add(this.Signature.buffer());
        /* Buffer.concat([
             this.signature.toBuffer(),
             Buffer.from([sigtype & 0xff])
           ]*/
 
         // Add miner pub key
-        buildOut.add(this.minerPubKey);
+        buildOut.add(this.MinerPubKey.buffer());
 
         // Add miner nonce
-        buildOut.add(Buffer.from(this.nonce));
+        buildOut.add(this.Nonce.buffer());
 
         // Add time
-        buildOut.add(Buffer.from(this.time));
+        buildOut.add(this.Time.buffer());
 
         // Add extra nonce2
-        buildOut.add(this.extraNonce2);
+        buildOut.add(this.ExtraNonce2.buffer());
 
         // Add extra nonce 1
-        buildOut.add(this.extraNonce1);
+        buildOut.add(this.ExtraNonce1.buffer());
 
         // Add miner address
-        buildOut.add(this.minerPubKeyHash);
+        buildOut.add(this.MinerPubKeyHash.buffer());
 
         for (let i = 0; i < buildOut.chunks.length ; i++) {
             if (!buildOut.checkMinimalPush(i)) {
@@ -256,14 +229,14 @@ export class BoostPowJobProofModel {
             script.chunks[6].len
 
         ) {
-            signature = script.chunks[0].buf;
-            minerPubKey = script.chunks[1].buf;
-            nonce = script.chunks[2].buf;
-            time = script.chunks[3].buf;
+            signature = new Bytes(script.chunks[0].buf);
+            minerPubKey = new Bytes(script.chunks[1].buf);
+            nonce = new UInt32Little(script.chunks[2].buf);
+            time = new UInt32Little(script.chunks[3].buf);
 
-            extraNonce2 = script.chunks[4].buf;
-            extraNonce1 = script.chunks[5].buf;
-            minerPubKeyHash = script.chunks[6].buf;
+            extraNonce2 = new UInt32Big(script.chunks[4].buf);
+            extraNonce1 = new UInt64Big(script.chunks[5].buf);
+            minerPubKeyHash = new Digest20(script.chunks[6].buf);
 
             return new BoostPowJobProofModel(
                 signature,
@@ -318,14 +291,14 @@ export class BoostPowJobProofModel {
             script.chunks[6].len
 
         ) {
-            signature = script.chunks[0].buf;
-            minerPubKey = script.chunks[1].buf;
-            nonce = script.chunks[2].buf;
-            time = script.chunks[3].buf;
+            signature = new Bytes(script.chunks[0].buf);
+            minerPubKey = new Bytes(script.chunks[1].buf);
+            nonce = new UInt32Little(script.chunks[2].buf);
+            time = new UInt32Little(script.chunks[3].buf);
 
-            extraNonce2 = script.chunks[4].buf;
-            extraNonce1 = script.chunks[5].buf;
-            minerPubKeyHash = script.chunks[6].buf;
+            extraNonce2 = new UInt32Big(script.chunks[4].buf);
+            extraNonce1 = new UInt64Big(script.chunks[5].buf);
+            minerPubKeyHash = new Digest20(script.chunks[6].buf);
 
             return new BoostPowJobProofModel(
                 signature,

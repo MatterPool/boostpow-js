@@ -1,22 +1,22 @@
-/// <reference types="node" />
 import * as bsv from 'bsv';
+import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowStringModel {
     private _blockheader;
     private _metadata;
     constructor(blockheader: bsv.BlockHeader, metadata?: BoostPowMetadataModel);
-    boosthash(): string;
-    hashBuffer(): Buffer;
-    hash(): string;
-    id(): string;
-    contentHex(): string;
-    contentBuffer(): Buffer;
+    boostHash(): Digest32;
+    hash(): Digest32;
+    id(): Digest32;
+    category(): Int32Little;
+    content(): Digest32;
     contentString(trimLeadingNulls?: boolean): string;
     bits(): number;
-    metadataHash(): string;
-    nonce(): number;
-    time(): number;
-    category(): number;
+    metadataHash(): Digest32;
+    nonce(): UInt32Little;
+    time(): UInt32Little;
     static nBitsHexToDifficultyNumber(nbits: string): number;
     getTargetAsNumberBuffer(): any;
     static difficultyNumberToNBitsHex(diff: number): string;

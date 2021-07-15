@@ -1,11 +1,17 @@
 /// <reference types="node" />
+import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
+import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 export declare class BoostPowMetadataModel {
-    private tag;
-    private minerPubKeyHash;
-    private extraNonce1;
-    private extraNonce2;
-    private userNonce;
-    private additionalData;
+    private Tag;
+    private MinerPubKeyHash;
+    private ExtraNonce1;
+    private ExtraNonce2;
+    private UserNonce;
+    private AdditionalData;
     private constructor();
     static fromObject(params: {
         tag: string;
@@ -23,26 +29,15 @@ export declare class BoostPowMetadataModel {
         userNonce: Buffer;
         additionalData: Buffer;
     }): BoostPowMetadataModel;
-    trimBufferString(str: string, trimLeadingNulls?: boolean): string;
-    getTag(): Buffer;
-    getTagUtf8(): string;
-    getTagString(): string;
-    getMinerPubKeyHash(): Buffer;
-    getMinerPubKeyHashUtf8(): string;
-    getUserNonce(): Buffer;
-    getUserNonceUtf8(): string;
-    getUserNonceNumber(): number;
-    getExtraNonce1Number(): number;
-    getExtraNonce1(): Buffer;
-    getExtraNonce2Number(): number;
-    getExtraNonce2(): Buffer;
-    getAdditionalData(): Buffer;
-    getAdditionalDataUtf8(): string;
-    getAdditionalDataString(): string;
+    tag(): Bytes;
+    minerPubKeyHash(): Digest20;
+    userNonce(): UInt32Little;
+    extraNonce1(): UInt32Big;
+    extraNonce2(): UInt64Big;
+    additionalData(): Bytes;
     toString(): string;
     getCoinbaseString(): string;
-    hash(): any;
-    hashAsBuffer(): any;
+    hash(): Digest32;
     toObject(): {
         tag: string;
         minerPubKeyHash: string;

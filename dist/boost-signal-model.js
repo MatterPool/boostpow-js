@@ -43,20 +43,11 @@ class BoostSignalModel {
     energy() {
         return this.difficulty();
     }
-    content(hex) {
-        if (hex) {
-            return this.boostPowString.contentHex();
-        }
-        return this.boostPowString.contentString();
+    content() {
+        return this.boostPowString.content();
     }
-    category(hex) {
-        const category = this.boostPowString.category();
-        const cat = Buffer.allocUnsafe(4);
-        cat.writeUInt32BE(category, 0);
-        if (hex) {
-            return cat.toString('hex');
-        }
-        return cat.toString('utf8');
+    category() {
+        return this.boostPowString.category();
     }
     metadataHash() {
         return this.boostPowString.metadataHash();
@@ -67,38 +58,29 @@ class BoostSignalModel {
     nonce() {
         return this.boostPowString.nonce();
     }
-    tag(hex) {
+    tag() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getTag().toString('hex');
-        }
-        return this.boostPowMetadata.getTagUtf8();
+        return this.boostPowMetadata.tag();
     }
-    userNonce(hex) {
+    userNonce() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getUserNonce().toString('hex');
-        }
-        return this.boostPowMetadata.getUserNonceUtf8();
+        return this.boostPowMetadata.userNonce();
     }
-    additionalData(hex) {
+    additionalData() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getAdditionalData().toString('hex');
-        }
-        return this.boostPowMetadata.getAdditionalDataUtf8();
+        return this.boostPowMetadata.additionalData();
     }
     minerPubKeyHash() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
+        return this.boostPowMetadata.minerPubKeyHash();
     }
     toString() {
         let str = this.boostPowString.toString();

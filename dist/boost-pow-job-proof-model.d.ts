@@ -1,17 +1,21 @@
-/// <reference types="node" />
 import * as bsv from 'bsv';
+import { UInt32Little } from './fields/uint32Little';
+import { UInt32Big } from './fields/uint32Big';
+import { UInt64Big } from './fields/uint64Big';
+import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 /**
  * Responsible for redeem script proof that work was done.
  * This gets combined with BoostPowJobModel
  */
 export declare class BoostPowJobProofModel {
-    private signature;
-    private minerPubKey;
-    private time;
-    private extraNonce1;
-    private extraNonce2;
-    private nonce;
-    private minerPubKeyHash;
+    private Signature;
+    private MinerPubKey;
+    private Time;
+    private ExtraNonce1;
+    private ExtraNonce2;
+    private Nonce;
+    private MinerPubKeyHash;
     private txid?;
     private vin?;
     private spentTxid?;
@@ -26,21 +30,13 @@ export declare class BoostPowJobProofModel {
         extraNonce2: string;
         minerPubKeyHash?: string;
     }): BoostPowJobProofModel;
-    getTime(): Buffer;
-    getTimeNumber(): number;
-    getTimeBuffer(): Buffer;
-    getExtraNonce1Number(): number;
-    getExtraNonce1(): Buffer;
-    getExtraNonce2Number(): number;
-    getExtraNonce2(): Buffer;
-    getNonceNumber(): number;
-    getNonce(): Buffer;
-    getMinerPubKeyHash(): Buffer;
-    getMinerPubKeyHashHex(): string;
-    getSignature(): Buffer;
-    getSignatureHex(): string;
-    getMinerPubKey(): Buffer;
-    getMinerPubKeyHex(): string;
+    time(): UInt32Little;
+    extraNonce1(): UInt32Big;
+    extraNonce2(): UInt64Big;
+    nonce(): UInt32Little;
+    minerPubKeyHash(): Digest20;
+    signature(): Bytes;
+    minerPubKey(): Bytes;
     toObject(): {
         signature: string;
         minerPubKey: string;

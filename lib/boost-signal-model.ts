@@ -1,3 +1,8 @@
+import { Int32Little } from './fields/int32Little';
+import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import * as bsv from 'bsv';
@@ -22,88 +27,80 @@ export class BoostSignalModel {
             throw new Error('Fatal: Invalid metadata for the pow string');
         }
     };
+
     public getBoostJobId(): string | undefined {
         return this.boostJobId;
     }
+
     public getBoostJobProofId(): string | undefined {
         return this.boostJobProofId;
     }
+
     public getBoostPowString(): BoostPowStringModel {
         return this.boostPowString;
     }
+
     public getBoostMetadata(): BoostPowMetadataModel {
         return this.boostPowMetadata;
     }
-    public hash(): string {
+
+    public hash(): Digest32 {
         return this.boostPowString.hash();
     }
+
     public difficulty(): number {
         return this.boostPowString.difficulty();
     }
+
     public energy(): number {
         return this.difficulty();
     }
-    public content(hex?: boolean): string {
-        if (hex) {
-            return this.boostPowString.contentHex();
-        }
-        return this.boostPowString.contentString();
-    }
-    public category(hex?: boolean): string {
-        const category = this.boostPowString.category();
-        const cat = Buffer.allocUnsafe(4);
-        cat.writeUInt32BE(category, 0);
-        if (hex) {
-            return cat.toString('hex');
-        }
-        return cat.toString('utf8');
+
+    public content(): Digest32 {
+        return this.boostPowString.content();
     }
 
-    public metadataHash(): string {
+    public category(): Int32Little {
+        return this.boostPowString.category();
+    }
+
+    public metadataHash(): Digest32 {
         return this.boostPowString.metadataHash();
     }
-    public time(): number {
+
+    public time(): UInt32Little {
         return this.boostPowString.time();
     }
-    public nonce(): number {
+    public nonce(): UInt32Little {
         return this.boostPowString.nonce();
     }
 
-    public tag(hex?: boolean): string | null {
+    public tag(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getTag().toString('hex');
-        }
-        return this.boostPowMetadata.getTagUtf8();
+        return this.boostPowMetadata.tag();
     }
 
-    public userNonce(hex?: boolean): string | null {
+    public userNonce(): UInt32Little | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getUserNonce().toString('hex');
-        }
-        return this.boostPowMetadata.getUserNonceUtf8();
+        return this.boostPowMetadata.userNonce()
     }
 
-    public additionalData(hex?: boolean): string | null {
+    public additionalData(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getAdditionalData().toString('hex');
-        }
-        return this.boostPowMetadata.getAdditionalDataUtf8();
+        return this.boostPowMetadata.additionalData();
     }
 
-    public minerPubKeyHash(): string | null {
+    public minerPubKeyHash(): Digest20 | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.getMinerPubKeyHash().toString('hex');
+        return this.boostPowMetadata.minerPubKeyHash();
     }
 
     public toString(): string {
