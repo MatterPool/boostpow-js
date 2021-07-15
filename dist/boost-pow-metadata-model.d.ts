@@ -2,6 +2,7 @@
 import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
+import { Digest32 } from './fields/digest32';
 export declare class BoostPowMetadataModel {
     private tag;
     private minerPubKeyHash;
@@ -39,8 +40,7 @@ export declare class BoostPowMetadataModel {
     getAdditionalDataString(): string;
     toString(): string;
     getCoinbaseString(): string;
-    hash(): any;
-    hashAsBuffer(): any;
+    hash(): Digest32;
     toObject(): {
         tag: string;
         minerPubKeyHash: string;

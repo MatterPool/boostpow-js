@@ -1,5 +1,6 @@
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import * as bsv from 'bsv';
@@ -41,7 +42,7 @@ export class BoostSignalModel {
         return this.boostPowMetadata;
     }
 
-    public hash(): string {
+    public hash(): Digest32 {
         return this.boostPowString.hash();
     }
 
@@ -53,18 +54,15 @@ export class BoostSignalModel {
         return this.difficulty();
     }
 
-    public content(hex?: boolean): string {
-        if (hex) {
-            return this.boostPowString.contentHex();
-        }
-        return this.boostPowString.contentString();
+    public content(): Digest32 {
+        return this.boostPowString.content();
     }
 
-    public category(hex?: boolean): Int32Little {
+    public category(): Int32Little {
         return this.boostPowString.category();
     }
 
-    public metadataHash(): string {
+    public metadataHash(): Digest32 {
         return this.boostPowString.metadataHash();
     }
 
@@ -85,14 +83,11 @@ export class BoostSignalModel {
         return this.boostPowMetadata.getTagUtf8();
     }
 
-    public userNonce(hex?: boolean): string | null {
+    public userNonce(): UInt32Little | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.userNonce().hex();
-        }
-        return this.boostPowMetadata.userNonce().utf8();
+        return this.boostPowMetadata.userNonce()
     }
 
     public additionalData(hex?: boolean): string | null {

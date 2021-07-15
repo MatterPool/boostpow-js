@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import { BoostUtils } from './boost-utils';
@@ -16,7 +17,7 @@ export class BoostPowStringModel {
         }
 
         if (metadata) {
-            if (!this._blockheader.merkleRoot !== metadata.hash()) {
+            if (this._blockheader.merkleRoot !== metadata.hash().hex()) {
                 throw new Error('INVALID_METADATA');
             }
             this._metadata = metadata;
@@ -25,33 +26,24 @@ export class BoostPowStringModel {
 
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
-    boosthash(): string {
-        return this._blockheader.hash;
+    boostHash(): Digest32 {
+        return this.hash();
     }
 
-    hashBuffer() : Buffer {
-        // todo: IS THIS THE RIGHT PLACE???
-        return Buffer.from(this._blockheader.hash,"hex").reverse();
+    hash(): Digest32 {
+        return Digest32.fromHex(this._blockheader.hash);
     }
 
-    hash(): string {
-        return this._blockheader.hash;
-    }
-
-    id(): string {
-        return this._blockheader.hash;
+    id(): Digest32 {
+        return this.hash();
     }
 
     category(): Int32Little {
       return Int32Little.fromNumber(this._blockheader.version);
     }
 
-    contentHex(): string {
-        return this.toObject().content;
-    }
-
-    contentBuffer(): Buffer {
-        return new Buffer(this.toObject().content,'hex').reverse();
+    content(): Digest32 {
+        return new Digest32(new Buffer(this.toObject().content,'hex').reverse());
     }
 
     contentString(trimLeadingNulls = true): string {
@@ -63,8 +55,8 @@ export class BoostPowStringModel {
         return this.toObject().bits;
     }
 
-    metadataHash(): string {
-        return this.toObject().metadataHash;
+    metadataHash(): Digest32 {
+        return new Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
     }
 
     nonce(): UInt32Little {

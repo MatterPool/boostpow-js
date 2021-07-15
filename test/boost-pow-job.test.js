@@ -297,10 +297,10 @@ describe("boost #BoostPowString tryValidateJobProof", () => {
     expect(result.boostPowString.toString()).to.eql(
       "000000004bd94af3e76f57ba13d790f02d5ff3ad7dd0451c2a31ecd2cb1fdbb0f3a932330c7e3858267273997f3981b674195bb3b25033264eff57c9aee9f7fca08d2211b7768f5fffff001d32000988"
     );
-    expect(result.boostPowString.hash()).to.eql(
+    expect(result.boostPowString.hash().hex()).to.eql(
       "0000000005fe6ee4cbb33d916681681e01740a6f7e79a862c80f7168c879560b"
     );
-    expect(result.boostPowMetadata.hash()).to.eql(
+    expect(result.boostPowMetadata.hash().hex()).to.eql(
       "11228da0fcf7e9aec957ff4e263350b2b35b1974b681397f9973722658387e0c"
     );
     expect(result.boostPowMetadata.toString()).to.eql(
@@ -367,11 +367,11 @@ describe("boost #BoostPowString tryValidateJobProof", () => {
     const result = index.BoostPowJob.tryValidateJobProof(job, jobProof, false);
     expect(result).to.not.eql(null);
 
-    expect(result.boostPowString.hash()).to.eql(
+    expect(result.boostPowString.hash().hex()).to.eql(
       "0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35"
     );
 
-    expect(result.boostPowMetadata.hash()).to.eql(
+    expect(result.boostPowMetadata.hash().hex()).to.eql(
       "7687b9ef4a2a8bc0387336177e4f90ceabca3cbdf246ad4e9f27d4d94f1f4019"
     );
 
@@ -460,7 +460,7 @@ describe("boost #BoostPowJob createRedeemTransaction", () => {
       "0000000035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588119401f4fd9d4279f4ead46f2bd3ccaabce904f7e17367338c08b2a4aefb9877681c06d5effff001de069a11c"
     );
 
-    expect(powString.boostPowString.hash()).to.eql(
+    expect(powString.boostPowString.hash().hex()).to.eql(
       "0000000000f0e97bec0c369dd6c7cbde0243a351d8ab138778717c63660afa35"
     );
 
@@ -563,11 +563,11 @@ describe("BoostPowJob", () => {
     expect(job.userNonce().hex()).to.eql("c8010000");
     expect(job.userNonce().number()).to.eql(456);
 
-    expect(job.getContentString()).to.eql("hello animal");
-    expect(job.getContentBuffer().toString("hex")).to.eql(
+    expect(job.content().string()).to.eql("hello animal");
+    expect(job.content().buffer().toString("hex")).to.eql(
       "68656c6c6f20616e696d616c0000000000000000000000000000000000000000"
     );
-    expect(job.getContentHex()).to.eql(
+    expect(job.content().hex()).to.eql(
       "00000000000000000000000000000000000000006c616d696e61206f6c6c6568"
     );
 
@@ -590,7 +590,7 @@ describe("BoostPowJob", () => {
     const boostPowString = index.BoostPowString.fromString(
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     );
-    expect(boostPowString.hash()).to.equal(
+    expect(boostPowString.hash().hex()).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     );
     expect(boostPowString.toObject()).to.eql({
@@ -899,7 +899,8 @@ describe("BoostPowJob", () => {
         .reverse()
         .toString("hex"),
     });
-    expect(job.getContentHex()).to.eql(
+    
+    expect(job.content().hex()).to.eql(
       "35b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881"
     );
   });

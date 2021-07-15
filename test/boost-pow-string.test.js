@@ -15,9 +15,10 @@ describe("boost #BoostPowString.fromObject", () => {
       category: 1,
     });
 
-    expect(obj.hash()).to.eql(
+    expect(obj.hash().hex()).to.eql(
       "0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca"
     );
+
     expect(obj.toString()).to.eql(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
     );
@@ -54,7 +55,7 @@ describe("boost #BoostPowString.fromString", () => {
     const boostPowString = index.BoostPowString.fromString(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
     );
-    expect(boostPowString.hash()).to.equal(
+    expect(boostPowString.hash().hex()).to.equal(
       "0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca"
     );
   });
@@ -63,12 +64,14 @@ describe("boost #BoostPowString.fromString", () => {
     const boostPowString = index.BoostPowString.fromString(
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     );
+
     // 01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc
     // 1000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96
     // 153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc
-    expect(boostPowString.hash()).to.equal(
+    expect(boostPowString.hash().hex()).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     );
+
     expect(boostPowString.toObject()).to.eql({
       hash: "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc",
       content:
@@ -219,7 +222,7 @@ describe("BoostPowString", () => {
     const boostPowString = index.BoostPowString.fromString(
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     );
-    expect(boostPowString.hash()).to.equal(
+    expect(boostPowString.hash().hex()).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     );
     expect(boostPowString.toObject()).to.eql({
@@ -235,21 +238,21 @@ describe("BoostPowString", () => {
       category: 1,
     });
 
-    expect(boostPowString.contentHex()).to.eql(
+    expect(boostPowString.content().hex()).to.eql(
       "00000000000000000000000000000000000000000048656c6c6f20776f726c64"
     );
-    expect(boostPowString.contentBuffer().toString("hex")).to.eql(
+    expect(boostPowString.content().buffer().toString("hex")).to.eql(
       "646c726f77206f6c6c6548000000000000000000000000000000000000000000"
     );
-    expect(boostPowString.contentString(false)).to.eql(
-      "dlrow olleH\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
+    expect(boostPowString.content().string()).to.eql(
+      "dlrow olleH"
     );
     expect(boostPowString.contentString()).to.eql("dlrow olleH");
     expect(boostPowString.contentString(true)).to.eql("dlrow olleH");
     expect(boostPowString.bits()).to.eql(486604799);
     expect(boostPowString.bits().toString(16)).to.eql("1d00ffff");
     expect(boostPowString.difficulty()).to.eql(1);
-    expect(boostPowString.metadataHash()).to.eql(
+    expect(boostPowString.metadataHash().hex()).to.eql(
       "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a"
     );
     expect(boostPowString.time().number()).to.eql(1305200806);
@@ -413,9 +416,9 @@ describe("boost integration test ", () => {
   });
 
   it("should get content from locking script", async () => {
-    expect(job.getContentHex()).to.eql(contentHex);
-    expect(job.getContentBuffer()).to.eql(contentBuffer);
-    expect(job.getContentString()).to.eql(contentString);
+    expect(job.content().hex()).to.eql(contentHex);
+    expect(job.content().buffer()).to.eql(contentBuffer);
+    expect(job.content().string()).to.eql(contentString);
   });
 
   it("should get difficulty from locking script", async () => {
@@ -480,8 +483,8 @@ describe("boost integration test ", () => {
 
   // check valid metadata
   it("should generate correct metadata hash", async () => {
-    expect(metadata.hash().toUpperCase()).to.eql(metadataHashHex);
-    expect(metadata.hashAsBuffer()).to.eql(metadataHashBuffer);
+    expect(metadata.hash().hex().toUpperCase()).to.eql(metadataHashHex);
+    expect(metadata.hash().buffer()).to.eql(metadataHashBuffer);
   });
 
   it("should should write metadata to string", async () => {
@@ -524,18 +527,18 @@ describe("boost integration test ", () => {
     expect(proof.boostPowString.toString().toUpperCase()).to.eql(
       proofStringHex
     );
-    expect(proof.boostPowString.hash().toUpperCase()).to.eql(proofHashHex);
-    expect(proof.boostPowString.hashBuffer()).to.eql(proofHashBuffer);
+    expect(proof.boostPowString.hash().hex().toUpperCase()).to.eql(proofHashHex);
+    expect(proof.boostPowString.hash().buffer()).to.eql(proofHashBuffer);
 
-    expect(proof.boostPowString.contentHex()).to.eql(contentHex);
-    expect(proof.boostPowString.contentString()).to.eql(contentString);
-    expect(proof.boostPowString.contentBuffer()).to.eql(contentBuffer);
+    expect(proof.boostPowString.content().hex()).to.eql(contentHex);
+    expect(proof.boostPowString.content().string()).to.eql(contentString);
+    expect(proof.boostPowString.content().buffer()).to.eql(contentBuffer);
 
     expect(proof.boostPowString.nonce().number()).to.eql(nonceNumber);
     expect(proof.boostPowString.time().number()).to.eql(timeNumber);
     expect(proof.boostPowString.category().number()).to.eql(categoryNumber);
     expect(proof.boostPowString.bits()).to.eql(compactNumber);
-    expect(proof.boostPowString.metadataHash().toUpperCase()).to.eql(
+    expect(proof.boostPowString.metadataHash().hex().toUpperCase()).to.eql(
       metadataHashHex
     );
   });

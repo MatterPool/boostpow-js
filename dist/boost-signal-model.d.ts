@@ -1,5 +1,6 @@
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostSignalModel {
@@ -12,16 +13,16 @@ export declare class BoostSignalModel {
     getBoostJobProofId(): string | undefined;
     getBoostPowString(): BoostPowStringModel;
     getBoostMetadata(): BoostPowMetadataModel;
-    hash(): string;
+    hash(): Digest32;
     difficulty(): number;
     energy(): number;
-    content(hex?: boolean): string;
-    category(hex?: boolean): Int32Little;
-    metadataHash(): string;
+    content(): Digest32;
+    category(): Int32Little;
+    metadataHash(): Digest32;
     time(): UInt32Little;
     nonce(): UInt32Little;
     tag(hex?: boolean): string | null;
-    userNonce(hex?: boolean): string | null;
+    userNonce(): UInt32Little | null;
     additionalData(hex?: boolean): string | null;
     minerPubKeyHash(): string | null;
     toString(): string;

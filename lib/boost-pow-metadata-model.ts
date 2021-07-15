@@ -3,6 +3,7 @@ import { BoostUtils } from './boost-utils';
 import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
+import { Digest32 } from './fields/digest32';
 
 export class BoostPowMetadataModel {
 
@@ -106,12 +107,8 @@ export class BoostPowMetadataModel {
         return this.toString();
     }
 
-    hash() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer()).reverse().toString('hex');
-    }
-
-    hashAsBuffer() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer());
+    hash(): Digest32 {
+        return new Digest32(bsv.crypto.Hash.sha256sha256(this.toBuffer()));
     }
 
     toObject () {

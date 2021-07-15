@@ -158,7 +158,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
     ).to.eql(expectedMerkleRootMetaHash);
 
     expect(
-      index.BoostPowJob.createBoostPowMetadata(job, jobProof).hash()
+      index.BoostPowJob.createBoostPowMetadata(job, jobProof).hash().hex()
     ).to.eql(expectedMerkleRootMetaHash);
     /*
                 {"method": "mining.submit", "params": ["abra.001", "3",
@@ -227,7 +227,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
 
     expect(powString).to.not.eql(null);
 
-    expect(powString.boostPowString.hash()).to.eql(
+    expect(powString.boostPowString.hash().hex()).to.eql(
       "00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330"
     );
 

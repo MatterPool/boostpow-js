@@ -6,6 +6,7 @@ const boost_utils_1 = require("./boost-utils");
 const uint32Little_1 = require("./fields/uint32Little");
 const uint32Big_1 = require("./fields/uint32Big");
 const uint64Big_1 = require("./fields/uint64Big");
+const digest32_1 = require("./fields/digest32");
 class BoostPowMetadataModel {
     constructor(tag, minerPubKeyHash, ExtraNonce1, ExtraNonce2, UserNonce, additionalData) {
         this.tag = tag;
@@ -61,10 +62,7 @@ class BoostPowMetadataModel {
         return this.toString();
     }
     hash() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer()).reverse().toString('hex');
-    }
-    hashAsBuffer() {
-        return bsv.crypto.Hash.sha256sha256(this.toBuffer());
+        return new digest32_1.Digest32(bsv.crypto.Hash.sha256sha256(this.toBuffer()));
     }
     toObject() {
         return {

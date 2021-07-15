@@ -43,13 +43,10 @@ class BoostSignalModel {
     energy() {
         return this.difficulty();
     }
-    content(hex) {
-        if (hex) {
-            return this.boostPowString.contentHex();
-        }
-        return this.boostPowString.contentString();
+    content() {
+        return this.boostPowString.content();
     }
-    category(hex) {
+    category() {
         return this.boostPowString.category();
     }
     metadataHash() {
@@ -70,14 +67,11 @@ class BoostSignalModel {
         }
         return this.boostPowMetadata.getTagUtf8();
     }
-    userNonce(hex) {
+    userNonce() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.userNonce().hex();
-        }
-        return this.boostPowMetadata.userNonce().utf8();
+        return this.boostPowMetadata.userNonce();
     }
     additionalData(hex) {
         if (!this.boostPowMetadata) {

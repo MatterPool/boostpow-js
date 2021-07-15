@@ -2,11 +2,12 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { Digest32 } from './fields/digest32';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
-    private content;
+    private Content;
     private difficulty;
     private Category;
     private tag;
@@ -18,9 +19,7 @@ export declare class BoostPowJobModel {
     private value?;
     private constructor();
     category(): Int32Little;
-    getContentBuffer(): Buffer;
-    getContentString(trimTrailingNulls?: boolean): string;
-    getContentHex(): string;
+    content(): Digest32;
     getDiff(): number;
     getTagString(trimTrailingNulls?: boolean): string;
     getTagHex(): string;
