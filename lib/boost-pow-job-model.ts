@@ -2,6 +2,7 @@ import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
+import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -12,8 +13,8 @@ export class BoostPowJobModel {
         private Content: Digest32,
         private difficulty: number,
         private Category: Int32Little,
-        private tag: Buffer,
-        private additionalData: Buffer,
+        private Tag: Bytes,
+        private AdditionalData: Bytes,
         private UserNonce: UInt32Little,
         private useGeneralPurposeBits: boolean,
         // Optional tx information attached or not
@@ -35,28 +36,12 @@ export class BoostPowJobModel {
         return this.difficulty;
     }
 
-    getTagString(trimTrailingNulls = true): string {
-        return BoostUtils.trimBufferString(this.tag, trimTrailingNulls);
+    tag(): Bytes {
+        return this.Tag;
     }
 
-    getTagHex(): string {
-        return this.tag.toString('hex');
-    }
-
-    getTagBuffer(): Buffer {
-        return this.tag;
-    }
-
-    getAdditionalDataString(trimTrailingNulls = true): string {
-        return BoostUtils.trimBufferString(this.additionalData, trimTrailingNulls);
-    }
-
-    getAdditionalDataHex(): string {
-        return this.additionalData.toString('hex');
-    }
-
-    getAdditionalDataBuffer(): Buffer {
-        return this.additionalData;
+    additionalData(): Bytes {
+        return this.AdditionalData;
     }
 
     userNonce(): UInt32Little {
@@ -103,8 +88,8 @@ export class BoostPowJobModel {
             new Digest32(BoostUtils.createBufferAndPad(params.content, 32)),
             params.diff,
             new Int32Little(BoostUtils.createBufferAndPad(params.category, 4, false)),
-            params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0),
-            params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0),
+            new Bytes(params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0)),
+            new Bytes(params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0)),
             // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
             new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
             false
@@ -134,8 +119,8 @@ export class BoostPowJobModel {
             content: this.Content.hex(),
             diff: this.difficulty,
             category: this.Category.hex(),
-            tag: this.tag.toString('hex'),
-            additionalData: this.additionalData.toString('hex'),
+            tag: this.Tag.hex(),
+            additionalData: this.AdditionalData.hex(),
             userNonce: this.UserNonce.hex(),
         };
     }
@@ -195,11 +180,11 @@ export class BoostPowJobModel {
 
         buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
 
-        buildOut.add(this.toOpCode(this.tag));
+        buildOut.add(this.toOpCode(this.Tag.buffer()));
 
         buildOut.add(this.toOpCode(this.UserNonce.buffer()));
 
-        buildOut.add(this.toOpCode(this.additionalData));
+        buildOut.add(this.toOpCode(this.AdditionalData.buffer()));
 
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
@@ -308,13 +293,13 @@ export class BoostPowJobModel {
             let targetInt = parseInt(targetHex, 16);
             diff = BoostUtils.difficulty(targetInt);
 
-            tag = this.fromOpCode(script.chunks[5]);
+            tag = new Bytes(this.fromOpCode(script.chunks[5]));
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
 
             userNonce = new UInt32Little(this.fromOpCode(script.chunks[6]));
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
 
-            additionalData = this.fromOpCode(script.chunks[7]);
+            additionalData = new Bytes(this.fromOpCode(script.chunks[7]));
 
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
 
@@ -499,12 +484,12 @@ export class BoostPowJobModel {
 
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
         return BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.getTagBuffer(),
+            tag: boostPowJob.tag().buffer(),
             minerPubKeyHash: boostPowJobProof.minerPubKeyHash().buffer(),
             extraNonce1: boostPowJobProof.extraNonce1().buffer(),
             extraNonce2: boostPowJobProof.extraNonce2().buffer(),
             userNonce: boostPowJob.userNonce().buffer(),
-            additionalData: boostPowJob.getAdditionalDataBuffer(),
+            additionalData: boostPowJob.additionalData().buffer(),
         });
     }
 

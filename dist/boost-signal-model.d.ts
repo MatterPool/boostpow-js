@@ -2,6 +2,7 @@ import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostSignalModel {
@@ -22,9 +23,9 @@ export declare class BoostSignalModel {
     metadataHash(): Digest32;
     time(): UInt32Little;
     nonce(): UInt32Little;
-    tag(hex?: boolean): string | null;
+    tag(): Bytes | null;
     userNonce(): UInt32Little | null;
-    additionalData(hex?: boolean): string | null;
+    additionalData(): Bytes | null;
     minerPubKeyHash(): Digest20 | null;
     toString(): string;
     toObject(): any;

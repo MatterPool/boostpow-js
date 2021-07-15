@@ -61,14 +61,14 @@ describe("boost #BoostPowMetadata tests", () => {
         "0000000000000000000000000000000000000000000000000000000000404142",
     });
 
-    const tagString1 = abstract.getTagUtf8();
-    const tagString2 = abstract.getTagUtf8();
+    const tagString1 = abstract.tag().utf8();
+    const tagString2 = abstract.tag().utf8();
 
     const userNonceString1 = abstract.userNonce().utf8();
     const userNonceString2 = abstract.userNonce().utf8();
 
-    const adataString1 = abstract.getAdditionalDataUtf8();
-    const adataString2 = abstract.getAdditionalDataUtf8();
+    const adataString1 = abstract.additionalData().utf8();
+    const adataString2 = abstract.additionalData().utf8();
 
     expect(tagString1).to.eql(tagString2);
     expect(userNonceString1).to.eql(userNonceString2);

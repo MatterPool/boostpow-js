@@ -4,13 +4,14 @@ import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 export declare class BoostPowMetadataModel {
-    private tag;
+    private Tag;
     private MinerPubKeyHash;
     private ExtraNonce1;
     private ExtraNonce2;
     private UserNonce;
-    private additionalData;
+    private AdditionalData;
     private constructor();
     static fromObject(params: {
         tag: string;
@@ -28,16 +29,12 @@ export declare class BoostPowMetadataModel {
         userNonce: Buffer;
         additionalData: Buffer;
     }): BoostPowMetadataModel;
-    getTag(): Buffer;
-    getTagUtf8(): string;
-    getTagString(): string;
+    tag(): Bytes;
     minerPubKeyHash(): Digest20;
     userNonce(): UInt32Little;
     extraNonce1(): UInt32Big;
     extraNonce2(): UInt64Big;
-    getAdditionalData(): Buffer;
-    getAdditionalDataUtf8(): string;
-    getAdditionalDataString(): string;
+    additionalData(): Bytes;
     toString(): string;
     getCoinbaseString(): string;
     hash(): Digest32;

@@ -5,16 +5,17 @@ import { UInt32Big } from './fields/uint32Big';
 import { UInt64Big } from './fields/uint64Big';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 
 export class BoostPowMetadataModel {
 
     private constructor(
-        private tag: Buffer,
+        private Tag: Bytes,
         private MinerPubKeyHash: Digest20,
         private ExtraNonce1: UInt32Big,
         private ExtraNonce2: UInt64Big,
         private UserNonce: UInt32Little,
-        private additionalData: Buffer
+        private AdditionalData: Bytes
     ) {
     }
 
@@ -28,12 +29,12 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            new Buffer(params.tag, 'hex'),
+            new Bytes(new Buffer(params.tag, 'hex')),
             new Digest20(BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false)),
             new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)),
             new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
             new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
-            new Buffer(params.additionalData, 'hex'),
+            new Bytes(new Buffer(params.additionalData, 'hex')),
         );
     }
 
@@ -47,25 +48,17 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            params.tag,
+            new Bytes(params.tag),
             new Digest20(params.minerPubKeyHash),
             new UInt32Big(params.extraNonce1),
             new UInt64Big(params.extraNonce2),
             new UInt32Little(params.userNonce),
-            params.additionalData,
+            new Bytes(params.additionalData),
         );
     }
 
-    getTag(): Buffer {
-        return this.tag;
-    }
-
-    getTagUtf8(): string {
-        return BoostUtils.trimBufferString(this.tag, true);
-    }
-
-    getTagString(): string {
-        return this.getTagUtf8();
+    tag(): Bytes {
+        return this.Tag;
     }
 
     minerPubKeyHash(): Digest20 {
@@ -84,16 +77,8 @@ export class BoostPowMetadataModel {
         return this.ExtraNonce2;
     }
 
-    getAdditionalData(): Buffer {
-        return this.additionalData;
-    }
-
-    getAdditionalDataUtf8(): string {
-        return BoostUtils.trimBufferString(this.additionalData, true);
-    }
-
-    getAdditionalDataString(): string {
-        return this.getAdditionalDataUtf8();
+    additionalData(): Bytes {
+        return this.AdditionalData;
     }
 
     toString(): string {
@@ -110,23 +95,23 @@ export class BoostPowMetadataModel {
 
     toObject () {
         return {
-            tag: this.tag.toString('hex'),
+            tag: this.Tag.hex(),
             minerPubKeyHash: this.MinerPubKeyHash.hex(),
             extraNonce1: this.ExtraNonce1.hex(),
             extraNonce2: this.ExtraNonce2.hex(),
             userNonce: this.UserNonce.hex(),
-            additionalData: this.additionalData.toString('hex'),
+            additionalData: this.AdditionalData.hex(),
         };
     }
 
     toBuffer(): Buffer {
         return Buffer.concat([
-            this.tag,
+            this.Tag.buffer(),
             this.MinerPubKeyHash.buffer(),
             this.ExtraNonce1.buffer(),
             this.ExtraNonce2.buffer(),
             this.UserNonce.buffer(),
-            this.additionalData
+            this.AdditionalData.buffer()
         ]);
     }
 

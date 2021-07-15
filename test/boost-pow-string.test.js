@@ -427,15 +427,15 @@ describe("boost integration test ", () => {
   });
 
   it("should get tag from locking script", async () => {
-    expect(job.getTagHex()).to.eql(tagHex);
-    expect(job.getTagString()).to.eql(tagString);
-    expect(job.getTagBuffer()).to.eql(tagBuffer);
+    expect(job.tag().hex()).to.eql(tagHex);
+    expect(job.tag().string()).to.eql(tagString);
+    expect(job.tag().buffer()).to.eql(tagBuffer);
   });
 
   it("should get addational data from locking script", async () => {
-    expect(job.getAdditionalDataHex()).to.eql(dataHex);
-    expect(job.getAdditionalDataString()).to.eql(dataString);
-    expect(job.getAdditionalDataBuffer()).to.eql(dataBuffer);
+    expect(job.additionalData().hex()).to.eql(dataHex);
+    expect(job.additionalData().string()).to.eql(dataString);
+    expect(job.additionalData().buffer()).to.eql(dataBuffer);
   });
 
   it("should get user nonce from locking script", async () => {
@@ -446,13 +446,13 @@ describe("boost integration test ", () => {
 
   // check getters for solution
   it("should get signature", async () => {
-    expect(solution.getSignature()).to.eql(signatureBuffer);
-    expect(solution.getSignatureHex()).to.eql(signatureHex);
+    expect(solution.signature().buffer()).to.eql(signatureBuffer);
+    expect(solution.signature().hex()).to.eql(signatureHex);
   });
 
   it("should get miner pubkey", async () => {
-    expect(solution.getMinerPubKey()).to.eql(minerPubKeyBuffer);
-    expect(solution.getMinerPubKeyHex()).to.eql(minerPubKeyHex);
+    expect(solution.minerPubKey().buffer()).to.eql(minerPubKeyBuffer);
+    expect(solution.minerPubKey().hex()).to.eql(minerPubKeyHex);
   });
 
   it("should get nonce", async () => {
@@ -493,13 +493,13 @@ describe("boost integration test ", () => {
 
   // check getters for metadata
   it("should get tag from metadata", async () => {
-    expect(metadata.getTagString()).to.eql(tagString);
-    expect(metadata.getTag()).to.eql(tagBuffer);
+    expect(metadata.tag().string()).to.eql(tagString);
+    expect(metadata.tag().buffer()).to.eql(tagBuffer);
   });
 
   it("should get addational data from metadata", async () => {
-    expect(metadata.getAdditionalDataString()).to.eql(dataString);
-    expect(metadata.getAdditionalData()).to.eql(dataBuffer);
+    expect(metadata.additionalData().string()).to.eql(dataString);
+    expect(metadata.additionalData().buffer()).to.eql(dataBuffer);
   });
 
   it("should get user nonce from metadata", async () => {

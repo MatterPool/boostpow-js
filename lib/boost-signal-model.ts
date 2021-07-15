@@ -2,6 +2,7 @@ import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
+import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 import * as bsv from 'bsv';
@@ -74,14 +75,11 @@ export class BoostSignalModel {
         return this.boostPowString.nonce();
     }
 
-    public tag(hex?: boolean): string | null {
+    public tag(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getTag().toString('hex');
-        }
-        return this.boostPowMetadata.getTagUtf8();
+        return this.boostPowMetadata.tag();
     }
 
     public userNonce(): UInt32Little | null {
@@ -91,14 +89,11 @@ export class BoostSignalModel {
         return this.boostPowMetadata.userNonce()
     }
 
-    public additionalData(hex?: boolean): string | null {
+    public additionalData(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getAdditionalData().toString('hex');
-        }
-        return this.boostPowMetadata.getAdditionalDataUtf8();
+        return this.boostPowMetadata.additionalData();
     }
 
     public minerPubKeyHash(): Digest20 | null {

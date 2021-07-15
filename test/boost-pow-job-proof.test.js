@@ -179,14 +179,14 @@ describe("boost #BoostPowJobProof", () => {
       time: "12300009",
       nonce: "30000002",
     });
-    expect(jobProof.getSignatureHex()).to.eql(
+    expect(jobProof.signature().hex()).to.eql(
       "0000000000000000000000000000000000000000000000000000000000000001"
     );
 
-    expect(jobProof.getMinerPubKeyHex()).to.eql(
+    expect(jobProof.minerPubKey().hex()).to.eql(
       "020370f418d21765b33bc093db143aa1dd5cfefc97275652dc8396c2d567f93d65"
     );
-    
+
     expect(jobProof.minerPubKeyHash().hex()).to.eql(
       "9fb8cb68b8850a13c7438e26e1d277b748be657a"
     );

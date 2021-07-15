@@ -5,18 +5,19 @@ const bsv = require("bsv");
 const int32Little_1 = require("./fields/int32Little");
 const uint32Little_1 = require("./fields/uint32Little");
 const digest32_1 = require("./fields/digest32");
+const bytes_1 = require("./fields/bytes");
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-    constructor(Content, difficulty, Category, tag, additionalData, UserNonce, useGeneralPurposeBits, 
+    constructor(Content, difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
     txid, vout, value) {
         this.Content = Content;
         this.difficulty = difficulty;
         this.Category = Category;
-        this.tag = tag;
-        this.additionalData = additionalData;
+        this.Tag = Tag;
+        this.AdditionalData = AdditionalData;
         this.UserNonce = UserNonce;
         this.useGeneralPurposeBits = useGeneralPurposeBits;
         this.txid = txid;
@@ -32,23 +33,11 @@ class BoostPowJobModel {
     getDiff() {
         return this.difficulty;
     }
-    getTagString(trimTrailingNulls = true) {
-        return boost_utils_1.BoostUtils.trimBufferString(this.tag, trimTrailingNulls);
+    tag() {
+        return this.Tag;
     }
-    getTagHex() {
-        return this.tag.toString('hex');
-    }
-    getTagBuffer() {
-        return this.tag;
-    }
-    getAdditionalDataString(trimTrailingNulls = true) {
-        return boost_utils_1.BoostUtils.trimBufferString(this.additionalData, trimTrailingNulls);
-    }
-    getAdditionalDataHex() {
-        return this.additionalData.toString('hex');
-    }
-    getAdditionalDataBuffer() {
-        return this.additionalData;
+    additionalData() {
+        return this.AdditionalData;
     }
     userNonce() {
         return this.UserNonce;
@@ -76,7 +65,7 @@ class BoostPowJobModel {
             let tempBuffer = Buffer.from([getRandomInt(0xff), getRandomInt(0xff), getRandomInt(0xff), getRandomInt(0xff)]);
             params.userNonce = tempBuffer.toString('hex');
         }
-        return new BoostPowJobModel(new digest32_1.Digest32(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32)), params.diff, new int32Little_1.Int32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false)), params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0), params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0), 
+        return new BoostPowJobModel(new digest32_1.Digest32(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32)), params.diff, new int32Little_1.Int32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false)), new bytes_1.Bytes(params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0)), new bytes_1.Bytes(params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0)), 
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
         new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), false);
     }
@@ -99,8 +88,8 @@ class BoostPowJobModel {
             content: this.Content.hex(),
             diff: this.difficulty,
             category: this.Category.hex(),
-            tag: this.tag.toString('hex'),
-            additionalData: this.additionalData.toString('hex'),
+            tag: this.Tag.hex(),
+            additionalData: this.AdditionalData.hex(),
             userNonce: this.UserNonce.hex(),
         };
     }
@@ -147,9 +136,9 @@ class BoostPowJobModel {
         buildOut.add(this.toOpCode(this.Category.buffer()));
         buildOut.add(this.toOpCode(this.Content.buffer()));
         buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
-        buildOut.add(this.toOpCode(this.tag));
+        buildOut.add(this.toOpCode(this.Tag.buffer()));
         buildOut.add(this.toOpCode(this.UserNonce.buffer()));
-        buildOut.add(this.toOpCode(this.additionalData));
+        buildOut.add(this.toOpCode(this.AdditionalData.buffer()));
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
             buildOut.add(op);
@@ -239,11 +228,11 @@ class BoostPowJobModel {
             let targetHex = (this.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('');
             let targetInt = parseInt(targetHex, 16);
             diff = boost_utils_1.BoostUtils.difficulty(targetInt);
-            tag = this.fromOpCode(script.chunks[5]);
+            tag = new bytes_1.Bytes(this.fromOpCode(script.chunks[5]));
             //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
             userNonce = new uint32Little_1.UInt32Little(this.fromOpCode(script.chunks[6]));
             //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
-            additionalData = this.fromOpCode(script.chunks[7]);
+            additionalData = new bytes_1.Bytes(this.fromOpCode(script.chunks[7]));
             //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
             return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, txid, vout, value);
         }
@@ -388,12 +377,12 @@ class BoostPowJobModel {
     }
     static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
         return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.getTagBuffer(),
+            tag: boostPowJob.tag().buffer(),
             minerPubKeyHash: boostPowJobProof.minerPubKeyHash().buffer(),
             extraNonce1: boostPowJobProof.extraNonce1().buffer(),
             extraNonce2: boostPowJobProof.extraNonce2().buffer(),
             userNonce: boostPowJob.userNonce().buffer(),
-            additionalData: boostPowJob.getAdditionalDataBuffer(),
+            additionalData: boostPowJob.additionalData().buffer(),
         });
     }
     static tryValidateJobProof(boostPowJob, boostPowJobProof, debug = false) {

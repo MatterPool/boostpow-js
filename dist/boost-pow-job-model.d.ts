@@ -1,8 +1,8 @@
-/// <reference types="node" />
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
+import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -10,8 +10,8 @@ export declare class BoostPowJobModel {
     private Content;
     private difficulty;
     private Category;
-    private tag;
-    private additionalData;
+    private Tag;
+    private AdditionalData;
     private UserNonce;
     private useGeneralPurposeBits;
     private txid?;
@@ -21,12 +21,8 @@ export declare class BoostPowJobModel {
     category(): Int32Little;
     content(): Digest32;
     getDiff(): number;
-    getTagString(trimTrailingNulls?: boolean): string;
-    getTagHex(): string;
-    getTagBuffer(): Buffer;
-    getAdditionalDataString(trimTrailingNulls?: boolean): string;
-    getAdditionalDataHex(): string;
-    getAdditionalDataBuffer(): Buffer;
+    tag(): Bytes;
+    additionalData(): Bytes;
     userNonce(): UInt32Little;
     static fromObject(params: {
         content: string;

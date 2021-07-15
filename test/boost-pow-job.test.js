@@ -571,19 +571,19 @@ describe("BoostPowJob", () => {
       "00000000000000000000000000000000000000006c616d696e61206f6c6c6568"
     );
 
-    expect(job.getTagString()).to.eql("this is a tag");
-    expect(job.getTagBuffer().toString("hex")).to.eql(
+    expect(job.tag().string()).to.eql("this is a tag");
+    expect(job.tag().buffer().toString("hex")).to.eql(
       "7468697320697320612074616700000000000000"
     );
-    expect(job.getTagHex()).to.eql("7468697320697320612074616700000000000000");
+    expect(job.tag().hex()).to.eql("7468697320697320612074616700000000000000");
 
     expect(job.category().string()).to.eql("bill");
     expect(job.category().buffer().toString("hex")).to.eql("62696c6c");
     expect(job.category().hex()).to.eql("62696c6c");
 
-    expect(job.getAdditionalDataString()).to.eql("this is more additionalData");
-    expect(job.getAdditionalDataBuffer().toString("hex")).to.eql(data);
-    expect(job.getAdditionalDataHex()).to.eql(data);
+    expect(job.additionalData().string()).to.eql("this is more additionalData");
+    expect(job.additionalData().buffer().toString("hex")).to.eql(data);
+    expect(job.additionalData().hex()).to.eql(data);
   });
 
   it("should correctly match up forms of variables for pow string and pow job", async () => {
@@ -899,7 +899,7 @@ describe("BoostPowJob", () => {
         .reverse()
         .toString("hex"),
     });
-    
+
     expect(job.content().hex()).to.eql(
       "35b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde5881"
     );

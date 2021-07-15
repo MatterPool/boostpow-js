@@ -58,14 +58,11 @@ class BoostSignalModel {
     nonce() {
         return this.boostPowString.nonce();
     }
-    tag(hex) {
+    tag() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getTag().toString('hex');
-        }
-        return this.boostPowMetadata.getTagUtf8();
+        return this.boostPowMetadata.tag();
     }
     userNonce() {
         if (!this.boostPowMetadata) {
@@ -73,14 +70,11 @@ class BoostSignalModel {
         }
         return this.boostPowMetadata.userNonce();
     }
-    additionalData(hex) {
+    additionalData() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        if (hex) {
-            return this.boostPowMetadata.getAdditionalData().toString('hex');
-        }
-        return this.boostPowMetadata.getAdditionalDataUtf8();
+        return this.boostPowMetadata.additionalData();
     }
     minerPubKeyHash() {
         if (!this.boostPowMetadata) {
