@@ -7,4 +7,5 @@ export declare class Int32Little {
     number(): number;
     buffer(): Buffer;
     string(): string;
+    utf8(): string;
 }

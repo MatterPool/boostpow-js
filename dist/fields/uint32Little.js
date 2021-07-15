@@ -23,6 +23,9 @@ class UInt32Little {
         return this.data;
     }
     string() {
+        return this.utf8();
+    }
+    utf8() {
         return boost_utils_1.BoostUtils.trimBufferString(this.data, true);
     }
 }

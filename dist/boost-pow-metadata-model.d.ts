@@ -1,10 +1,11 @@
 /// <reference types="node" />
+import { UInt32Little } from './fields/uint32Little';
 export declare class BoostPowMetadataModel {
     private tag;
     private minerPubKeyHash;
     private extraNonce1;
     private extraNonce2;
-    private userNonce;
+    private UserNonce;
     private additionalData;
     private constructor();
     static fromObject(params: {
@@ -23,15 +24,12 @@ export declare class BoostPowMetadataModel {
         userNonce: Buffer;
         additionalData: Buffer;
     }): BoostPowMetadataModel;
-    trimBufferString(str: string, trimLeadingNulls?: boolean): string;
     getTag(): Buffer;
     getTagUtf8(): string;
     getTagString(): string;
     getMinerPubKeyHash(): Buffer;
     getMinerPubKeyHashUtf8(): string;
-    getUserNonce(): Buffer;
-    getUserNonceUtf8(): string;
-    getUserNonceNumber(): number;
+    userNonce(): UInt32Little;
     getExtraNonce1Number(): number;
     getExtraNonce1(): Buffer;
     getExtraNonce2Number(): number;

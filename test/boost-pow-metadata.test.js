@@ -64,8 +64,8 @@ describe("boost #BoostPowMetadata tests", () => {
     const tagString1 = abstract.getTagUtf8();
     const tagString2 = abstract.getTagUtf8();
 
-    const userNonceString1 = abstract.getUserNonceUtf8();
-    const userNonceString2 = abstract.getUserNonceUtf8();
+    const userNonceString1 = abstract.userNonce().utf8();
+    const userNonceString2 = abstract.userNonce().utf8();
 
     const adataString1 = abstract.getAdditionalDataUtf8();
     const adataString2 = abstract.getAdditionalDataUtf8();

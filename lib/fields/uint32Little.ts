@@ -28,6 +28,10 @@ export class UInt32Little {
   }
 
   string(): string {
+    return this.utf8();
+  }
+
+  utf8(): string {
     return BoostUtils.trimBufferString(this.data, true);
   }
 }

@@ -1,5 +1,6 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
+import { UInt32Little } from './fields/uint32Little';
 
 export class BoostPowMetadataModel {
 
@@ -8,7 +9,7 @@ export class BoostPowMetadataModel {
         private minerPubKeyHash: Buffer,
         private extraNonce1: Buffer,
         private extraNonce2: Buffer,
-        private userNonce: Buffer,
+        private UserNonce: UInt32Little,
         private additionalData: Buffer
     ) {
     }
@@ -27,7 +28,7 @@ export class BoostPowMetadataModel {
             BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false),
             BoostUtils.createBufferAndPad(params.extraNonce1, 4, false),
             BoostUtils.createBufferAndPad(params.extraNonce2, 8, false),
-            BoostUtils.createBufferAndPad(params.userNonce, 4, false),
+            new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
             new Buffer(params.additionalData, 'hex'),
         );
     }
@@ -46,17 +47,9 @@ export class BoostPowMetadataModel {
             params.minerPubKeyHash,
             params.extraNonce1,
             params.extraNonce2,
-            params.userNonce,
+            new UInt32Little(params.userNonce),
             params.additionalData,
         );
-    }
-    public trimBufferString(str: string, trimLeadingNulls = true): string {
-        const content = Buffer.from(str, 'hex').toString('utf8');
-        if (trimLeadingNulls) {
-            return content.replace(/\0/g, '');
-        } else {
-            return content;
-        }
     }
 
     getTag(): Buffer {
@@ -64,7 +57,7 @@ export class BoostPowMetadataModel {
     }
 
     getTagUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.tag).toString('hex'), true);
+        return BoostUtils.trimBufferString(this.tag, true);
     }
 
     getTagString(): string {
@@ -79,16 +72,8 @@ export class BoostPowMetadataModel {
         return this.minerPubKeyHash.toString('hex');
     }
 
-    getUserNonce(): Buffer {
-        return this.userNonce;
-    }
-
-    getUserNonceUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.userNonce).reverse().toString('hex'), true);
-    }
-
-    getUserNonceNumber(): number {
-        return this.userNonce.readUInt32LE();
+    userNonce(): UInt32Little {
+        return this.UserNonce;
     }
 
     getExtraNonce1Number(): number {
@@ -112,22 +97,15 @@ export class BoostPowMetadataModel {
     }
 
     getAdditionalDataUtf8(): string {
-        return this.trimBufferString(Buffer.from(this.additionalData).toString('hex'), true);
+        return BoostUtils.trimBufferString(this.additionalData, true);
     }
 
     getAdditionalDataString(): string {
         return this.getAdditionalDataUtf8();
     }
 
-    toString() {
-        return Buffer.concat([
-            this.tag,
-            this.minerPubKeyHash,
-            this.extraNonce1,
-            this.extraNonce2,
-            this.userNonce,
-            this.additionalData
-        ]).toString('hex');
+    toString(): string {
+        return this.toBuffer().toString('hex');
     }
 
     getCoinbaseString() {
@@ -148,7 +126,7 @@ export class BoostPowMetadataModel {
             minerPubKeyHash: this.minerPubKeyHash.toString('hex'),
             extraNonce1: this.extraNonce1.toString('hex'),
             extraNonce2: this.extraNonce2.toString('hex'),
-            userNonce: this.userNonce.toString('hex'),
+            userNonce: this.UserNonce.hex(),
             additionalData: this.additionalData.toString('hex'),
         };
     }
@@ -159,7 +137,7 @@ export class BoostPowMetadataModel {
             this.minerPubKeyHash,
             this.extraNonce1,
             this.extraNonce2,
-            this.userNonce,
+            this.UserNonce.buffer(),
             this.additionalData
         ]);
     }

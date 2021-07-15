@@ -501,8 +501,8 @@ describe("boost integration test ", () => {
   });
 
   it("should get user nonce from metadata", async () => {
-    expect(metadata.getUserNonceNumber()).to.eql(userNonceNumber);
-    expect(metadata.getUserNonce()).to.eql(userNonceBuffer);
+    expect(metadata.userNonce().number()).to.eql(userNonceNumber);
+    expect(metadata.userNonce().buffer()).to.eql(userNonceBuffer);
   });
 
   it("should get miner pubkey hash from metadata", async () => {

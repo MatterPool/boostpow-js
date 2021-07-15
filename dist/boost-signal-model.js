@@ -75,9 +75,9 @@ class BoostSignalModel {
             return null;
         }
         if (hex) {
-            return this.boostPowMetadata.getUserNonce().toString('hex');
+            return this.boostPowMetadata.userNonce().hex();
         }
-        return this.boostPowMetadata.getUserNonceUtf8();
+        return this.boostPowMetadata.userNonce().utf8();
     }
     additionalData(hex) {
         if (!this.boostPowMetadata) {
