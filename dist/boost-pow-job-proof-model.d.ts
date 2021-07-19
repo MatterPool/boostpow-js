@@ -16,6 +16,7 @@ export declare class BoostPowJobProofModel {
     private ExtraNonce2;
     private Nonce;
     private MinerPubKeyHash;
+    private GeneralPurposeBits?;
     private txid?;
     private vin?;
     private spentTxid?;
@@ -29,8 +30,10 @@ export declare class BoostPowJobProofModel {
         extraNonce1: string;
         extraNonce2: string;
         minerPubKeyHash?: string;
+        generalPurposeBits?: string;
     }): BoostPowJobProofModel;
     time(): UInt32Little;
+    generalPurposeBits(): UInt32Little | undefined;
     extraNonce1(): UInt32Big;
     extraNonce2(): UInt64Big;
     nonce(): UInt32Little;
@@ -44,9 +47,19 @@ export declare class BoostPowJobProofModel {
         nonce: string;
         extraNonce1: string;
         extraNonce2: string;
+        generalPurposeBits: string;
         minerPubKeyHash: string;
+    } | {
+        signature: string;
+        minerPubKey: string;
+        time: string;
+        nonce: string;
+        extraNonce1: string;
+        extraNonce2: string;
+        minerPubKeyHash: string;
+        generalPurposeBits?: undefined;
     };
-    toHex(): string;
+    toScript(): bsv.Script;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined;
     static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined;
     static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
@@ -60,7 +73,6 @@ export declare class BoostPowJobProofModel {
     getVin(): number | undefined;
     getSpentTxid(): string | undefined;
     getSpentVout(): number | undefined;
-    toASM(): string;
     static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel;
     toString(): string;
     toBuffer(): string;

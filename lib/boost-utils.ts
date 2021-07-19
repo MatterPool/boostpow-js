@@ -134,6 +134,10 @@
         return Buffer.concat([buf, pad]);
     }
 
+    static generalPurposeBitsMask(): number {
+      return 0xE0001FFF;
+    }
+
     static createBufferAndPad(buf: any, length: number, reverse = true): any {
         if (!buf) {
             const emptyBuffer = Buffer.alloc(length);

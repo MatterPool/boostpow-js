@@ -118,6 +118,9 @@ class BoostUtils {
         let pad = Buffer.alloc(length - str.length);
         return Buffer.concat([buf, pad]);
     }
+    static generalPurposeBitsMask() {
+        return 0xE0001FFF;
+    }
     static createBufferAndPad(buf, length, reverse = true) {
         if (!buf) {
             const emptyBuffer = Buffer.alloc(length);

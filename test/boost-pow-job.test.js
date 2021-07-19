@@ -28,6 +28,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
       tag: "",
       additionalData: "",
       userNonce: "00000000",
+      useGeneralPurposeBits: false
     });
   });
 
@@ -85,6 +86,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
       tag: tag,
       additionalData: data,
       userNonce: "913914e3",
+      useGeneralPurposeBits: false
     });
   });
 
@@ -165,6 +167,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
       additionalData:
         "000000000000000000000000000000000000006d657461646174612068657265",
       userNonce: "913914e3",
+      useGeneralPurposeBits: false
     });
 
     expect(job.toObject()).to.eql({
@@ -176,6 +179,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
       additionalData:
         "000000000000000000000000000000000000006d657461646174612068657265",
       userNonce: "913914e3",
+      useGeneralPurposeBits: false
     });
   });
 

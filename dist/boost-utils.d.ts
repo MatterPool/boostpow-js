@@ -22,5 +22,6 @@ export declare class BoostUtils {
     static difficulty2bits(difficulty: number): number;
     static getTargetAsNumberBuffer(diff: any): any;
     static stringToBuffer(str: string, length?: number): Buffer;
+    static generalPurposeBitsMask(): number;
     static createBufferAndPad(buf: any, length: number, reverse?: boolean): any;
 }
