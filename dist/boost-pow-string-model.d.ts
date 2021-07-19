@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowStringModel {
@@ -11,6 +12,7 @@ export declare class BoostPowStringModel {
     hash(): Digest32;
     id(): Digest32;
     category(): Int32Little;
+    magicNumber(): UInt16Little;
     content(): Digest32;
     contentString(trimLeadingNulls?: boolean): string;
     bits(): number;

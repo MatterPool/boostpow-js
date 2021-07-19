@@ -23,5 +23,8 @@ export declare class BoostUtils {
     static getTargetAsNumberBuffer(diff: any): any;
     static stringToBuffer(str: string, length?: number): Buffer;
     static generalPurposeBitsMask(): number;
+    static generalPurposeBits(category: number): number;
+    static magicNumber(category: number): number;
+    static version(category: number): number;
     static createBufferAndPad(buf: any, length: number, reverse?: boolean): any;
 }

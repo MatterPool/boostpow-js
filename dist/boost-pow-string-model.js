@@ -4,6 +4,7 @@ exports.BoostPowStringModel = void 0;
 const bsv = require("bsv");
 const int32Little_1 = require("./fields/int32Little");
 const uint32Little_1 = require("./fields/uint32Little");
+const uint16Little_1 = require("./fields/uint16Little");
 const digest32_1 = require("./fields/digest32");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowStringModel {
@@ -32,6 +33,9 @@ class BoostPowStringModel {
     }
     category() {
         return int32Little_1.Int32Little.fromNumber(this._blockheader.version);
+    }
+    magicNumber() {
+        return uint16Little_1.UInt16Little.fromNumber(boost_utils_1.BoostUtils.magicNumber(this.category().number()));
     }
     content() {
         return new digest32_1.Digest32(new Buffer(this.toObject().content, 'hex').reverse());

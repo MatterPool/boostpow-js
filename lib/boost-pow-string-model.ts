@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
 import { BoostPowJobModel } from './boost-pow-job-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -40,6 +41,10 @@ export class BoostPowStringModel {
 
     category(): Int32Little {
       return Int32Little.fromNumber(this._blockheader.version);
+    }
+
+    magicNumber(): UInt16Little {
+      return UInt16Little.fromNumber(BoostUtils.magicNumber(this.category().number()));
     }
 
     content(): Digest32 {

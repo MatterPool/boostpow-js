@@ -139,7 +139,7 @@
     }
 
     static generalPurposeBits(category: number): number {
-      return (~generalPurposeBitsMask() & category >> 13);
+      return (~this.generalPurposeBitsMask() & category >> 13);
     }
 
     static magicNumber(category: number): number {
@@ -147,7 +147,7 @@
     }
 
     static version(category: number): number {
-      return generalPurposeBitsMask() & category;
+      return this.generalPurposeBitsMask() & category;
     }
 
     static createBufferAndPad(buf: any, length: number, reverse = true): any {
