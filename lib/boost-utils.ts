@@ -138,6 +138,18 @@
       return 0xE0001FFF;
     }
 
+    static generalPurposeBits(category: number): number {
+      return (~generalPurposeBitsMask() & category >> 13);
+    }
+
+    static magicNumber(category: number): number {
+      return (0x00001FFF & category) | ((0xE0000000 & category) >> 16);
+    }
+
+    static version(category: number): number {
+      return generalPurposeBitsMask() & category;
+    }
+
     static createBufferAndPad(buf: any, length: number, reverse = true): any {
         if (!buf) {
             const emptyBuffer = Buffer.alloc(length);
