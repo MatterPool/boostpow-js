@@ -111,6 +111,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
       additionalData:
         "9400000000000000000000000000000000000000000000000000000000000000",
       userNonce: "88660000",
+      useGeneralPurposeBits: false
     });
 
     var expectedPubKeyHash = "92e4d5ab4bb067f872d28f44d3e5433e56fca190";

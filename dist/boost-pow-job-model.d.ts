@@ -31,6 +31,7 @@ export declare class BoostPowJobModel {
         tag?: string;
         additionalData?: string;
         userNonce?: string;
+        useGeneralPurposeBits?: boolean;
     }): BoostPowJobModel;
     getBits(): number;
     bits(): number;
@@ -43,6 +44,7 @@ export declare class BoostPowJobModel {
         tag: string;
         additionalData: string;
         userNonce: string;
+        useGeneralPurposeBits: boolean;
     };
     getTargetAsNumberHex(): any;
     getTargetAsNumberBuffer(): any;
@@ -50,7 +52,7 @@ export declare class BoostPowJobModel {
     toHex(): string;
     private toOpCode;
     private static fromOpCode;
-    toScript(isHex?: boolean): bsv.Script;
+    toScript(): bsv.Script;
     getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;
     static readScript(script: any, txid?: string, vout?: number, value?: number): BoostPowJobModel;
@@ -83,7 +85,7 @@ export declare class BoostPowJobModel {
      */
     static createRedeemTransaction(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug?: boolean): null | {
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | {
         boostPowString: BoostPowStringModel | null;
         boostPowMetadata: BoostPowMetadataModel | null;
     };

@@ -55,6 +55,7 @@ export class BoostPowJobModel {
         tag?: string,
         additionalData?: string,
         userNonce?: string,
+        useGeneralPurposeBits?: boolean
     }): BoostPowJobModel {
 
         if (params.content && params.content.length > 64) {
@@ -76,6 +77,7 @@ export class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.')
         }
+
         if(!params.userNonce) {
             let getRandomInt = (max) => {
                 return Math.floor(Math.random() * max);
@@ -92,8 +94,9 @@ export class BoostPowJobModel {
             new Bytes(params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0)),
             // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
             new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
-            false
+            params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false
         );
+
     }
 
     getBits(): number {
@@ -122,6 +125,7 @@ export class BoostPowJobModel {
             tag: this.Tag.hex(),
             additionalData: this.AdditionalData.hex(),
             userNonce: this.UserNonce.hex(),
+            useGeneralPurposeBits: this.useGeneralPurposeBits
         };
     }
 
@@ -140,7 +144,7 @@ export class BoostPowJobModel {
     }
 
     toHex(): string {
-        return this.toScript(true);
+        return this.toScript().toHex();
     }
 
     private toOpCode(num:Buffer)  {
@@ -167,7 +171,7 @@ export class BoostPowJobModel {
         }
     }
 
-    toScript(isHex: boolean = false): bsv.Script {
+    toScript(): bsv.Script {
         let buildOut = bsv.Script();
 
         buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
@@ -191,21 +195,6 @@ export class BoostPowJobModel {
             buildOut.add(op);
         }
 
-        for (let i = 0; i < buildOut.chunks.length ; i++) {
-            if (!buildOut.checkMinimalPush(i)) {
-                throw new Error('not min push');
-            }
-        }
-
-        const hex = buildOut.toHex();
-        const fromhex = bsv.Script.fromHex(hex);
-        const hexIso = fromhex.toHex();
-        if (hex != hexIso) {
-            throw new Error('Not isomorphic');
-        }
-        if (isHex) {
-            return hexIso;
-        }
         // Return script
         return buildOut;
     }
@@ -493,23 +482,28 @@ export class BoostPowJobModel {
         });
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, debug: boolean = false): null | { boostPowString: BoostPowStringModel | null, boostPowMetadata: BoostPowMetadataModel | null } {
-        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
-        if (debug) {
-            console.log('BoostPowString.tryValidateJobProof')
-            console.log('category', boostPowJob.category().hex(), boostPowJob.category().buffer().byteLength);
-            console.log('content', boostPowJob.content().hex(), boostPowJob.content().buffer().byteLength);
-            console.log('boostPowMetadataCoinbaseString', boostPowMetadataCoinbaseString.toBuffer().toString('hex'), boostPowMetadataCoinbaseString, boostPowMetadataCoinbaseString.hash());
-            console.log('time', boostPowJobProof.time().hex(), boostPowJobProof.time().buffer().byteLength);
-            console.log('target', boostPowJob.getTargetAsNumberBuffer().toString('hex'), boostPowJob.getTargetAsNumberBuffer().byteLength);
-            console.log('nonce', boostPowJobProof.nonce().hex(), boostPowJobProof.nonce().buffer().byteLength)
-            console.log('userNonce', boostPowJob.userNonce().hex(), boostPowJob.userNonce().buffer().byteLength);
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: BoostPowStringModel | null, boostPowMetadata: BoostPowMetadataModel | null } {
+        var category: Buffer;
 
-            console.log("metadata hash:", boostPowMetadataCoinbaseString.hash().hex());
+        if (boostPowJob.useGeneralPurposeBits) {
+          var generalPurposeBits = boostPowJobProof.generalPurposeBits();
+          if (generalPurposeBits) {
+            category = BoostUtils.writeUInt32LE(
+              (boostPowJob.category().number() & BoostUtils.generalPurposeBitsMask()) |
+                (generalPurposeBits.number() & ~BoostUtils.generalPurposeBitsMask()));
+          } else {
+            return null;
+          }
+        } else if (boostPowJobProof.generalPurposeBits()) {
+            return null;
+        } else {
+          category = boostPowJob.category().buffer();
         }
 
+        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
+
         const headerBuf = Buffer.concat([
-            boostPowJob.category().buffer(),
+            category,
             boostPowJob.content().buffer(),
             boostPowMetadataCoinbaseString.hash().buffer(),
             boostPowJobProof.time().buffer(),
@@ -518,20 +512,11 @@ export class BoostPowJobModel {
         ]);
 
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
-        if (debug) {
-            console.log('boostHeader candidate', headerBuf.toString('hex'), blockHeader);
-        }
         if (blockHeader.validProofOfWork()) {
-            if (debug) {
-                console.log('BoostPowString.tryValidateJobProof is valid')
-            }
             return {
                 boostPowString: new BoostPowStringModel(blockHeader),
                 boostPowMetadata: boostPowMetadataCoinbaseString,
             }
-        }
-        if (debug) {
-            console.log('BoostPowString.tryValidateJobProof is invalid')
         }
         return null;
     }

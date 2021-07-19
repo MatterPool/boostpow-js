@@ -30,15 +30,15 @@ describe("boost #BoostPowJobProof", () => {
       nonce: "00000005",
     });
 
-    expect(jobProof.toHex()).to.eql(
+    expect(jobProof.toScript().toHex()).to.eql(
       "20000000000000000000000000000000000000000000000000000000000000000621000000000000000000000000000000000000000000000000000000000000000006040000000504123000090800000003000000030402000000140000000000000000000000000000000000000001"
     );
 
     const fromHex = index.BoostPowJobProof.fromHex(
       "20000000000000000000000000000000000000000000000000000000000000000621000000000000000000000000000000000000000000000000000000000000000006040000000504123000090800000003000000030402000000140000000000000000000000000000000000000001"
     );
-    const hexAgain = fromHex.toHex();
-    expect(jobProof.toHex()).to.eql(hexAgain);
+    const hexAgain = fromHex.toScript().toHex();
+    expect(jobProof.toScript().toHex()).to.eql(hexAgain);
   });
 
   // 00000000000000000000000000000000000000009fb8cb68b8850a13c7438e26e1d277b748be657a4600002c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -74,10 +74,10 @@ describe("boost #BoostPowJobProof", () => {
       "0000000000000000000000000000000000000000000000000000000000000006 000000000000000000000000000000000000000000000000000000000000000006 00000005 12300009 0000000300000003 02000000 0000000000000000000000000000000000000001";
     expect(jobProof.toString()).to.eql(str);
     const fromString = index.BoostPowJobProof.fromString(str);
-    expect(jobProof.toASM()).to.eql(fromString.toASM());
-    expect(jobProof.toASM()).to.eql(asm);
-    expect(jobProof.toHex()).to.eql(
-      index.BoostPowJobProof.fromASM(jobProof.toASM()).toHex()
+    expect(jobProof.toScript().toASM()).to.eql(fromString.toScript().toASM());
+    expect(jobProof.toScript().toASM()).to.eql(asm);
+    expect(jobProof.toScript().toHex()).to.eql(
+      index.BoostPowJobProof.fromASM(jobProof.toScript().toASM()).toScript().toHex()
     );
   });
 
@@ -117,7 +117,7 @@ describe("boost #BoostPowJobProof", () => {
   });
 
   it("should success load job proof from scripthex", async () => {
-    const jobProof = index.BoostPowJobProof.fromScript(
+    const jobProof = index.BoostPowJobProof.fromHex(
       "483045022100cd0c5025794c5bd5120a0634af824520360cb354df2c00c0606ccf227c44d0d802206a4040f5c0173c83827cd4d9e83f6c3f9fc09e336970776c02d07c211a977576412102f96821f6d9a6150e0ea06b00c8c77597e863330041be70438ff6fb211d7efe660462a3aeb004b851825e0800000000000000000446037ef11492e4d5ab4bb067f872d28f44d3e5433e56fca190"
     );
     expect(jobProof.toObject()).to.eql({
@@ -204,8 +204,8 @@ describe("boost #BoostPowJobProof", () => {
       time: "12300009",
       nonce: "00000005",
     });
-    var jobProofScript = jobProof.toASM();
-    expect(jobProofScript).to.eq(jobProof.toASM());
+    var jobProofScript = jobProof.toScript().toASM();
+    expect(jobProofScript).to.eq(jobProof.toScript().toASM());
   });
 });
 
