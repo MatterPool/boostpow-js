@@ -10,9 +10,9 @@ class BoostSignalRankerModel {
         this.lastSignalTime_ = 0;
         this.recentSignalTime_ = 0;
         this.totalDifficulty_ = 0;
-        this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
+        this.boostSignals.sort((a, b) => (a.difficulty > b.difficulty) ? -1 : 1);
         for (const signal of boostSignals) {
-            this.totalDifficulty_ += signal.difficulty();
+            this.totalDifficulty_ += signal.difficulty;
         }
         for (const sig of this.boostSignals) {
             if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time.number) {

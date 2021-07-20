@@ -1,8 +1,6 @@
 import * as bsv from 'bsv';
 import { BoostUtils } from '../boost-utils';
 
-const BN = require('bn.js');
-
 export class Digest32 {
   constructor(
     private data: Buffer,
@@ -19,8 +17,8 @@ export class Digest32 {
     return new Buffer(this.data).reverse().toString('hex');
   }
 
-  get number() {
-    return new BN(this.hex, 'hex', 'be');
+  get number(): bsv.crypto.BN {
+    return new bsv.crypto.BN(this.hex, 'hex', 'be');
   }
 
   get buffer(): Buffer {

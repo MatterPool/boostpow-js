@@ -16,7 +16,7 @@ export declare class BoostSignalModel {
     get powString(): BoostPowStringModel;
     get metadata(): BoostPowMetadataModel;
     get hash(): Digest32;
-    difficulty(): number;
+    get difficulty(): number;
     get content(): Digest32;
     get category(): Int32Little;
     get metadataHash(): Digest32;

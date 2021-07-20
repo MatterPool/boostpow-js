@@ -49,8 +49,8 @@ export class BoostSignalModel {
         return this.boostPowString.hash;
     }
 
-    public difficulty(): number {
-        return this.boostPowString.difficulty();
+    public get difficulty(): number {
+        return this.boostPowString.difficulty;
     }
 
     public get content(): Digest32 {

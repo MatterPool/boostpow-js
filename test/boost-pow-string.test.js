@@ -163,24 +163,11 @@ describe("boost #BoostPowString validateProofOfWork ", () => {
     expect(result).to.eql(false);
   });
 
-  it("getTargetDifficulty success", async () => {
-    // Block header:
-    // 010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991
-    // https://search.matterpool.io/block/0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca
-    const boostPowString = index.BoostPowString.fromString(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    );
-    const targetDiff = boostPowString.targetDifficulty(443192243);
-    expect(targetDiff.toHex()).to.eql(
-      "6a93b30000000000000000000000000000000000000000000000"
-    );
-  });
-
   it("getDifficulty success", async () => {
     const boostPowString = index.BoostPowString.fromString(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
     );
-    const diff = boostPowString.difficulty();
+    const diff = boostPowString.difficulty;
     expect(diff).to.eql(157416.40184364);
   });
 
@@ -248,9 +235,9 @@ describe("BoostPowString", () => {
       "dlrow olleH"
     );
     expect(boostPowString.content.string).to.eql("dlrow olleH");
-    expect(boostPowString.bits()).to.eql(486604799);
-    expect(boostPowString.bits().toString(16)).to.eql("1d00ffff");
-    expect(boostPowString.difficulty()).to.eql(1);
+    expect(boostPowString.bits.number).to.eql(486604799);
+    expect(boostPowString.bits.number.toString(16)).to.eql("1d00ffff");
+    expect(boostPowString.difficulty).to.eql(1);
     expect(boostPowString.metadataHash.hex).to.eql(
       "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a"
     );
@@ -508,11 +495,11 @@ const expectedLockingScriptV2 =
   });
 
   it("should get difficulty from locking script", async () => {
-    expect(jobV1.getDiff()).to.eql(difficulty);
-    expect(jobV1.getTargetAsNumberHex()).to.eql(compactHex);
+    expect(jobV1.difficulty).to.eql(difficulty);
+    expect(jobV1.bits.number.toString(16)).to.eql(compactHex);
 
-    expect(jobV2.getDiff()).to.eql(difficulty);
-    expect(jobV2.getTargetAsNumberHex()).to.eql(compactHex);
+    expect(jobV2.difficulty).to.eql(difficulty);
+    expect(jobV2.bits.number.toString(16)).to.eql(compactHex);
   });
 
   it("should get tag from locking script", async () => {
@@ -659,7 +646,7 @@ const expectedLockingScriptV2 =
     expect(proofV1.boostPowString.nonce.number).to.eql(nonceV1Number);
     expect(proofV1.boostPowString.time.number).to.eql(timeNumber);
     expect(proofV1.boostPowString.category.number).to.eql(categoryNumber);
-    expect(proofV1.boostPowString.bits()).to.eql(compactNumber);
+    expect(proofV1.boostPowString.bits.number).to.eql(compactNumber);
     expect(proofV1.boostPowString.metadataHash.hex.toUpperCase()).to.eql(
       metadataHashHex
     );
@@ -681,7 +668,7 @@ const expectedLockingScriptV2 =
     expect(proofV2.boostPowString.nonce.number).to.eql(nonceV2Number);
     expect(proofV2.boostPowString.time.number).to.eql(timeNumber);
     expect(proofV2.boostPowString.category.number).to.eql(categoryWithGPBNumber);
-    expect(proofV2.boostPowString.bits()).to.eql(compactNumber);
+    expect(proofV2.boostPowString.bits.number).to.eql(compactNumber);
     expect(proofV2.boostPowString.metadataHash.hex.toUpperCase()).to.eql(
       metadataHashHex
     );

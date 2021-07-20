@@ -39,10 +39,10 @@ export class BoostSignalRankerModel {
     private constructor(
         private boostSignals: BoostSignalModel[],
     ) {
-        this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
+        this.boostSignals.sort((a, b) => (a.difficulty > b.difficulty) ? -1 : 1);
 
         for (const signal of boostSignals) {
-            this.totalDifficulty_ += signal.difficulty();
+            this.totalDifficulty_ += signal.difficulty;
         }
         for (const sig of this.boostSignals) {
             if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time.number) {
@@ -200,7 +200,7 @@ export class BoostSignalRankerModel {
         }
         return boostSignalSummaries;
     }
-    
+
     private groupPrivate(field1: string): BoostSignalSummary[] {
         if (!field1 || field1 === '') {
             throw new Error('invalid arg');

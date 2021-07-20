@@ -4,6 +4,7 @@ import { UInt32Little } from './fields/uint32Little';
 import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
 import { Bytes } from './fields/bytes';
+import { Difficulty } from './fields/difficulty';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
@@ -12,7 +13,7 @@ import { BoostUtils } from './boost-utils';
 export class BoostPowJobModel {
     private constructor(
         private Content: Digest32,
-        private difficulty: number,
+        private Difficulty: number,
         private Category: Int32Little,
         private Tag: Bytes,
         private AdditionalData: Bytes,
@@ -35,10 +36,6 @@ export class BoostPowJobModel {
 
     get content(): Digest32 {
         return this.Content;
-    }
-
-    getDiff(): number {
-        return this.difficulty;
     }
 
     get tag(): Bytes {
@@ -104,22 +101,12 @@ export class BoostPowJobModel {
 
     }
 
-    getBits(): number {
-        return BoostUtils.difficulty2bits(this.difficulty);
+    get difficulty(): number {
+        return this.Difficulty;
     }
 
-    bits(): number {
-        return BoostUtils.difficulty2bits(this.difficulty);
-    }
-
-    public static hexBitsToDifficulty(hexBits: string): number {
-        let targetHex = (hexBits.match(/../g) || []).join('');
-        let targetInt = parseInt(targetHex, 16);
-        return BoostUtils.difficulty(targetInt);
-    }
-
-    getBitsHex(): string {
-        return this.getTargetAsNumberHex();
+    get bits(): UInt32Little {
+        return UInt32Little.fromNumber(BoostUtils.difficulty2bits(this.difficulty));
     }
 
     toObject () {

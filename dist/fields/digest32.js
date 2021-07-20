@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Digest32 = void 0;
+const bsv = require("bsv");
 const boost_utils_1 = require("../boost-utils");
-const BN = require('bn.js');
 class Digest32 {
     constructor(data) {
         this.data = data;
@@ -16,7 +16,7 @@ class Digest32 {
         return new Buffer(this.data).reverse().toString('hex');
     }
     get number() {
-        return new BN(this.hex, 'hex', 'be');
+        return new bsv.crypto.BN(this.hex, 'hex', 'be');
     }
     get buffer() {
         return this.data;

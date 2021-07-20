@@ -51,8 +51,8 @@ export class BoostPowStringModel {
         return new Digest32(new Buffer(this.toObject().content,'hex').reverse());
     }
 
-    bits(): number {
-        return this.toObject().bits;
+    get bits(): UInt32Little {
+        return UInt32Little.fromNumber(this._blockheader.toObject().bits);
     }
 
     get metadataHash(): Digest32 {
@@ -66,7 +66,7 @@ export class BoostPowStringModel {
     get time(): UInt32Little {
         return UInt32Little.fromNumber(this._blockheader.time);
     }
-
+/*
     static nBitsHexToDifficultyNumber(nbits: string): number {
         return BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
     }
@@ -79,7 +79,7 @@ export class BoostPowStringModel {
     static difficultyNumberToNBitsHex(diff: number): string {
         const bitsInt32 = BoostUtils.difficulty2bits(diff);
         return bitsInt32.toString(16);
-    }
+    }*/
 
     static validProofOfWorkFromBuffer(buf): boolean {
         const blockheader = bsv.BlockHeader.fromBuffer(buf);
@@ -182,7 +182,7 @@ export class BoostPowStringModel {
             hash: blockheaderObj.hash,
             content: blockheaderObj.prevHash,
             bits: blockheaderObj.bits,
-            difficulty: this.difficulty(),
+            difficulty: this.difficulty,
             category: blockheaderObj.version,
             metadataHash: blockheaderObj.merkleRoot,
             time: blockheaderObj.time,
@@ -191,11 +191,8 @@ export class BoostPowStringModel {
         return boostheaderObj;
     }
 
-    difficulty() : number {
+    get difficulty() : number {
         return this._blockheader.getDifficulty();
     }
 
-    targetDifficulty(bits?: number) {
-        return this._blockheader.getTargetDifficulty(bits);
-    }
 }

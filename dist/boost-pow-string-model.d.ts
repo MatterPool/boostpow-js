@@ -14,13 +14,10 @@ export declare class BoostPowStringModel {
     get category(): Int32Little;
     get magicNumber(): UInt16Little;
     get content(): Digest32;
-    bits(): number;
+    get bits(): UInt32Little;
     get metadataHash(): Digest32;
     get nonce(): UInt32Little;
     get time(): UInt32Little;
-    static nBitsHexToDifficultyNumber(nbits: string): number;
-    getTargetAsNumberBuffer(): any;
-    static difficultyNumberToNBitsHex(diff: number): string;
     static validProofOfWorkFromBuffer(buf: any): boolean;
     static validProofOfWorkFromString(str: any): boolean;
     static validProofOfWorkFromObject(obj: any): boolean;
@@ -52,6 +49,5 @@ export declare class BoostPowStringModel {
         time: any;
         nonce: any;
     };
-    difficulty(): number;
-    targetDifficulty(bits?: number): any;
+    get difficulty(): number;
 }

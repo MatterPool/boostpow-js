@@ -37,8 +37,8 @@ class BoostSignalModel {
     get hash() {
         return this.boostPowString.hash;
     }
-    difficulty() {
-        return this.boostPowString.difficulty();
+    get difficulty() {
+        return this.boostPowString.difficulty;
     }
     get content() {
         return this.boostPowString.content;

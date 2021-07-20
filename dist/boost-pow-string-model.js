@@ -40,8 +40,8 @@ class BoostPowStringModel {
     get content() {
         return new digest32_1.Digest32(new Buffer(this.toObject().content, 'hex').reverse());
     }
-    bits() {
-        return this.toObject().bits;
+    get bits() {
+        return uint32Little_1.UInt32Little.fromNumber(this._blockheader.toObject().bits);
     }
     get metadataHash() {
         return new digest32_1.Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
@@ -52,17 +52,20 @@ class BoostPowStringModel {
     get time() {
         return uint32Little_1.UInt32Little.fromNumber(this._blockheader.time);
     }
-    static nBitsHexToDifficultyNumber(nbits) {
-        return boost_utils_1.BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
-    }
-    getTargetAsNumberBuffer() {
-        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty());
-        return Buffer.from(i.toString(16), 'hex').reverse();
-    }
-    static difficultyNumberToNBitsHex(diff) {
-        const bitsInt32 = boost_utils_1.BoostUtils.difficulty2bits(diff);
-        return bitsInt32.toString(16);
-    }
+    /*
+        static nBitsHexToDifficultyNumber(nbits: string): number {
+            return BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
+        }
+    
+        getTargetAsNumberBuffer(): any {
+            const i = BoostUtils.difficulty2bits(this.difficulty());
+            return Buffer.from(i.toString(16), 'hex').reverse();
+        }
+    
+        static difficultyNumberToNBitsHex(diff: number): string {
+            const bitsInt32 = BoostUtils.difficulty2bits(diff);
+            return bitsInt32.toString(16);
+        }*/
     static validProofOfWorkFromBuffer(buf) {
         const blockheader = bsv.BlockHeader.fromBuffer(buf);
         if (blockheader.validProofOfWork()) {
@@ -150,7 +153,7 @@ class BoostPowStringModel {
             hash: blockheaderObj.hash,
             content: blockheaderObj.prevHash,
             bits: blockheaderObj.bits,
-            difficulty: this.difficulty(),
+            difficulty: this.difficulty,
             category: blockheaderObj.version,
             metadataHash: blockheaderObj.merkleRoot,
             time: blockheaderObj.time,
@@ -158,11 +161,8 @@ class BoostPowStringModel {
         };
         return boostheaderObj;
     }
-    difficulty() {
+    get difficulty() {
         return this._blockheader.getDifficulty();
-    }
-    targetDifficulty(bits) {
-        return this._blockheader.getTargetDifficulty(bits);
     }
 }
 exports.BoostPowStringModel = BoostPowStringModel;

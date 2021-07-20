@@ -10,9 +10,9 @@ class BoostSignalSummary {
             throw new Error('invalid arg');
         }
         for (const signal of this.boostSignals) {
-            this.totalDifficulty_ += signal.difficulty();
+            this.totalDifficulty_ += signal.difficulty;
         }
-        this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
+        this.boostSignals.sort((a, b) => (a.difficulty > b.difficulty) ? -1 : 1);
         for (const sig of this.boostSignals) {
             if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time) {
                 this.lastSignalTime_ = sig.time;

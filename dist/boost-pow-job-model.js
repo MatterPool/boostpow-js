@@ -11,11 +11,11 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-    constructor(Content, difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, 
+    constructor(Content, Difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
     txid, vout, value) {
         this.Content = Content;
-        this.difficulty = difficulty;
+        this.Difficulty = Difficulty;
         this.Category = Category;
         this.Tag = Tag;
         this.AdditionalData = AdditionalData;
@@ -33,9 +33,6 @@ class BoostPowJobModel {
     }
     get content() {
         return this.Content;
-    }
-    getDiff() {
-        return this.difficulty;
     }
     get tag() {
         return this.Tag;
@@ -73,19 +70,11 @@ class BoostPowJobModel {
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
         new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false);
     }
-    getBits() {
-        return boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
+    get difficulty() {
+        return this.Difficulty;
     }
-    bits() {
-        return boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
-    }
-    static hexBitsToDifficulty(hexBits) {
-        let targetHex = (hexBits.match(/../g) || []).join('');
-        let targetInt = parseInt(targetHex, 16);
-        return boost_utils_1.BoostUtils.difficulty(targetInt);
-    }
-    getBitsHex() {
-        return this.getTargetAsNumberHex();
+    get bits() {
+        return uint32Little_1.UInt32Little.fromNumber(boost_utils_1.BoostUtils.difficulty2bits(this.difficulty));
     }
     toObject() {
         return {

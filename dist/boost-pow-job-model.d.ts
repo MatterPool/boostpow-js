@@ -9,7 +9,7 @@ import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
     private Content;
-    private difficulty;
+    private Difficulty;
     private Category;
     private Tag;
     private AdditionalData;
@@ -22,7 +22,6 @@ export declare class BoostPowJobModel {
     get category(): Int32Little;
     get magicNumber(): UInt16Little;
     get content(): Digest32;
-    getDiff(): number;
     get tag(): Bytes;
     get additionalData(): Bytes;
     get userNonce(): UInt32Little;
@@ -35,10 +34,8 @@ export declare class BoostPowJobModel {
         userNonce?: string;
         useGeneralPurposeBits?: boolean;
     }): BoostPowJobModel;
-    getBits(): number;
-    bits(): number;
-    static hexBitsToDifficulty(hexBits: string): number;
-    getBitsHex(): string;
+    get difficulty(): number;
+    get bits(): UInt32Little;
     toObject(): {
         content: string;
         diff: number;

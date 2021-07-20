@@ -562,7 +562,7 @@ describe("BoostPowJob", () => {
 
     expect(!!job.getScriptHash()).to.eql(true);
     expect(!!job.getId()).to.eql(true);
-    expect(job.getDiff()).to.eql(21);
+    expect(job.difficulty).to.eql(21);
     expect(job.userNonce.buffer.toString("hex")).to.eql("c8010000");
     expect(job.userNonce.hex).to.eql("c8010000");
     expect(job.userNonce.number).to.eql(456);
@@ -626,12 +626,12 @@ describe("BoostPowJob", () => {
       ).toHex()
     );
 
-    expect(boostPowString.bits()).to.eql(486604799);
-    expect(job.bits()).to.eql(486604799);
-    expect(boostPowString.bits().toString(16)).to.eql("1d00ffff");
-    expect(job.bits().toString(16)).to.eql("1d00ffff");
-    expect(boostPowString.difficulty()).to.eql(1);
-    expect(job.getDifficulty()).to.eql(1);
+    expect(boostPowString.bits.number).to.eql(486604799);
+    expect(job.bits.number).to.eql(486604799);
+    expect(boostPowString.bits.number.toString(16)).to.eql("1d00ffff");
+    expect(job.bits.number.toString(16)).to.eql("1d00ffff");
+    expect(boostPowString.difficulty).to.eql(1);
+    expect(job.difficulty).to.eql(1);
   });
 
   it("should correctly match target and bits for known bitcoin header 0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca", async () => {
@@ -648,17 +648,9 @@ describe("BoostPowJob", () => {
         }).toASM()
       ).toHex()
     );
-    expect(job.bits()).to.eql(443192243);
-    expect(job.bits().toString(16)).to.eql("1a6a93b3");
-    expect(job.getDifficulty()).to.eql(157416.40184364);
-    expect(index.BoostPowJob.hexBitsToDifficulty("1a6a93b3")).to.eql(
-      157416.40184364
-    );
-  });
-
-  it("should correctly get bits and target and category number", async () => {
-    const prodBitsSample = index.BoostPowJob.hexBitsToDifficulty("1802f15b");
-    expect(prodBitsSample).to.eql(373622670066.215);
+    expect(job.bits.number).to.eql(443192243);
+    expect(job.bits.number.toString(16)).to.eql("1a6a93b3");
+    expect(job.difficulty).to.eql(157416.40184364);
   });
 
   it("check to string and from string", async () => {
@@ -861,9 +853,9 @@ describe("BoostPowJob", () => {
       userNonce: userNonce,
     });
 
-    expect(job.getBits()).to.eql(486604799);
-    expect(job.getBitsHex()).to.eql("1d00ffff");
-    expect(job.getBits().toString(16)).to.eql("1d00ffff");
+    expect(job.bits.number).to.eql(486604799);
+    expect(job.bits.hex).to.eql("ffff001d");
+    expect(job.bits.number.toString(16)).to.eql("1d00ffff");
     expect(job.category.number).to.eql(123);
     expect(job.userNonce.number).to.eql(456);
 
@@ -876,10 +868,10 @@ describe("BoostPowJob", () => {
       userNonce: userNonce,
     });
 
-    expect(job.getDiff()).to.eql(409786762471.9213);
-    expect(job.getBits()).to.eql(402829022);
-    expect(job.getBitsHex()).to.eql("1802aede");
-    expect(job.getBits().toString(16)).to.eql("1802aede");
+    expect(job.difficulty).to.eql(409786762471.9213);
+    expect(job.bits.number).to.eql(402829022);
+    expect(job.bits.hex).to.eql("deae0218");
+    expect(job.bits.number.toString(16)).to.eql("1802aede");
   });
 
   it("should correctly get content for capitalists", async () => {
