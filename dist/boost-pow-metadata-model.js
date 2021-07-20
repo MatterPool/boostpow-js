@@ -24,51 +24,51 @@ class BoostPowMetadataModel {
     static fromBuffer(params) {
         return new BoostPowMetadataModel(new bytes_1.Bytes(params.tag), new digest20_1.Digest20(params.minerPubKeyHash), new uint32Big_1.UInt32Big(params.extraNonce1), new uint64Big_1.UInt64Big(params.extraNonce2), new uint32Little_1.UInt32Little(params.userNonce), new bytes_1.Bytes(params.additionalData));
     }
-    tag() {
+    get tag() {
         return this.Tag;
     }
-    minerPubKeyHash() {
+    get minerPubKeyHash() {
         return this.MinerPubKeyHash;
     }
-    userNonce() {
+    get userNonce() {
         return this.UserNonce;
     }
-    extraNonce1() {
+    get extraNonce1() {
         return this.ExtraNonce1;
     }
-    extraNonce2() {
+    get extraNonce2() {
         return this.ExtraNonce2;
     }
-    additionalData() {
+    get additionalData() {
         return this.AdditionalData;
+    }
+    get getCoinbaseString() {
+        return this.toString();
+    }
+    get hash() {
+        return new digest32_1.Digest32(bsv.crypto.Hash.sha256sha256(this.toBuffer()));
     }
     toString() {
         return this.toBuffer().toString('hex');
     }
-    getCoinbaseString() {
-        return this.toString();
-    }
-    hash() {
-        return new digest32_1.Digest32(bsv.crypto.Hash.sha256sha256(this.toBuffer()));
-    }
     toObject() {
         return {
-            tag: this.Tag.hex(),
-            minerPubKeyHash: this.MinerPubKeyHash.hex(),
-            extraNonce1: this.ExtraNonce1.hex(),
-            extraNonce2: this.ExtraNonce2.hex(),
-            userNonce: this.UserNonce.hex(),
-            additionalData: this.AdditionalData.hex(),
+            tag: this.Tag.hex,
+            minerPubKeyHash: this.minerPubKeyHash.hex,
+            extraNonce1: this.extraNonce1.hex,
+            extraNonce2: this.extraNonce2.hex,
+            userNonce: this.userNonce.hex,
+            additionalData: this.additionalData.hex,
         };
     }
     toBuffer() {
         return Buffer.concat([
-            this.Tag.buffer(),
-            this.MinerPubKeyHash.buffer(),
-            this.ExtraNonce1.buffer(),
-            this.ExtraNonce2.buffer(),
-            this.UserNonce.buffer(),
-            this.AdditionalData.buffer()
+            this.tag.buffer,
+            this.minerPubKeyHash.buffer,
+            this.extraNonce1.buffer,
+            this.extraNonce2.buffer,
+            this.userNonce.buffer,
+            this.additionalData.buffer
         ]);
     }
     toHex() {

@@ -32,14 +32,14 @@ export declare class BoostPowJobProofModel {
         minerPubKeyHash?: string;
         generalPurposeBits?: string;
     }): BoostPowJobProofModel;
-    time(): UInt32Little;
-    generalPurposeBits(): UInt32Little | undefined;
-    extraNonce1(): UInt32Big;
-    extraNonce2(): UInt64Big;
-    nonce(): UInt32Little;
-    minerPubKeyHash(): Digest20;
-    signature(): Bytes;
-    minerPubKey(): Bytes;
+    get time(): UInt32Little;
+    get generalPurposeBits(): UInt32Little | undefined;
+    get extraNonce1(): UInt32Big;
+    get extraNonce2(): UInt64Big;
+    get nonce(): UInt32Little;
+    get minerPubKeyHash(): Digest20;
+    get signature(): Bytes;
+    get minerPubKey(): Bytes;
     toObject(): {
         signature: string;
         minerPubKey: string;

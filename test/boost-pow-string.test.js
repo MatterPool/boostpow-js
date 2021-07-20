@@ -15,7 +15,7 @@ describe("boost #BoostPowString.fromObject", () => {
       category: 1,
     });
 
-    expect(obj.hash().hex()).to.eql(
+    expect(obj.hash.hex).to.eql(
       "0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca"
     );
 
@@ -55,7 +55,7 @@ describe("boost #BoostPowString.fromString", () => {
     const boostPowString = index.BoostPowString.fromString(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
     );
-    expect(boostPowString.hash().hex()).to.equal(
+    expect(boostPowString.hash.hex).to.equal(
       "0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca"
     );
   });
@@ -68,7 +68,7 @@ describe("boost #BoostPowString.fromString", () => {
     // 01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc
     // 1000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96
     // 153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc
-    expect(boostPowString.hash().hex()).to.equal(
+    expect(boostPowString.hash.hex).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     );
 
@@ -222,7 +222,7 @@ describe("BoostPowString", () => {
     const boostPowString = index.BoostPowString.fromString(
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     );
-    expect(boostPowString.hash().hex()).to.equal(
+    expect(boostPowString.hash.hex).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     );
     expect(boostPowString.toObject()).to.eql({
@@ -238,26 +238,25 @@ describe("BoostPowString", () => {
       category: 1,
     });
 
-    expect(boostPowString.content().hex()).to.eql(
+    expect(boostPowString.content.hex).to.eql(
       "00000000000000000000000000000000000000000048656c6c6f20776f726c64"
     );
-    expect(boostPowString.content().buffer().toString("hex")).to.eql(
+    expect(boostPowString.content.buffer.toString("hex")).to.eql(
       "646c726f77206f6c6c6548000000000000000000000000000000000000000000"
     );
-    expect(boostPowString.content().string()).to.eql(
+    expect(boostPowString.content.string).to.eql(
       "dlrow olleH"
     );
-    expect(boostPowString.contentString()).to.eql("dlrow olleH");
-    expect(boostPowString.contentString(true)).to.eql("dlrow olleH");
+    expect(boostPowString.content.string).to.eql("dlrow olleH");
     expect(boostPowString.bits()).to.eql(486604799);
     expect(boostPowString.bits().toString(16)).to.eql("1d00ffff");
     expect(boostPowString.difficulty()).to.eql(1);
-    expect(boostPowString.metadataHash().hex()).to.eql(
+    expect(boostPowString.metadataHash.hex).to.eql(
       "acd8278e84b037c47565df65a981d72fb09be5262e8783d4cf4e42633615962a"
     );
-    expect(boostPowString.time().number()).to.eql(1305200806);
-    expect(boostPowString.nonce().number()).to.eql(3698479534);
-    expect(boostPowString.category().number()).to.eql(1);
+    expect(boostPowString.time.number).to.eql(1305200806);
+    expect(boostPowString.nonce.number).to.eql(3698479534);
+    expect(boostPowString.category.number).to.eql(1);
   });
 });
 
@@ -489,23 +488,23 @@ const expectedLockingScriptV2 =
 
   // check getters for job.
   it("should get category from locking script", async () => {
-    expect(jobV1.category().hex()).to.eql(categoryHex);
-    expect(jobV1.category().number()).to.eql(categoryNumber);
-    expect(jobV1.category().buffer()).to.eql(categoryBuffer);
+    expect(jobV1.category.hex).to.eql(categoryHex);
+    expect(jobV1.category.number).to.eql(categoryNumber);
+    expect(jobV1.category.buffer).to.eql(categoryBuffer);
 
-    expect(jobV2.category().hex()).to.eql(categoryHex);
-    expect(jobV2.category().number()).to.eql(categoryNumber);
-    expect(jobV2.category().buffer()).to.eql(categoryBuffer);
+    expect(jobV2.category.hex).to.eql(categoryHex);
+    expect(jobV2.category.number).to.eql(categoryNumber);
+    expect(jobV2.category.buffer).to.eql(categoryBuffer);
   });
 
   it("should get content from locking script", async () => {
-    expect(jobV1.content().hex()).to.eql(contentHex);
-    expect(jobV1.content().buffer()).to.eql(contentBuffer);
-    expect(jobV1.content().string()).to.eql(contentString);
+    expect(jobV1.content.hex).to.eql(contentHex);
+    expect(jobV1.content.buffer).to.eql(contentBuffer);
+    expect(jobV1.content.string).to.eql(contentString);
 
-    expect(jobV2.content().hex()).to.eql(contentHex);
-    expect(jobV2.content().buffer()).to.eql(contentBuffer);
-    expect(jobV2.content().string()).to.eql(contentString);
+    expect(jobV2.content.hex).to.eql(contentHex);
+    expect(jobV2.content.buffer).to.eql(contentBuffer);
+    expect(jobV2.content.string).to.eql(contentString);
   });
 
   it("should get difficulty from locking script", async () => {
@@ -517,97 +516,97 @@ const expectedLockingScriptV2 =
   });
 
   it("should get tag from locking script", async () => {
-    expect(jobV1.tag().hex()).to.eql(tagHex);
-    expect(jobV1.tag().string()).to.eql(tagString);
-    expect(jobV1.tag().buffer()).to.eql(tagBuffer);
+    expect(jobV1.tag.hex).to.eql(tagHex);
+    expect(jobV1.tag.string).to.eql(tagString);
+    expect(jobV1.tag.buffer).to.eql(tagBuffer);
 
-    expect(jobV2.tag().hex()).to.eql(tagHex);
-    expect(jobV2.tag().string()).to.eql(tagString);
-    expect(jobV2.tag().buffer()).to.eql(tagBuffer);
+    expect(jobV2.tag.hex).to.eql(tagHex);
+    expect(jobV2.tag.string).to.eql(tagString);
+    expect(jobV2.tag.buffer).to.eql(tagBuffer);
   });
 
   it("should get addational data from locking script", async () => {
-    expect(jobV1.additionalData().hex()).to.eql(dataHex);
-    expect(jobV1.additionalData().string()).to.eql(dataString);
-    expect(jobV1.additionalData().buffer()).to.eql(dataBuffer);
+    expect(jobV1.additionalData.hex).to.eql(dataHex);
+    expect(jobV1.additionalData.string).to.eql(dataString);
+    expect(jobV1.additionalData.buffer).to.eql(dataBuffer);
 
-    expect(jobV2.additionalData().hex()).to.eql(dataHex);
-    expect(jobV2.additionalData().string()).to.eql(dataString);
-    expect(jobV2.additionalData().buffer()).to.eql(dataBuffer);
+    expect(jobV2.additionalData.hex).to.eql(dataHex);
+    expect(jobV2.additionalData.string).to.eql(dataString);
+    expect(jobV2.additionalData.buffer).to.eql(dataBuffer);
   });
 
   it("should get user nonce from locking script", async () => {
-    expect(jobV1.userNonce().hex()).to.eql(userNonceHex);
-    expect(jobV1.userNonce().number()).to.eql(userNonceNumber);
-    expect(jobV1.userNonce().buffer()).to.eql(userNonceBuffer);
+    expect(jobV1.userNonce.hex).to.eql(userNonceHex);
+    expect(jobV1.userNonce.number).to.eql(userNonceNumber);
+    expect(jobV1.userNonce.buffer).to.eql(userNonceBuffer);
 
-    expect(jobV2.userNonce().hex()).to.eql(userNonceHex);
-    expect(jobV2.userNonce().number()).to.eql(userNonceNumber);
-    expect(jobV2.userNonce().buffer()).to.eql(userNonceBuffer);
+    expect(jobV2.userNonce.hex).to.eql(userNonceHex);
+    expect(jobV2.userNonce.number).to.eql(userNonceNumber);
+    expect(jobV2.userNonce.buffer).to.eql(userNonceBuffer);
   });
 
   // check getters for solution
   it("should get signature", async () => {
-    expect(solutionV1.signature().buffer()).to.eql(signatureBuffer);
-    expect(solutionV1.signature().hex()).to.eql(signatureHex);
+    expect(solutionV1.signature.buffer).to.eql(signatureBuffer);
+    expect(solutionV1.signature.hex).to.eql(signatureHex);
 
-    expect(solutionV2.signature().buffer()).to.eql(signatureBuffer);
-    expect(solutionV2.signature().hex()).to.eql(signatureHex);
+    expect(solutionV2.signature.buffer).to.eql(signatureBuffer);
+    expect(solutionV2.signature.hex).to.eql(signatureHex);
   });
 
   it("should get miner pubkey", async () => {
-    expect(solutionV1.minerPubKey().buffer()).to.eql(minerPubKeyBuffer);
-    expect(solutionV1.minerPubKey().hex()).to.eql(minerPubKeyHex);
+    expect(solutionV1.minerPubKey.buffer).to.eql(minerPubKeyBuffer);
+    expect(solutionV1.minerPubKey.hex).to.eql(minerPubKeyHex);
 
-    expect(solutionV2.minerPubKey().buffer()).to.eql(minerPubKeyBuffer);
-    expect(solutionV2.minerPubKey().hex()).to.eql(minerPubKeyHex);
+    expect(solutionV2.minerPubKey.buffer).to.eql(minerPubKeyBuffer);
+    expect(solutionV2.minerPubKey.hex).to.eql(minerPubKeyHex);
   });
 
   it("should get nonce", async () => {
-    expect(solutionV1.nonce().number()).to.eql(nonceV1Number);
-    expect(solutionV1.nonce().buffer()).to.eql(nonceV1Buffer);
+    expect(solutionV1.nonce.number).to.eql(nonceV1Number);
+    expect(solutionV1.nonce.buffer).to.eql(nonceV1Buffer);
 
-    expect(solutionV2.nonce().number()).to.eql(nonceV2Number);
-    expect(solutionV2.nonce().buffer()).to.eql(nonceV2Buffer);
+    expect(solutionV2.nonce.number).to.eql(nonceV2Number);
+    expect(solutionV2.nonce.buffer).to.eql(nonceV2Buffer);
   });
 
   it("should get time", async () => {
-    expect(solutionV1.time().number()).to.eql(timeNumber);
-    expect(solutionV1.time().buffer()).to.eql(timeBuffer);
+    expect(solutionV1.time.number).to.eql(timeNumber);
+    expect(solutionV1.time.buffer).to.eql(timeBuffer);
 
-    expect(solutionV2.time().number()).to.eql(timeNumber);
-    expect(solutionV2.time().buffer()).to.eql(timeBuffer);
+    expect(solutionV2.time.number).to.eql(timeNumber);
+    expect(solutionV2.time.buffer).to.eql(timeBuffer);
   });
 
   it("should get miner pubkey hash from solution", async () => {
-    expect(solutionV1.minerPubKeyHash().buffer()).to.eql(minerPubKeyHashBuffer);
-    expect(solutionV1.minerPubKeyHash().hex().toUpperCase()).to.eql(
+    expect(solutionV1.minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
+    expect(solutionV1.minerPubKeyHash.hex.toUpperCase()).to.eql(
       minerPubKeyHashHex
     );
 
-    expect(solutionV2.minerPubKeyHash().buffer()).to.eql(minerPubKeyHashBuffer);
-    expect(solutionV2.minerPubKeyHash().hex().toUpperCase()).to.eql(
+    expect(solutionV2.minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
+    expect(solutionV2.minerPubKeyHash.hex.toUpperCase()).to.eql(
       minerPubKeyHashHex
     );
   });
 
   it("should get extra nonce 1 from solution", async () => {
-    expect(solutionV1.extraNonce1().number()).to.eql(extraNonce1Number);
-    expect(solutionV1.extraNonce1().buffer()).to.eql(extraNonce1Buffer);
+    expect(solutionV1.extraNonce1.number).to.eql(extraNonce1Number);
+    expect(solutionV1.extraNonce1.buffer).to.eql(extraNonce1Buffer);
 
-    expect(solutionV2.extraNonce1().number()).to.eql(extraNonce1Number);
-    expect(solutionV2.extraNonce1().buffer()).to.eql(extraNonce1Buffer);
+    expect(solutionV2.extraNonce1.number).to.eql(extraNonce1Number);
+    expect(solutionV2.extraNonce1.buffer).to.eql(extraNonce1Buffer);
   });
 
   it("should get extra nonce 2 from solution", async () => {
-    expect(solutionV1.extraNonce2().buffer()).to.eql(extraNonce2Buffer);
-    expect(solutionV2.extraNonce2().buffer()).to.eql(extraNonce2Buffer);
+    expect(solutionV1.extraNonce2.buffer).to.eql(extraNonce2Buffer);
+    expect(solutionV2.extraNonce2.buffer).to.eql(extraNonce2Buffer);
   });
 
   // check valid metadata
   it("should generate correct metadata hash", async () => {
-    expect(metadata.hash().hex().toUpperCase()).to.eql(metadataHashHex);
-    expect(metadata.hash().buffer()).to.eql(metadataHashBuffer);
+    expect(metadata.hash.hex.toUpperCase()).to.eql(metadataHashHex);
+    expect(metadata.hash.buffer).to.eql(metadataHashBuffer);
   });
 
   it("should should write metadata to string", async () => {
@@ -616,31 +615,31 @@ const expectedLockingScriptV2 =
 
   // check getters for metadata
   it("should get tag from metadata", async () => {
-    expect(metadata.tag().string()).to.eql(tagString);
-    expect(metadata.tag().buffer()).to.eql(tagBuffer);
+    expect(metadata.tag.string).to.eql(tagString);
+    expect(metadata.tag.buffer).to.eql(tagBuffer);
   });
 
   it("should get addational data from metadata", async () => {
-    expect(metadata.additionalData().string()).to.eql(dataString);
-    expect(metadata.additionalData().buffer()).to.eql(dataBuffer);
+    expect(metadata.additionalData.string).to.eql(dataString);
+    expect(metadata.additionalData.buffer).to.eql(dataBuffer);
   });
 
   it("should get user nonce from metadata", async () => {
-    expect(metadata.userNonce().number()).to.eql(userNonceNumber);
-    expect(metadata.userNonce().buffer()).to.eql(userNonceBuffer);
+    expect(metadata.userNonce.number).to.eql(userNonceNumber);
+    expect(metadata.userNonce.buffer).to.eql(userNonceBuffer);
   });
 
   it("should get miner pubkey hash from metadata", async () => {
-    expect(metadata.minerPubKeyHash().buffer()).to.eql(minerPubKeyHashBuffer);
+    expect(metadata.minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
   });
 
   it("should get extra nonce 1 from metadata", async () => {
-    expect(metadata.extraNonce1().number()).to.eql(extraNonce1Number);
-    expect(metadata.extraNonce1().buffer()).to.eql(extraNonce1Buffer);
+    expect(metadata.extraNonce1.number).to.eql(extraNonce1Number);
+    expect(metadata.extraNonce1.buffer).to.eql(extraNonce1Buffer);
   });
 
   it("should get extra nonce 2 from metadata", async () => {
-    expect(metadata.extraNonce2().buffer()).to.eql(extraNonce2Buffer);
+    expect(metadata.extraNonce2.buffer).to.eql(extraNonce2Buffer);
   });
 
   // check valid string
@@ -650,18 +649,18 @@ const expectedLockingScriptV2 =
     expect(proofV1.boostPowString.toString().toUpperCase()).to.eql(
       proofStringHexV1
     );
-    expect(proofV1.boostPowString.hash().hex().toUpperCase()).to.eql(proofHashHexV1);
-    expect(proofV1.boostPowString.hash().buffer()).to.eql(proofHashBufferV1);
+    expect(proofV1.boostPowString.hash.hex.toUpperCase()).to.eql(proofHashHexV1);
+    expect(proofV1.boostPowString.hash.buffer).to.eql(proofHashBufferV1);
 
-    expect(proofV1.boostPowString.content().hex()).to.eql(contentHex);
-    expect(proofV1.boostPowString.content().string()).to.eql(contentString);
-    expect(proofV1.boostPowString.content().buffer()).to.eql(contentBuffer);
+    expect(proofV1.boostPowString.content.hex).to.eql(contentHex);
+    expect(proofV1.boostPowString.content.string).to.eql(contentString);
+    expect(proofV1.boostPowString.content.buffer).to.eql(contentBuffer);
 
-    expect(proofV1.boostPowString.nonce().number()).to.eql(nonceV1Number);
-    expect(proofV1.boostPowString.time().number()).to.eql(timeNumber);
-    expect(proofV1.boostPowString.category().number()).to.eql(categoryNumber);
+    expect(proofV1.boostPowString.nonce.number).to.eql(nonceV1Number);
+    expect(proofV1.boostPowString.time.number).to.eql(timeNumber);
+    expect(proofV1.boostPowString.category.number).to.eql(categoryNumber);
     expect(proofV1.boostPowString.bits()).to.eql(compactNumber);
-    expect(proofV1.boostPowString.metadataHash().hex().toUpperCase()).to.eql(
+    expect(proofV1.boostPowString.metadataHash.hex.toUpperCase()).to.eql(
       metadataHashHex
     );
   });
@@ -672,18 +671,18 @@ const expectedLockingScriptV2 =
     expect(proofV2.boostPowString.toString().toUpperCase()).to.eql(
       proofStringHexV2
     );
-    expect(proofV2.boostPowString.hash().hex().toUpperCase()).to.eql(proofHashHexV2);
-    expect(proofV2.boostPowString.hash().buffer()).to.eql(proofHashBufferV2);
+    expect(proofV2.boostPowString.hash.hex.toUpperCase()).to.eql(proofHashHexV2);
+    expect(proofV2.boostPowString.hash.buffer).to.eql(proofHashBufferV2);
 
-    expect(proofV2.boostPowString.content().hex()).to.eql(contentHex);
-    expect(proofV2.boostPowString.content().string()).to.eql(contentString);
-    expect(proofV2.boostPowString.content().buffer()).to.eql(contentBuffer);
+    expect(proofV2.boostPowString.content.hex).to.eql(contentHex);
+    expect(proofV2.boostPowString.content.string).to.eql(contentString);
+    expect(proofV2.boostPowString.content.buffer).to.eql(contentBuffer);
 
-    expect(proofV2.boostPowString.nonce().number()).to.eql(nonceV2Number);
-    expect(proofV2.boostPowString.time().number()).to.eql(timeNumber);
-    expect(proofV2.boostPowString.category().number()).to.eql(categoryWithGPBNumber);
+    expect(proofV2.boostPowString.nonce.number).to.eql(nonceV2Number);
+    expect(proofV2.boostPowString.time.number).to.eql(timeNumber);
+    expect(proofV2.boostPowString.category.number).to.eql(categoryWithGPBNumber);
     expect(proofV2.boostPowString.bits()).to.eql(compactNumber);
-    expect(proofV2.boostPowString.metadataHash().hex().toUpperCase()).to.eql(
+    expect(proofV2.boostPowString.metadataHash.hex.toUpperCase()).to.eql(
       metadataHashHex
     );
   });

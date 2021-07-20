@@ -15,23 +15,23 @@ export class Digest32 {
 
   // reverse because of a horrible convention that exists in Bitcoin
   // which got started due to stupid a bug long ago.
-  hex(): string {
+  get hex(): string {
     return new Buffer(this.data).reverse().toString('hex');
   }
 
-  number() {
-    return new BN(this.hex(), 'hex', 'be');
+  get number() {
+    return new BN(this.hex, 'hex', 'be');
   }
 
-  buffer(): Buffer {
+  get buffer(): Buffer {
     return this.data;
   }
 
-  string(): string {
-    return this.utf8();
+  get string(): string {
+    return this.utf8;
   }
 
-  utf8(): string {
+  get utf8(): string {
     return BoostUtils.trimBufferString(this.data, true);
   }
 }

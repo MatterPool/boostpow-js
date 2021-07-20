@@ -4,6 +4,7 @@ exports.BoostPowJobModel = void 0;
 const bsv = require("bsv");
 const int32Little_1 = require("./fields/int32Little");
 const uint32Little_1 = require("./fields/uint32Little");
+const uint16Little_1 = require("./fields/uint16Little");
 const digest32_1 = require("./fields/digest32");
 const bytes_1 = require("./fields/bytes");
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
@@ -24,22 +25,25 @@ class BoostPowJobModel {
         this.vout = vout;
         this.value = value;
     }
-    category() {
+    get category() {
         return this.Category;
     }
-    content() {
+    get magicNumber() {
+        return uint16Little_1.UInt16Little.fromNumber(boost_utils_1.BoostUtils.magicNumber(this.category.number));
+    }
+    get content() {
         return this.Content;
     }
     getDiff() {
         return this.difficulty;
     }
-    tag() {
+    get tag() {
         return this.Tag;
     }
-    additionalData() {
+    get additionalData() {
         return this.AdditionalData;
     }
-    userNonce() {
+    get userNonce() {
         return this.UserNonce;
     }
     static fromObject(params) {
@@ -85,12 +89,12 @@ class BoostPowJobModel {
     }
     toObject() {
         return {
-            content: this.Content.hex(),
+            content: this.content.hex,
             diff: this.difficulty,
-            category: this.Category.hex(),
-            tag: this.Tag.hex(),
-            additionalData: this.AdditionalData.hex(),
-            userNonce: this.UserNonce.hex(),
+            category: this.category.hex,
+            tag: this.tag.hex,
+            additionalData: this.additionalData.hex,
+            userNonce: this.userNonce.hex,
             useGeneralPurposeBits: this.useGeneralPurposeBits
         };
     }
@@ -134,12 +138,12 @@ class BoostPowJobModel {
         let buildOut = bsv.Script();
         buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
         buildOut.add(bsv.Opcode.OP_DROP);
-        buildOut.add(this.toOpCode(this.Category.buffer()));
-        buildOut.add(this.toOpCode(this.Content.buffer()));
+        buildOut.add(this.toOpCode(this.category.buffer));
+        buildOut.add(this.toOpCode(this.content.buffer));
         buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
-        buildOut.add(this.toOpCode(this.Tag.buffer()));
-        buildOut.add(this.toOpCode(this.UserNonce.buffer()));
-        buildOut.add(this.toOpCode(this.AdditionalData.buffer()));
+        buildOut.add(this.toOpCode(this.tag.buffer));
+        buildOut.add(this.toOpCode(this.userNonce.buffer));
+        buildOut.add(this.toOpCode(this.additionalData.buffer));
         // Add the rest of the script
         for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
             buildOut.add(op);
@@ -354,50 +358,50 @@ class BoostPowJobModel {
             Buffer.from([sigtype & 0xff])
         ]))
             .add(privKey.toPublicKey().toBuffer())
-            .add(boostPowJobProof.nonce().buffer())
-            .add(boostPowJobProof.time().buffer())
-            .add(boostPowJobProof.extraNonce2().buffer())
-            .add(boostPowJobProof.extraNonce1().buffer())
-            .add(boostPowJobProof.minerPubKeyHash().buffer());
+            .add(boostPowJobProof.nonce.buffer)
+            .add(boostPowJobProof.time.buffer)
+            .add(boostPowJobProof.extraNonce2.buffer)
+            .add(boostPowJobProof.extraNonce1.buffer)
+            .add(boostPowJobProof.minerPubKeyHash.buffer);
         tx.inputs[0].setScript(unlockingScript);
         return tx;
     }
     static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
         return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
-            tag: boostPowJob.tag().buffer(),
-            minerPubKeyHash: boostPowJobProof.minerPubKeyHash().buffer(),
-            extraNonce1: boostPowJobProof.extraNonce1().buffer(),
-            extraNonce2: boostPowJobProof.extraNonce2().buffer(),
-            userNonce: boostPowJob.userNonce().buffer(),
-            additionalData: boostPowJob.additionalData().buffer(),
+            tag: boostPowJob.tag.buffer,
+            minerPubKeyHash: boostPowJobProof.minerPubKeyHash.buffer,
+            extraNonce1: boostPowJobProof.extraNonce1.buffer,
+            extraNonce2: boostPowJobProof.extraNonce2.buffer,
+            userNonce: boostPowJob.userNonce.buffer,
+            additionalData: boostPowJob.additionalData.buffer,
         });
     }
     static tryValidateJobProof(boostPowJob, boostPowJobProof) {
         var category;
         if (boostPowJob.useGeneralPurposeBits) {
-            var generalPurposeBits = boostPowJobProof.generalPurposeBits();
+            var generalPurposeBits = boostPowJobProof.generalPurposeBits;
             if (generalPurposeBits) {
-                category = boost_utils_1.BoostUtils.writeUInt32LE((boostPowJob.category().number() & boost_utils_1.BoostUtils.generalPurposeBitsMask()) |
-                    (generalPurposeBits.number() & ~boost_utils_1.BoostUtils.generalPurposeBitsMask()));
+                category = boost_utils_1.BoostUtils.writeUInt32LE((boostPowJob.category.number & boost_utils_1.BoostUtils.generalPurposeBitsMask()) |
+                    (generalPurposeBits.number & ~boost_utils_1.BoostUtils.generalPurposeBitsMask()));
             }
             else {
                 return null;
             }
         }
-        else if (boostPowJobProof.generalPurposeBits()) {
+        else if (boostPowJobProof.generalPurposeBits) {
             return null;
         }
         else {
-            category = boostPowJob.category().buffer();
+            category = boostPowJob.category.buffer;
         }
         const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
         const headerBuf = Buffer.concat([
             category,
-            boostPowJob.content().buffer(),
-            boostPowMetadataCoinbaseString.hash().buffer(),
-            boostPowJobProof.time().buffer(),
+            boostPowJob.content.buffer,
+            boostPowMetadataCoinbaseString.hash.buffer,
+            boostPowJobProof.time.buffer,
             boostPowJob.getTargetAsNumberBuffer(),
-            boostPowJobProof.nonce().buffer(),
+            boostPowJobProof.nonce.buffer,
         ]);
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
         if (blockHeader.validProofOfWork()) {

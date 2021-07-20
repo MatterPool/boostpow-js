@@ -15,19 +15,19 @@ export class UInt16Little {
     return new UInt16Little(data);
   }
 
-  hex(): string {
+  get hex(): string {
     return this.data.toString('hex');
   }
 
-  number(): number {
+  get number(): number {
     return this.data.readUInt16LE();
   }
 
-  buffer(): Buffer {
+  get buffer(): Buffer {
     return this.data;
   }
 
-  string(): string {
-    return this.hex();
+  get string(): string {
+    return this.hex;
   }
 }

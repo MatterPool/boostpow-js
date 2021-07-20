@@ -18,7 +18,7 @@ export class BoostPowStringModel {
         }
 
         if (metadata) {
-            if (this._blockheader.merkleRoot !== metadata.hash().hex()) {
+            if (this._blockheader.merkleRoot !== metadata.hash.hex) {
                 throw new Error('INVALID_METADATA');
             }
             this._metadata = metadata;
@@ -27,48 +27,43 @@ export class BoostPowStringModel {
 
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
-    boostHash(): Digest32 {
-        return this.hash();
+    get boostHash(): Digest32 {
+        return this.hash;
     }
 
-    hash(): Digest32 {
+    get hash(): Digest32 {
         return Digest32.fromHex(this._blockheader.hash);
     }
 
-    id(): Digest32 {
-        return this.hash();
+    get id(): Digest32 {
+        return this.hash;
     }
 
-    category(): Int32Little {
+    get category(): Int32Little {
       return Int32Little.fromNumber(this._blockheader.version);
     }
 
-    magicNumber(): UInt16Little {
-      return UInt16Little.fromNumber(BoostUtils.magicNumber(this.category().number()));
+    get magicNumber(): UInt16Little {
+      return UInt16Little.fromNumber(BoostUtils.magicNumber(this.category.number));
     }
 
-    content(): Digest32 {
+    get content(): Digest32 {
         return new Digest32(new Buffer(this.toObject().content,'hex').reverse());
-    }
-
-    contentString(trimLeadingNulls = true): string {
-        var content = new Buffer(this._blockheader.toObject().prevHash, 'hex');
-        return BoostUtils.trimBufferString(content.reverse(), trimLeadingNulls);
     }
 
     bits(): number {
         return this.toObject().bits;
     }
 
-    metadataHash(): Digest32 {
+    get metadataHash(): Digest32 {
         return new Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
     }
 
-    nonce(): UInt32Little {
+    get nonce(): UInt32Little {
         return UInt32Little.fromNumber(this._blockheader.nonce);
     }
 
-    time(): UInt32Little {
+    get time(): UInt32Little {
         return UInt32Little.fromNumber(this._blockheader.time);
     }
 

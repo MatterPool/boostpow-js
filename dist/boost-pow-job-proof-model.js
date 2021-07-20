@@ -65,81 +65,81 @@ class BoostPowJobProofModel {
         }
         return new BoostPowJobProofModel(new bytes_1.Bytes(Buffer.from(params.signature, 'hex')), new bytes_1.Bytes(minerPubKey), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false)), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new uint64Big_1.UInt64Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false)), new digest20_1.Digest20(Buffer.from(minerPubKeyHash, 'hex')), generalPurposeBits);
     }
-    time() {
+    get time() {
         return this.Time;
     }
-    generalPurposeBits() {
+    get generalPurposeBits() {
         return this.GeneralPurposeBits;
     }
-    extraNonce1() {
+    get extraNonce1() {
         return this.ExtraNonce1;
     }
-    extraNonce2() {
+    get extraNonce2() {
         return this.ExtraNonce2;
     }
-    nonce() {
+    get nonce() {
         return this.Nonce;
     }
     // Should add bsv.Address version and string version too
-    minerPubKeyHash() {
+    get minerPubKeyHash() {
         return this.MinerPubKeyHash;
     }
-    signature() {
+    get signature() {
         return this.Signature;
     }
-    minerPubKey() {
+    get minerPubKey() {
         return this.MinerPubKey;
     }
     toObject() {
-        if (this.GeneralPurposeBits) {
+        if (this.generalPurposeBits) {
             return {
                 // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-                signature: this.Signature.hex(),
-                minerPubKey: this.MinerPubKey.hex(),
-                time: this.Time.hex(),
-                nonce: this.Nonce.hex(),
-                extraNonce1: this.ExtraNonce1.hex(),
-                extraNonce2: this.ExtraNonce2.hex(),
-                generalPurposeBits: this.GeneralPurposeBits.hex(),
-                minerPubKeyHash: this.MinerPubKeyHash.hex(),
+                signature: this.signature.hex,
+                minerPubKey: this.minerPubKey.hex,
+                time: this.time.hex,
+                nonce: this.nonce.hex,
+                extraNonce1: this.extraNonce1.hex,
+                extraNonce2: this.extraNonce2.hex,
+                generalPurposeBits: this.generalPurposeBits.hex,
+                minerPubKeyHash: this.minerPubKeyHash.hex,
             };
         }
         else {
             return {
                 // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-                signature: this.Signature.hex(),
-                minerPubKey: this.MinerPubKey.hex(),
-                time: this.Time.hex(),
-                nonce: this.Nonce.hex(),
-                extraNonce1: this.ExtraNonce1.hex(),
-                extraNonce2: this.ExtraNonce2.hex(),
-                minerPubKeyHash: this.MinerPubKeyHash.hex(),
+                signature: this.signature.hex,
+                minerPubKey: this.minerPubKey.hex,
+                time: this.time.hex,
+                nonce: this.nonce.hex,
+                extraNonce1: this.extraNonce1.hex,
+                extraNonce2: this.extraNonce2.hex,
+                minerPubKeyHash: this.minerPubKeyHash.hex,
             };
         }
     }
     toScript() {
         let buildOut = bsv.Script();
         // Add signature
-        buildOut.add(this.Signature.buffer());
+        buildOut.add(this.signature.buffer);
         /* Buffer.concat([
              this.signature.toBuffer(),
              Buffer.from([sigtype & 0xff])
            ]*/
         // Add miner pub key
-        buildOut.add(this.MinerPubKey.buffer());
+        buildOut.add(this.minerPubKey.buffer);
         // Add miner nonce
-        buildOut.add(this.Nonce.buffer());
+        buildOut.add(this.nonce.buffer);
         // Add time
-        buildOut.add(this.Time.buffer());
+        buildOut.add(this.time.buffer);
         // Add extra nonce2
-        buildOut.add(this.ExtraNonce2.buffer());
+        buildOut.add(this.extraNonce2.buffer);
         // Add extra nonce 1
-        buildOut.add(this.ExtraNonce1.buffer());
-        if (this.GeneralPurposeBits) {
-            buildOut.add(this.GeneralPurposeBits.buffer());
+        buildOut.add(this.extraNonce1.buffer);
+        if (this.generalPurposeBits) {
+            buildOut.add(this.generalPurposeBits.buffer);
         }
         // Add miner address
-        buildOut.add(this.MinerPubKeyHash.buffer());
+        buildOut.add(this.minerPubKeyHash.buffer);
         return buildOut;
     }
     static fromTransaction(tx) {

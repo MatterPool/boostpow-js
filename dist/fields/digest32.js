@@ -12,19 +12,19 @@ class Digest32 {
     }
     // reverse because of a horrible convention that exists in Bitcoin
     // which got started due to stupid a bug long ago.
-    hex() {
+    get hex() {
         return new Buffer(this.data).reverse().toString('hex');
     }
-    number() {
-        return new BN(this.hex(), 'hex', 'be');
+    get number() {
+        return new BN(this.hex, 'hex', 'be');
     }
-    buffer() {
+    get buffer() {
         return this.data;
     }
-    string() {
-        return this.utf8();
+    get string() {
+        return this.utf8;
     }
-    utf8() {
+    get utf8() {
         return boost_utils_1.BoostUtils.trimBufferString(this.data, true);
     }
 }

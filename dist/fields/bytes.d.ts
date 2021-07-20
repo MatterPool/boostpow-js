@@ -2,8 +2,8 @@
 export declare class Bytes {
     private data;
     constructor(data: Buffer);
-    hex(): string;
-    buffer(): Buffer;
-    string(): string;
-    utf8(): string;
+    get buffer(): Buffer;
+    get hex(): string;
+    get string(): string;
+    get utf8(): string;
 }

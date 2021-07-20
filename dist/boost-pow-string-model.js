@@ -14,7 +14,7 @@ class BoostPowStringModel {
             throw new Error('INVALID_POW');
         }
         if (metadata) {
-            if (this._blockheader.merkleRoot !== metadata.hash().hex()) {
+            if (this._blockheader.merkleRoot !== metadata.hash.hex) {
                 throw new Error('INVALID_METADATA');
             }
             this._metadata = metadata;
@@ -22,38 +22,34 @@ class BoostPowStringModel {
     }
     // Use boosthash(), hash() and id() to all be equal to the string
     // remember, the string itself is the data and proof of work identity.
-    boostHash() {
-        return this.hash();
+    get boostHash() {
+        return this.hash;
     }
-    hash() {
+    get hash() {
         return digest32_1.Digest32.fromHex(this._blockheader.hash);
     }
-    id() {
-        return this.hash();
+    get id() {
+        return this.hash;
     }
-    category() {
+    get category() {
         return int32Little_1.Int32Little.fromNumber(this._blockheader.version);
     }
-    magicNumber() {
-        return uint16Little_1.UInt16Little.fromNumber(boost_utils_1.BoostUtils.magicNumber(this.category().number()));
+    get magicNumber() {
+        return uint16Little_1.UInt16Little.fromNumber(boost_utils_1.BoostUtils.magicNumber(this.category.number));
     }
-    content() {
+    get content() {
         return new digest32_1.Digest32(new Buffer(this.toObject().content, 'hex').reverse());
-    }
-    contentString(trimLeadingNulls = true) {
-        var content = new Buffer(this._blockheader.toObject().prevHash, 'hex');
-        return boost_utils_1.BoostUtils.trimBufferString(content.reverse(), trimLeadingNulls);
     }
     bits() {
         return this.toObject().bits;
     }
-    metadataHash() {
+    get metadataHash() {
         return new digest32_1.Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse());
     }
-    nonce() {
+    get nonce() {
         return uint32Little_1.UInt32Little.fromNumber(this._blockheader.nonce);
     }
-    time() {
+    get time() {
         return uint32Little_1.UInt32Little.fromNumber(this._blockheader.time);
     }
     static nBitsHexToDifficultyNumber(nbits) {

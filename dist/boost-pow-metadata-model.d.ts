@@ -29,15 +29,15 @@ export declare class BoostPowMetadataModel {
         userNonce: Buffer;
         additionalData: Buffer;
     }): BoostPowMetadataModel;
-    tag(): Bytes;
-    minerPubKeyHash(): Digest20;
-    userNonce(): UInt32Little;
-    extraNonce1(): UInt32Big;
-    extraNonce2(): UInt64Big;
-    additionalData(): Bytes;
+    get tag(): Bytes;
+    get minerPubKeyHash(): Digest20;
+    get userNonce(): UInt32Little;
+    get extraNonce1(): UInt32Big;
+    get extraNonce2(): UInt64Big;
+    get additionalData(): Bytes;
+    get getCoinbaseString(): string;
+    get hash(): Digest32;
     toString(): string;
-    getCoinbaseString(): string;
-    hash(): Digest32;
     toObject(): {
         tag: string;
         minerPubKeyHash: string;

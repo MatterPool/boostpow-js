@@ -3,9 +3,9 @@ export declare class Digest32 {
     private data;
     constructor(data: Buffer);
     static fromHex(x: string): Digest32;
-    hex(): string;
-    number(): any;
-    buffer(): Buffer;
-    string(): string;
-    utf8(): string;
+    get hex(): string;
+    get number(): any;
+    get buffer(): Buffer;
+    get string(): string;
+    get utf8(): string;
 }

@@ -14,11 +14,11 @@ class BoostSignalSummary {
         }
         this.boostSignals.sort((a, b) => (a.difficulty() > b.difficulty()) ? -1 : 1);
         for (const sig of this.boostSignals) {
-            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time()) {
-                this.lastSignalTime_ = sig.time();
+            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time) {
+                this.lastSignalTime_ = sig.time;
             }
-            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time()) {
-                this.recentSignalTime_ = sig.time();
+            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time) {
+                this.recentSignalTime_ = sig.time;
             }
         }
     }

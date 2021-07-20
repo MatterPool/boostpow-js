@@ -13,20 +13,20 @@ class Int32Little {
         }
         return new Int32Little(data);
     }
-    hex() {
-        return this.data.toString('hex');
-    }
-    number() {
-        return this.data.readInt32LE();
-    }
-    buffer() {
+    get buffer() {
         return this.data;
     }
-    string() {
-        return this.utf8();
+    get hex() {
+        return this.buffer.toString('hex');
     }
-    utf8() {
-        return boost_utils_1.BoostUtils.trimBufferString(this.data, true);
+    get number() {
+        return this.buffer.readInt32LE();
+    }
+    get string() {
+        return this.utf8;
+    }
+    get utf8() {
+        return boost_utils_1.BoostUtils.trimBufferString(this.buffer, true);
     }
 }
 exports.Int32Little = Int32Little;

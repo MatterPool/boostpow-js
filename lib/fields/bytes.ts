@@ -7,19 +7,19 @@ export class Bytes {
   ) {
   }
 
-  hex(): string {
-    return new Buffer(this.data).toString('hex');
-  }
-
-  buffer(): Buffer {
+  get buffer(): Buffer {
     return this.data;
   }
 
-  string(): string {
-    return this.utf8();
+  get hex(): string {
+    return new Buffer(this.buffer).toString('hex');
   }
 
-  utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true);
+  get string(): string {
+    return this.utf8;
+  }
+
+  get utf8(): string {
+    return BoostUtils.trimBufferString(this.buffer, true);
   }
 }

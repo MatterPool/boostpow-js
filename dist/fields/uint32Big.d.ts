@@ -3,9 +3,9 @@ export declare class UInt32Big {
     private data;
     constructor(data: Buffer);
     static fromNumber(num: number): UInt32Big;
-    hex(): string;
-    number(): number;
-    buffer(): Buffer;
-    string(): string;
-    utf8(): string;
+    get hex(): string;
+    get number(): number;
+    get buffer(): Buffer;
+    get string(): string;
+    get utf8(): string;
 }

@@ -12,17 +12,17 @@ class UInt16Little {
         }
         return new UInt16Little(data);
     }
-    hex() {
+    get hex() {
         return this.data.toString('hex');
     }
-    number() {
+    get number() {
         return this.data.readUInt16LE();
     }
-    buffer() {
+    get buffer() {
         return this.data;
     }
-    string() {
-        return this.hex();
+    get string() {
+        return this.hex;
     }
 }
 exports.UInt16Little = UInt16Little;

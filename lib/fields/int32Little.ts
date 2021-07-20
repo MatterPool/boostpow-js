@@ -15,24 +15,24 @@ export class Int32Little {
     return new Int32Little(data);
   }
 
-  hex(): string {
-    return this.data.toString('hex');
-  }
-
-  number(): number {
-    return this.data.readInt32LE();
-  }
-
-  buffer(): Buffer {
+  get buffer(): Buffer {
     return this.data;
   }
 
-  string(): string {
-    return this.utf8();
+  get hex(): string {
+    return this.buffer.toString('hex');
   }
 
-  utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true);
+  get number(): number {
+    return this.buffer.readInt32LE();
+  }
+
+  get string(): string {
+    return this.utf8;
+  }
+
+  get utf8(): string {
+    return BoostUtils.trimBufferString(this.buffer, true);
   }
 
 }

@@ -13,19 +13,19 @@ class UInt32Big {
         }
         return new UInt32Big(data);
     }
-    hex() {
+    get hex() {
         return this.data.toString('hex');
     }
-    number() {
+    get number() {
         return this.data.readUInt32BE();
     }
-    buffer() {
+    get buffer() {
         return this.data;
     }
-    string() {
-        return this.utf8();
+    get string() {
+        return this.utf8;
     }
-    utf8() {
+    get utf8() {
         return boost_utils_1.BoostUtils.trimBufferString(this.data, true);
     }
 }

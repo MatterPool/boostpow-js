@@ -19,88 +19,86 @@ export class BoostSignalModel {
             // But that's okay and this is still a valid signal, but missing the metadata
             return;
         }
+
         // On the other hand if the metadata is provided, then we will strictly check that they belong together!
         // Validate the proof of work here matches the metadataHash because we trust no one!
         //
-        if (boostPowString.metadataHash() !==
+        if (boostPowString.metadataHash !==
             bsv.crypto.Hash.sha256sha256(boostPowMetadata.toBuffer()).reverse().toString('hex')) {
             throw new Error('Fatal: Invalid metadata for the pow string');
         }
     };
 
-    public getBoostJobId(): string | undefined {
+    public get jobId(): string | undefined {
         return this.boostJobId;
     }
 
-    public getBoostJobProofId(): string | undefined {
+    public get jobProofId(): string | undefined {
         return this.boostJobProofId;
     }
 
-    public getBoostPowString(): BoostPowStringModel {
+    public get powString(): BoostPowStringModel {
         return this.boostPowString;
     }
 
-    public getBoostMetadata(): BoostPowMetadataModel {
+    public get metadata(): BoostPowMetadataModel {
         return this.boostPowMetadata;
     }
 
-    public hash(): Digest32 {
-        return this.boostPowString.hash();
+    public get hash(): Digest32 {
+        return this.boostPowString.hash;
     }
 
     public difficulty(): number {
         return this.boostPowString.difficulty();
     }
 
-    public energy(): number {
-        return this.difficulty();
+    public get content(): Digest32 {
+        return this.boostPowString.content;
     }
 
-    public content(): Digest32 {
-        return this.boostPowString.content();
+    public get category(): Int32Little {
+        return this.boostPowString.category;
     }
 
-    public category(): Int32Little {
-        return this.boostPowString.category();
+    public get metadataHash(): Digest32 {
+        return this.boostPowString.metadataHash;
     }
 
-    public metadataHash(): Digest32 {
-        return this.boostPowString.metadataHash();
+    public get time(): UInt32Little {
+        return this.boostPowString.time;
+    }
+    public get nonce(): UInt32Little {
+        return this.boostPowString.nonce;
     }
 
-    public time(): UInt32Little {
-        return this.boostPowString.time();
-    }
-    public nonce(): UInt32Little {
-        return this.boostPowString.nonce();
-    }
-
-    public tag(): Bytes | null {
+    public get tag(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.tag();
+
+        return this.boostPowMetadata.tag;
     }
 
-    public userNonce(): UInt32Little | null {
+    public get userNonce(): UInt32Little | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.userNonce()
+        return this.boostPowMetadata.userNonce
     }
 
-    public additionalData(): Bytes | null {
+    public get additionalData(): Bytes | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.additionalData();
+        return this.boostPowMetadata.additionalData;
     }
 
-    public minerPubKeyHash(): Digest20 | null {
+    public get minerPubKeyHash(): Digest20 | null {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.minerPubKeyHash();
+        return this.boostPowMetadata.minerPubKeyHash;
     }
 
     public toString(): string {

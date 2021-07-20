@@ -15,23 +15,23 @@ export class UInt32Little {
     return new UInt32Little(data);
   }
 
-  hex(): string {
+  get hex(): string {
     return this.data.toString('hex');
   }
 
-  number(): number {
+  get number(): number {
     return this.data.readUInt32LE();
   }
 
-  buffer(): Buffer {
+  get buffer(): Buffer {
     return this.data;
   }
 
-  string(): string {
-    return this.utf8();
+  get string(): string {
+    return this.utf8;
   }
 
-  utf8(): string {
+  get utf8(): string {
     return BoostUtils.trimBufferString(this.data, true);
   }
 }

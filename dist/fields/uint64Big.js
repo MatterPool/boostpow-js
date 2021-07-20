@@ -6,16 +6,16 @@ class UInt64Big {
     constructor(data) {
         this.data = data;
     }
-    hex() {
+    get hex() {
         return this.data.toString('hex');
     }
-    buffer() {
+    get buffer() {
         return this.data;
     }
-    string() {
-        return this.utf8();
+    get string() {
+        return this.utf8;
     }
-    utf8() {
+    get utf8() {
         return boost_utils_1.BoostUtils.trimBufferString(this.data, true);
     }
 }

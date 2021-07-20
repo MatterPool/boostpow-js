@@ -45,11 +45,11 @@ export class BoostSignalRankerModel {
             this.totalDifficulty_ += signal.difficulty();
         }
         for (const sig of this.boostSignals) {
-            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time().number()) {
-                this.lastSignalTime_ = sig.time().number();
+            if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time.number) {
+                this.lastSignalTime_ = sig.time.number;
             }
-            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time().number()) {
-                this.recentSignalTime_ = sig.time().number();
+            if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time.number) {
+                this.recentSignalTime_ = sig.time.number;
             }
         }
     };
@@ -93,7 +93,7 @@ export class BoostSignalRankerModel {
     get list(): BoostSignalSummary[] {
         const groups: any = {}
         for (const item of this.boostSignals) {
-            const itemKey = item.category().hex() + item.content().hex();
+            const itemKey = item.category.hex + item.content.hex;
             if (!groups[itemKey]) {
                 groups[itemKey] = [];
             }
@@ -153,7 +153,7 @@ export class BoostSignalRankerModel {
         }
         for (const item of grouped) {
 
-            const hash = item.entity.content().hex();
+            const hash = item.entity.content.hex;
             const matched = checkHashMap.get(hash);
             if (matched) {
                 if (!matched.hash) {
@@ -200,6 +200,7 @@ export class BoostSignalRankerModel {
         }
         return boostSignalSummaries;
     }
+    
     private groupPrivate(field1: string): BoostSignalSummary[] {
         if (!field1 || field1 === '') {
             throw new Error('invalid arg');

@@ -2,8 +2,8 @@
 export declare class UInt64Big {
     private data;
     constructor(data: Buffer);
-    hex(): string;
-    buffer(): Buffer;
-    string(): string;
-    utf8(): string;
+    get hex(): string;
+    get buffer(): Buffer;
+    get string(): string;
+    get utf8(): string;
 }

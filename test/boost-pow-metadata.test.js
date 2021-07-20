@@ -61,14 +61,14 @@ describe("boost #BoostPowMetadata tests", () => {
         "0000000000000000000000000000000000000000000000000000000000404142",
     });
 
-    const tagString1 = abstract.tag().utf8();
-    const tagString2 = abstract.tag().utf8();
+    const tagString1 = abstract.tag.utf8;
+    const tagString2 = abstract.tag.utf8;
 
-    const userNonceString1 = abstract.userNonce().utf8();
-    const userNonceString2 = abstract.userNonce().utf8();
+    const userNonceString1 = abstract.userNonce.utf8;
+    const userNonceString2 = abstract.userNonce.utf8;
 
-    const adataString1 = abstract.additionalData().utf8();
-    const adataString2 = abstract.additionalData().utf8();
+    const adataString1 = abstract.additionalData.utf8;
+    const adataString2 = abstract.additionalData.utf8;
 
     expect(tagString1).to.eql(tagString2);
     expect(userNonceString1).to.eql(userNonceString2);
@@ -159,7 +159,7 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
     ).to.eql(expectedMerkleRootMetaHash);
 
     expect(
-      index.BoostPowJob.createBoostPowMetadata(job, jobProof).hash().hex()
+      index.BoostPowJob.createBoostPowMetadata(job, jobProof).hash.hex
     ).to.eql(expectedMerkleRootMetaHash);
     /*
                 {"method": "mining.submit", "params": ["abra.001", "3",
@@ -228,12 +228,12 @@ describe("boost #BoostPowJob createBoostPowMetadata", () => {
 
     expect(powString).to.not.eql(null);
 
-    expect(powString.boostPowString.hash().hex()).to.eql(
+    expect(powString.boostPowString.hash.hex).to.eql(
       "00000000f3a3ce33b86e99236e561d8e641ad62f13277a77abef50a6673e9330"
     );
 
     const powMetadata = index.BoostPowJob.createBoostPowMetadata(job, jobProof);
 
-    expect(powString.boostPowString.metadataHash()).to.eql(powMetadata.hash());
+    expect(powString.boostPowString.metadataHash).to.eql(powMetadata.hash);
   });
 });

@@ -16,71 +16,68 @@ class BoostSignalModel {
         // On the other hand if the metadata is provided, then we will strictly check that they belong together!
         // Validate the proof of work here matches the metadataHash because we trust no one!
         //
-        if (boostPowString.metadataHash() !==
+        if (boostPowString.metadataHash !==
             bsv.crypto.Hash.sha256sha256(boostPowMetadata.toBuffer()).reverse().toString('hex')) {
             throw new Error('Fatal: Invalid metadata for the pow string');
         }
     }
     ;
-    getBoostJobId() {
+    get jobId() {
         return this.boostJobId;
     }
-    getBoostJobProofId() {
+    get jobProofId() {
         return this.boostJobProofId;
     }
-    getBoostPowString() {
+    get powString() {
         return this.boostPowString;
     }
-    getBoostMetadata() {
+    get metadata() {
         return this.boostPowMetadata;
     }
-    hash() {
-        return this.boostPowString.hash();
+    get hash() {
+        return this.boostPowString.hash;
     }
     difficulty() {
         return this.boostPowString.difficulty();
     }
-    energy() {
-        return this.difficulty();
+    get content() {
+        return this.boostPowString.content;
     }
-    content() {
-        return this.boostPowString.content();
+    get category() {
+        return this.boostPowString.category;
     }
-    category() {
-        return this.boostPowString.category();
+    get metadataHash() {
+        return this.boostPowString.metadataHash;
     }
-    metadataHash() {
-        return this.boostPowString.metadataHash();
+    get time() {
+        return this.boostPowString.time;
     }
-    time() {
-        return this.boostPowString.time();
+    get nonce() {
+        return this.boostPowString.nonce;
     }
-    nonce() {
-        return this.boostPowString.nonce();
-    }
-    tag() {
+    get tag() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.tag();
+        return this.boostPowMetadata.tag;
     }
-    userNonce() {
+    get userNonce() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.userNonce();
+        return this.boostPowMetadata.userNonce;
     }
-    additionalData() {
+    get additionalData() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.additionalData();
+        return this.boostPowMetadata.additionalData;
     }
-    minerPubKeyHash() {
+    get minerPubKeyHash() {
         if (!this.boostPowMetadata) {
             return null;
         }
-        return this.boostPowMetadata.minerPubKeyHash();
+        return this.boostPowMetadata.minerPubKeyHash;
     }
     toString() {
         let str = this.boostPowString.toString();

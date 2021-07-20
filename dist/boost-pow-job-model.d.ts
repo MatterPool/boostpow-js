@@ -1,6 +1,7 @@
 import * as bsv from 'bsv';
 import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
+import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
 import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
@@ -18,12 +19,13 @@ export declare class BoostPowJobModel {
     private vout?;
     private value?;
     private constructor();
-    category(): Int32Little;
-    content(): Digest32;
+    get category(): Int32Little;
+    get magicNumber(): UInt16Little;
+    get content(): Digest32;
     getDiff(): number;
-    tag(): Bytes;
-    additionalData(): Bytes;
-    userNonce(): UInt32Little;
+    get tag(): Bytes;
+    get additionalData(): Bytes;
+    get userNonce(): UInt32Little;
     static fromObject(params: {
         content: string;
         diff: number;
