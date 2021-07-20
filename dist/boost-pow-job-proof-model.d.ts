@@ -17,10 +17,10 @@ export declare class BoostPowJobProofModel {
     private Nonce;
     private MinerPubKeyHash;
     private GeneralPurposeBits?;
-    private txid?;
-    private vin?;
-    private spentTxid?;
-    private spentVout?;
+    private Txid?;
+    private Vin?;
+    private SpentTxid?;
+    private SpentVout?;
     private constructor();
     static fromObject(params: {
         signature: string;
@@ -65,14 +65,14 @@ export declare class BoostPowJobProofModel {
     static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
     static fromHex(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
     static fromASM(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel;
-    getTxInpoint(): {
+    get txInpoint(): {
         txid?: string;
         vin?: number;
     };
-    getTxid(): string | undefined;
-    getVin(): number | undefined;
-    getSpentTxid(): string | undefined;
-    getSpentVout(): number | undefined;
+    get txid(): string | undefined;
+    get vin(): number | undefined;
+    get spentTxid(): string | undefined;
+    get spentVout(): number | undefined;
     static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel;
     toString(): string;
     toBuffer(): string;

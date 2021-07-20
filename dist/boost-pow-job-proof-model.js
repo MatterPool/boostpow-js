@@ -15,7 +15,7 @@ const bytes_1 = require("./fields/bytes");
 class BoostPowJobProofModel {
     constructor(Signature, MinerPubKey, Time, ExtraNonce1, ExtraNonce2, Nonce, MinerPubKeyHash, GeneralPurposeBits, 
     // Optional tx information attached or not
-    txid, vin, spentTxid, spentVout) {
+    Txid, Vin, SpentTxid, SpentVout) {
         this.Signature = Signature;
         this.MinerPubKey = MinerPubKey;
         this.Time = Time;
@@ -24,10 +24,10 @@ class BoostPowJobProofModel {
         this.Nonce = Nonce;
         this.MinerPubKeyHash = MinerPubKeyHash;
         this.GeneralPurposeBits = GeneralPurposeBits;
-        this.txid = txid;
-        this.vin = vin;
-        this.spentTxid = spentTxid;
-        this.spentVout = spentVout;
+        this.Txid = Txid;
+        this.Vin = Vin;
+        this.SpentTxid = SpentTxid;
+        this.SpentVout = SpentVout;
     }
     static fromObject(params) {
         if (params.signature.length > 166) {
@@ -228,26 +228,26 @@ class BoostPowJobProofModel {
         return BoostPowJobProofModel.fromScript(new bsv.Script.fromASM(asm), txid, vin, spentTxid, spentVout);
     }
     // Optional attached information if available
-    getTxInpoint() {
+    get txInpoint() {
         return {
-            txid: this.txid,
-            vin: this.vin,
+            txid: this.Txid,
+            vin: this.Vin,
         };
     }
     // Optional attached information if available
-    getTxid() {
-        return this.txid;
+    get txid() {
+        return this.Txid;
     }
     // Optional attached information if available
-    getVin() {
-        return this.vin;
+    get vin() {
+        return this.Vin;
     }
-    getSpentTxid() {
-        return this.spentTxid;
+    get spentTxid() {
+        return this.SpentTxid;
     }
     // Optional attached information if available
-    getSpentVout() {
-        return this.spentVout;
+    get spentVout() {
+        return this.SpentVout;
     }
     static fromASM2(str, txid, vin) {
         return BoostPowJobProofModel.fromHex(str, txid, vin);

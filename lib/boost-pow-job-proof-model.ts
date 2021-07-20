@@ -22,10 +22,10 @@ export class BoostPowJobProofModel {
         private MinerPubKeyHash: Digest20,
         private GeneralPurposeBits?: UInt32Little,
         // Optional tx information attached or not
-        private txid?: string,
-        private vin?: number,
-        private spentTxid?: string,
-        private spentVout?: number
+        private Txid?: string,
+        private Vin?: number,
+        private SpentTxid?: string,
+        private SpentVout?: number
     ) {
     }
 
@@ -317,29 +317,29 @@ export class BoostPowJobProofModel {
     }
 
     // Optional attached information if available
-    getTxInpoint(): {txid?: string, vin?: number} {
+    get txInpoint(): {txid?: string, vin?: number} {
         return {
-            txid: this.txid,
-            vin: this.vin,
+            txid: this.Txid,
+            vin: this.Vin,
         }
     }
     // Optional attached information if available
-    getTxid(): string | undefined {
-        return this.txid;
+    get txid(): string | undefined {
+        return this.Txid;
     }
 
     // Optional attached information if available
-    getVin(): number | undefined {
-        return this.vin;
+    get vin(): number | undefined {
+        return this.Vin;
     }
 
-    getSpentTxid(): string | undefined {
-        return this.spentTxid;
+    get spentTxid(): string | undefined {
+        return this.SpentTxid;
     }
 
     // Optional attached information if available
-    getSpentVout(): number | undefined {
-        return this.spentVout;
+    get spentVout(): number | undefined {
+        return this.SpentVout;
     }
 
     static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel {

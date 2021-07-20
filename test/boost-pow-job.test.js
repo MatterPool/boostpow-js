@@ -41,7 +41,7 @@ describe("boost #BoostPowJob create various getters and setters", () => {
 
     expect(
       jobs.map((e) => {
-        return e.getTxid();
+        return e.txid;
       })
     ).to.eql([
       "6bb713a65d0735cbe581ac66458ab83b557a58c198af2e2b5a2228d1b7ff8b87",
@@ -409,7 +409,7 @@ describe("boost #BoostPowJob createRedeemTransaction", () => {
     const job = index.BoostPowJob.fromRawTransaction(
       "010000000174d9f6dc235207fbbcdff7bdc412dcb375eb634da698ed164cc1e9aa1b88729a040000006b4830450221008596410738406e0e8589292a0e7a4d960e739025ab1859a3df6c77b4cf8c59ac0220733024f199162bc7b9ccd648aae56f0a0e307558a9827a26d35b1016de1865c54121025a77fe27d1db166b660205ff08b97f7dd87c7c68edaa2931895c2c8577f1a351ffffffff027d20000000000000e108626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e52796b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa01007e816c825488537f7681530121a5696b768100a0691d00000000000000000000000000000000000000000000000000000000007e6c539458959901007e819f6976a96c88acb461590e000000001976a914ba6e459a2b505dc78e44e8c5874776c00890e16088ac00000000"
     );
-    expect(job.getTxid()).to.eql(
+    expect(job.txid).to.eql(
       "4eb545a588a21045495e74449b348ce1eb8f48ac95356c519a2a85a57731a518"
     );
     /*
@@ -495,7 +495,7 @@ describe("BoostPowJob", () => {
   it("should correctly set txid if provided from all loaders", async () => {
     let job;
     job = index.BoostPowJob.fromRawTransaction(sampleTx1);
-    expect(job.getTxOutpoint()).to.eql({
+    expect(job.txOutpoint).to.eql({
       txid: sampleTx1id,
       vout: sampleTx1Vout,
       value: sampleTx1Value,
@@ -516,7 +516,7 @@ describe("BoostPowJob", () => {
       0
     );
 
-    expect(job.getTxOutpoint()).to.eql({
+    expect(job.txOutpoint).to.eql({
       txid: undefined,
       vout: undefined,
       value: undefined,
@@ -528,16 +528,19 @@ describe("BoostPowJob", () => {
       2,
       3432
     );
-    expect(job.getTxOutpoint()).to.eql({
+
+    expect(job.txOutpoint).to.eql({
       txid: "32617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a5c",
       vout: 2,
       value: 3432,
     });
-    expect(job.getTxid()).to.eql(
+
+    expect(job.txid).to.eql(
       "32617d4a0477a15cabf65e3731c8cf604861956826bdf3338e346c7dacdd5a5c"
     );
-    expect(job.getVout()).to.eql(2);
-    expect(job.getValue()).to.eql(3432);
+
+    expect(job.vout).to.eql(2);
+    expect(job.value).to.eql(3432);
   });
 
   it("should correctly get paramters", async () => {
@@ -560,8 +563,8 @@ describe("BoostPowJob", () => {
       userNonce: index.BoostUtilsHelper.writeUInt32LE(456).toString("hex"),
     });
 
-    expect(!!job.getScriptHash()).to.eql(true);
-    expect(!!job.getId()).to.eql(true);
+    expect(!!job.scriptHash).to.eql(true);
+    expect(!!job.id).to.eql(true);
     expect(job.difficulty).to.eql(21);
     expect(job.userNonce.buffer.toString("hex")).to.eql("c8010000");
     expect(job.userNonce.hex).to.eql("c8010000");

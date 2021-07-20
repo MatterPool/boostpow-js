@@ -15,9 +15,9 @@ export declare class BoostPowJobModel {
     private AdditionalData;
     private UserNonce;
     private useGeneralPurposeBits;
-    private txid?;
-    private vout?;
-    private value?;
+    private Txid?;
+    private Vout?;
+    private Value?;
     private constructor();
     get category(): Int32Little;
     get magicNumber(): UInt16Little;
@@ -25,6 +25,8 @@ export declare class BoostPowJobModel {
     get tag(): Bytes;
     get additionalData(): Bytes;
     get userNonce(): UInt32Little;
+    get difficulty(): number;
+    get bits(): UInt32Little;
     static fromObject(params: {
         content: string;
         diff: number;
@@ -34,8 +36,6 @@ export declare class BoostPowJobModel {
         userNonce?: string;
         useGeneralPurposeBits?: boolean;
     }): BoostPowJobModel;
-    get difficulty(): number;
-    get bits(): UInt32Little;
     toObject(): {
         content: string;
         diff: number;
@@ -45,14 +45,11 @@ export declare class BoostPowJobModel {
         userNonce: string;
         useGeneralPurposeBits: boolean;
     };
-    getTargetAsNumberHex(): any;
-    getTargetAsNumberBuffer(): any;
-    getId(): string;
+    get id(): string;
     toHex(): string;
     private toOpCode;
     private static fromOpCode;
     toScript(): bsv.Script;
-    getDifficulty(): number;
     static remainingOperationsMatchExactly(remainingChunks: any, start: number, expectedOps: any): boolean;
     static readScript(script: any, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
@@ -63,15 +60,15 @@ export declare class BoostPowJobModel {
     toString(): string;
     static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel;
     static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobModel;
-    getTxOutpoint(): {
+    get txOutpoint(): {
         txid?: string;
         vout?: number;
         value?: number;
     };
-    getTxid(): string | undefined;
-    getVout(): number | undefined;
-    getValue(): number | undefined;
-    getScriptHash(): string;
+    get txid(): string | undefined;
+    get vout(): number | undefined;
+    get value(): number | undefined;
+    get scriptHash(): string;
     static fromTransaction(tx: bsv.Transaction, vout?: number): BoostPowJobModel | undefined;
     static fromTransactionGetAllOutputs(tx: bsv.Transaction): BoostPowJobModel[];
     static fromRawTransaction(rawtx: string, vout?: number): BoostPowJobModel | undefined;

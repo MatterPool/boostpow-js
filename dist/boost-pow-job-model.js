@@ -13,7 +13,7 @@ const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
     constructor(Content, Difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, 
     // Optional tx information attached or not
-    txid, vout, value) {
+    Txid, Vout, Value) {
         this.Content = Content;
         this.Difficulty = Difficulty;
         this.Category = Category;
@@ -21,9 +21,9 @@ class BoostPowJobModel {
         this.AdditionalData = AdditionalData;
         this.UserNonce = UserNonce;
         this.useGeneralPurposeBits = useGeneralPurposeBits;
-        this.txid = txid;
-        this.vout = vout;
-        this.value = value;
+        this.Txid = Txid;
+        this.Vout = Vout;
+        this.Value = Value;
     }
     get category() {
         return this.Category;
@@ -42,6 +42,12 @@ class BoostPowJobModel {
     }
     get userNonce() {
         return this.UserNonce;
+    }
+    get difficulty() {
+        return this.Difficulty;
+    }
+    get bits() {
+        return uint32Little_1.UInt32Little.fromNumber(boost_utils_1.BoostUtils.difficulty2bits(this.difficulty));
     }
     static fromObject(params) {
         if (params.content && params.content.length > 64) {
@@ -70,12 +76,6 @@ class BoostPowJobModel {
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
         new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false);
     }
-    get difficulty() {
-        return this.Difficulty;
-    }
-    get bits() {
-        return uint32Little_1.UInt32Little.fromNumber(boost_utils_1.BoostUtils.difficulty2bits(this.difficulty));
-    }
     toObject() {
         return {
             content: this.content.hex,
@@ -87,16 +87,8 @@ class BoostPowJobModel {
             useGeneralPurposeBits: this.useGeneralPurposeBits
         };
     }
-    getTargetAsNumberHex() {
-        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
-        return Buffer.from(i.toString(16), 'hex').toString('hex');
-    }
-    getTargetAsNumberBuffer() {
-        const i = boost_utils_1.BoostUtils.difficulty2bits(this.difficulty);
-        return Buffer.from(i.toString(16), 'hex').reverse();
-    }
-    getId() {
-        return this.getScriptHash();
+    get id() {
+        return this.scriptHash;
     }
     toHex() {
         return this.toScript().toHex();
@@ -129,7 +121,7 @@ class BoostPowJobModel {
         buildOut.add(bsv.Opcode.OP_DROP);
         buildOut.add(this.toOpCode(this.category.buffer));
         buildOut.add(this.toOpCode(this.content.buffer));
-        buildOut.add(this.toOpCode(this.getTargetAsNumberBuffer()));
+        buildOut.add(this.toOpCode(this.bits.buffer));
         buildOut.add(this.toOpCode(this.tag.buffer));
         buildOut.add(this.toOpCode(this.userNonce.buffer));
         buildOut.add(this.toOpCode(this.additionalData.buffer));
@@ -139,9 +131,6 @@ class BoostPowJobModel {
         }
         // Return script
         return buildOut;
-    }
-    getDifficulty() {
-        return this.difficulty;
     }
     static remainingOperationsMatchExactly(remainingChunks, start, expectedOps) {
         let i = 0;
@@ -247,7 +236,7 @@ class BoostPowJobModel {
         return BoostPowJobModel.fromHex(script, txid, vout, value);
     }
     // Optional attached information if available
-    getTxOutpoint() {
+    get txOutpoint() {
         return {
             txid: this.txid,
             vout: this.vout,
@@ -255,18 +244,18 @@ class BoostPowJobModel {
         };
     }
     // Optional attached information if available
-    getTxid() {
-        return this.txid;
+    get txid() {
+        return this.Txid;
     }
     // Optional attached information if available
-    getVout() {
-        return this.vout;
+    get vout() {
+        return this.Vout;
     }
     // Optional attached information if available
-    getValue() {
-        return this.value;
+    get value() {
+        return this.Value;
     }
-    getScriptHash() {
+    get scriptHash() {
         const hex = this.toHex();
         const buffer = Buffer.from(hex, 'hex');
         return bsv.crypto.Hash.sha256(buffer).reverse().toString('hex');
@@ -316,25 +305,25 @@ class BoostPowJobModel {
         if (!boostPowString) {
             throw new Error('createRedeemTransaction: Invalid Job Proof');
         }
-        if (!boostPowJob.getTxid() ||
-            (boostPowJob.getVout() === undefined || boostPowJob.getVout() === null) ||
-            !boostPowJob.getValue()) {
+        if (!boostPowJob.txid ||
+            (boostPowJob.vout === undefined || boostPowJob.vout === null) ||
+            !boostPowJob.value) {
             throw new Error('createRedeemTransaction: Boost Pow Job requires txid, vout, and value');
         }
         let tx = new bsv.Transaction();
         tx.addInput(new bsv.Transaction.Input({
             output: new bsv.Transaction.Output({
                 script: boostPowJob.toScript(),
-                satoshis: boostPowJob.getValue()
+                satoshis: boostPowJob.value
             }),
-            prevTxId: boostPowJob.getTxid(),
-            outputIndex: boostPowJob.getVout(),
+            prevTxId: boostPowJob.txid,
+            outputIndex: boostPowJob.vout,
             script: bsv.Script.empty()
         }));
         const privKey = new bsv.PrivateKey(privateKeyStr);
         const sigtype = bsv.crypto.Signature.SIGHASH_ALL | bsv.crypto.Signature.SIGHASH_FORKID;
         const flags = bsv.Script.Interpreter.SCRIPT_VERIFY_MINIMALDATA | bsv.Script.Interpreter.SCRIPT_ENABLE_SIGHASH_FORKID | bsv.Script.Interpreter.SCRIPT_ENABLE_MAGNETIC_OPCODES | bsv.Script.Interpreter.SCRIPT_ENABLE_MONOLITH_OPCODES;
-        const receiveSats = boostPowJob.getValue() !== undefined ? boostPowJob.getValue() : 0;
+        const receiveSats = boostPowJob.value !== undefined ? boostPowJob.value : 0;
         tx.addOutput(new bsv.Transaction.Output({
             script: bsv.Script(new bsv.Address(receiveAddressStr)),
             satoshis: receiveSats ? receiveSats - 517 : 0 //subtract miner fee
@@ -389,7 +378,7 @@ class BoostPowJobModel {
             boostPowJob.content.buffer,
             boostPowMetadataCoinbaseString.hash.buffer,
             boostPowJobProof.time.buffer,
-            boostPowJob.getTargetAsNumberBuffer(),
+            boostPowJob.bits.buffer,
             boostPowJobProof.nonce.buffer,
         ]);
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);

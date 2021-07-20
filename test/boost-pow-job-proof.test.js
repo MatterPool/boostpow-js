@@ -105,15 +105,15 @@ describe("boost #BoostPowJobProof", () => {
     });
     expect(jobProof.time.number).to.eql(1585598904);
     expect(jobProof.nonce.number).to.eql(2964235106);
-    expect(jobProof.getTxid()).to.eql(
+    expect(jobProof.txid).to.eql(
       "5fc289d2b04e98ca9ffb0156f5c66b9dac38af65630ea45ac8508a716af1e9b3"
     );
-    expect(jobProof.getVin()).to.eql(0);
+    expect(jobProof.vin).to.eql(0);
 
-    expect(jobProof.getSpentTxid()).to.eql(
+    expect(jobProof.spentTxid).to.eql(
       "7f7927e1b425869442e8955f909e54964fef0b0426db44c907200aabd986522e"
     );
-    expect(jobProof.getSpentVout()).to.eql(1);
+    expect(jobProof.spentVout).to.eql(1);
   });
 
   it("should success load job proof from scripthex", async () => {
@@ -133,8 +133,8 @@ describe("boost #BoostPowJobProof", () => {
     });
     expect(jobProof.time.number).to.eql(1585598904);
     expect(jobProof.nonce.number).to.eql(2964235106);
-    expect(jobProof.getTxid()).to.eql(undefined);
-    expect(jobProof.getVin()).to.eql(undefined);
+    expect(jobProof.txid).to.eql(undefined);
+    expect(jobProof.vin).to.eql(undefined);
   });
 
   it("should correctly get content and buffers as appropriate", async () => {
@@ -150,8 +150,8 @@ describe("boost #BoostPowJobProof", () => {
       nonce: "30000002",
     });
 
-    expect(jobProof.getTxid()).to.eql(undefined);
-    expect(jobProof.getVin()).to.eql(undefined);
+    expect(jobProof.txid).to.eql(undefined);
+    expect(jobProof.vin).to.eql(undefined);
   });
 
   it("should correctly set and get miner", async () => {
