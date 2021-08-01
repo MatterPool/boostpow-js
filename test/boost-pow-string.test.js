@@ -326,6 +326,367 @@ describe("boost integration test ", () => {
   const categoryWithGPBBuffer = index.BoostUtilsHelper.writeUInt32LE(categoryWithGPBNumber);
   const categoryWithGPBHex = categoryWithGPBBuffer.toString("hex");
 
+  const jobBountyV1 = index.BoostPowJob.fromObject({
+    category: categoryHex,
+    content: contentHex,
+    diff: difficulty,
+    tag: tagHex,
+    additionalData: dataHex,
+    userNonce: userNonceHex,
+  });
+
+  const jobBountyV2 = index.BoostPowJob.fromObject({
+    category: categoryHex,
+    content: contentHex,
+    diff: difficulty,
+    tag: tagHex,
+    additionalData: dataHex,
+    userNonce: userNonceHex,
+    useGeneralPurposeBits: true
+  });
+
+  const jobContractV1 = index.BoostPowJob.fromObject({
+    category: categoryHex,
+    content: contentHex,
+    diff: difficulty,
+    tag: tagHex,
+    additionalData: dataHex,
+    userNonce: userNonceHex,
+    minerPubKeyHash: minerPubKeyHashHex,
+  });
+
+  const jobContractV2 = index.BoostPowJob.fromObject({
+    category: categoryHex,
+    content: contentHex,
+    diff: difficulty,
+    tag: tagHex,
+    additionalData: dataHex,
+    userNonce: userNonceHex,
+    minerPubKeyHash: minerPubKeyHashHex,
+    useGeneralPurposeBits: true
+  });
+
+  // check getters for job.
+  it("should get difficulty from locking script", async () => {
+    expect(jobBountyV1.difficulty).to.eql(difficulty);
+    expect(jobBountyV1.bits.number.toString(16)).to.eql(compactHex);
+
+    expect(jobBountyV2.difficulty).to.eql(difficulty);
+    expect(jobBountyV2.bits.number.toString(16)).to.eql(compactHex);
+
+    expect(jobContractV1.difficulty).to.eql(difficulty);
+    expect(jobContractV1.bits.number.toString(16)).to.eql(compactHex);
+
+    expect(jobContractV2.difficulty).to.eql(difficulty);
+    expect(jobContractV2.bits.number.toString(16)).to.eql(compactHex);
+  });
+
+  it("should get category from locking script", async () => {
+    let category = jobBountyV1.category;
+
+    expect(category).to.eql(jobBountyV2.category);
+    expect(category).to.eql(jobContractV1.category);
+    expect(category).to.eql(jobContractV2.category);
+
+    expect(category.hex).to.eql(categoryHex);
+    expect(category.number).to.eql(categoryNumber);
+    expect(category.buffer).to.eql(categoryBuffer);
+  });
+
+  it("should get content from locking script", async () => {
+    let content = jobBountyV1.content;
+
+    expect(content).to.eql(jobBountyV2.content);
+    expect(content).to.eql(jobContractV1.content);
+    expect(content).to.eql(jobContractV2.content);
+
+    expect(content.hex).to.eql(contentHex);
+    expect(content.buffer).to.eql(contentBuffer);
+    expect(content.string).to.eql(contentString);
+  });
+
+  it("should get tag from locking script", async () => {
+    let tag = jobBountyV1.tag;
+
+    expect(tag).to.eql(jobBountyV2.tag);
+    expect(tag).to.eql(jobContractV1.tag);
+    expect(tag).to.eql(jobContractV2.tag);
+
+    expect(tag.hex).to.eql(tagHex);
+    expect(tag.string).to.eql(tagString);
+    expect(tag.buffer).to.eql(tagBuffer);
+  });
+
+  it("should get addational data from locking script", async () => {
+    let additionalData = jobBountyV1.additionalData;
+
+    expect(additionalData).to.eql(jobBountyV2.additionalData);
+    expect(additionalData).to.eql(jobContractV1.additionalData);
+    expect(additionalData).to.eql(jobContractV2.additionalData);
+
+    expect(additionalData.hex).to.eql(dataHex);
+    expect(additionalData.string).to.eql(dataString);
+    expect(additionalData.buffer).to.eql(dataBuffer);
+  });
+
+  it("should get user nonce from locking script", async () => {
+    let userNonce = jobBountyV1.userNonce;
+
+    expect(userNonce).to.eql(jobBountyV2.userNonce);
+    expect(userNonce).to.eql(jobContractV1.userNonce);
+    expect(userNonce).to.eql(jobContractV2.userNonce);
+
+    expect(userNonce.hex).to.eql(userNonceHex);
+    expect(userNonce.number).to.eql(userNonceNumber);
+    expect(userNonce.buffer).to.eql(userNonceBuffer);
+  });
+
+  const solutionBountyV1 = index.BoostPowJobProof.fromObject({
+    signature: signatureHex,
+    minerPubKeyHash: minerPubKeyHashHex,
+    extraNonce1: extraNonce1Hex,
+    extraNonce2: extraNonce2Hex,
+    minerPubKey: minerPubKeyHex,
+    time: timeHex,
+    nonce: nonceV1Hex,
+  });
+
+  const solutionBountyV2 = index.BoostPowJobProof.fromObject({
+    signature: signatureHex,
+    minerPubKeyHash: minerPubKeyHashHex,
+    extraNonce1: extraNonce1Hex,
+    extraNonce2: extraNonce2Hex,
+    minerPubKey: minerPubKeyHex,
+    time: timeHex,
+    nonce: nonceV2Hex,
+    generalPurposeBits: generalPurposeBitsHex
+  });
+
+  const solutionContractV1 = index.BoostPowJobProof.fromObject({
+    signature: signatureHex,
+    extraNonce1: extraNonce1Hex,
+    extraNonce2: extraNonce2Hex,
+    minerPubKey: minerPubKeyHex,
+    time: timeHex,
+    nonce: nonceV1Hex,
+  });
+
+  const solutionContractV2 = index.BoostPowJobProof.fromObject({
+    signature: signatureHex,
+    extraNonce1: extraNonce1Hex,
+    extraNonce2: extraNonce2Hex,
+    minerPubKey: minerPubKeyHex,
+    time: timeHex,
+    nonce: nonceV2Hex,
+    generalPurposeBits: generalPurposeBitsHex
+  });
+
+  it("should get miner pubkey from locking script or unlocking script", async () => {
+    expect(jobBountyV1.minerPubKeyHash).to.eql(undefined);
+    expect(jobBountyV2.minerPubKeyHash).to.eql(undefined);
+
+    expect(solutionContractV1.minerPubKeyHash).to.eql(undefined);
+    expect(solutionContractV2.minerPubKeyHash).to.eql(undefined);
+
+    let minerPubKeyHash = solutionBountyV1.minerPubKeyHash;
+
+    expect(minerPubKeyHash).to.eql(solutionBountyV2.minerPubKeyHash);
+    expect(minerPubKeyHash).to.eql(jobContractV1.minerPubKeyHash);
+    expect(minerPubKeyHash).to.eql(jobContractV2.minerPubKeyHash);
+
+    expect(minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
+    expect(minerPubKeyHash.hex.toUpperCase()).to.eql(minerPubKeyHashHex);
+  });
+
+  // check getters for solution
+  it("should get signature", async () => {
+    let signature = solutionBountyV1.signature;
+
+    expect(signature.buffer).to.eql(signatureBuffer);
+    expect(signature.hex).to.eql(signatureHex);
+
+    expect(signature).to.eql(solutionBountyV2.signature);
+    expect(signature).to.eql(solutionContractV1.signature);
+    expect(signature).to.eql(solutionContractV2.signature);
+  });
+
+  it("should get miner pubkey", async () => {
+    let minerPubKey = solutionBountyV1.minerPubKey;
+
+    expect(minerPubKey.buffer).to.eql(minerPubKeyBuffer);
+    expect(minerPubKey.hex).to.eql(minerPubKeyHex);
+
+    expect(minerPubKey).to.eql(solutionBountyV2.minerPubKey);
+    expect(minerPubKey).to.eql(solutionContractV1.minerPubKey);
+    expect(minerPubKey).to.eql(solutionContractV2.minerPubKey);
+  });
+
+  it("should get nonce", async () => {
+    let nonceV1 = solutionBountyV1.nonce;
+    let nonceV2 = solutionBountyV2.nonce;
+
+    expect(nonceV1.number).to.eql(nonceV1Number);
+    expect(nonceV1.buffer).to.eql(nonceV1Buffer);
+
+    expect(nonceV2.number).to.eql(nonceV2Number);
+    expect(nonceV2.buffer).to.eql(nonceV2Buffer);
+
+    expect(nonceV1).to.eql(solutionContractV1.nonce);
+    expect(nonceV2).to.eql(solutionContractV2.nonce);
+  });
+
+  it("should get time", async () => {
+    let time = solutionBountyV1.time;
+
+    expect(time.number).to.eql(timeNumber);
+    expect(time.buffer).to.eql(timeBuffer);
+
+    expect(time).to.eql(solutionBountyV2.time);
+    expect(time).to.eql(solutionContractV1.time);
+    expect(time).to.eql(solutionContractV2.time);
+  });
+
+  it("should get extra nonce 1 from solution", async () => {
+    let extraNonce1 = solutionBountyV1.ExtraNonce1;
+
+    expect(extraNonce1.number).to.eql(extraNonce1Number);
+    expect(extraNonce1.buffer).to.eql(extraNonce1Buffer);
+
+    expect(extraNonce1).to.eql(solutionBountyV2.extraNonce1);
+    expect(extraNonce1).to.eql(solutionContractV1.extraNonce1);
+    expect(extraNonce1).to.eql(solutionContractV2.extraNonce1);
+  });
+
+  it("should get extra nonce 2 from solution", async () => {
+    expect(solutionBountyV2.extraNonce2.buffer).to.eql(extraNonce2Buffer);
+    expect(solutionContractV2.extraNonce2.buffer).to.eql(extraNonce2Buffer);
+  });
+
+  const expectedLockingScriptBountyV1 =
+    "626F6F7374706F77 OP_DROP D2040000 " +
+    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
+    "D80F271E 74686973206973206120746167 C8010000 " +
+    "74686973206973206D6F7265206164646974696F6E616C44617461 " +
+    "OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 " +
+    "OP_PICK OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY " +
+    "OP_CAT OP_5 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP " +
+    "OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP " +
+    "OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT " +
+    "OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 00 OP_CAT " +
+    "OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 " +
+    "OP_SPLIT OP_DUP OP_BIN2NUM OP_3 21 OP_WITHIN OP_VERIFY " +
+    "OP_TOALTSTACK OP_DUP OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
+    "0000000000000000000000000000000000000000000000000000000000 " +
+    "OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 00 " +
+    "OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
+    "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG";
+
+const expectedLockingScriptBountyV2 =
+    "626F6F7374706F77 OP_DROP D2040000 " +
+    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
+    "D80F271E 74686973206973206120746167 C8010000 " +
+    "74686973206973206D6F7265206164646974696F6E616C44617461 " +
+    "OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 " +
+    "OP_PICK OP_TOALTSTACK OP_6 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY " +
+    "OP_CAT OP_6 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT " +
+    "OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_TOALTSTACK FF1F00E0 " +
+    "OP_DUP OP_INVERT OP_TOALTSTACK OP_AND OP_SWAP OP_FROMALTSTACK OP_AND " +
+    "OP_OR OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY " +
+    "OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY " +
+    "OP_CAT OP_HASH256 00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 " +
+    "OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 21 OP_WITHIN " +
+    "OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
+    "0000000000000000000000000000000000000000000000000000000000 " +
+    "OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 00 " +
+    "OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
+    "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG";
+
+  const expectedLockingScriptContractV1 = "626F6F7374706F77 OP_DROP " +
+    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F D2040000 " +
+    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
+    "D80F271E 74686973206973206120746167 C8010000 " +
+    "74686973206973206D6F7265206164646974696F6E616C44617461 OP_CAT OP_SWAP " +
+    "OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK OP_TOALTSTACK " +
+    "OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_5 OP_ROLL OP_SIZE " +
+    "OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT OP_HASH256 OP_SWAP " +
+    "OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT " +
+    "OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT " +
+    "OP_HASH256 00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 " +
+    "OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 21 OP_WITHIN " +
+    "OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
+    "0000000000000000000000000000000000000000000000000000000000 OP_CAT " +
+    "OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 00 OP_CAT OP_BIN2NUM " +
+    "OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
+    "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG";
+
+  const expectedLockingScriptContractV2 = "626F6F7374706F77 OP_DROP " +
+    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F D2040000 " +
+    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
+    "D80F271E 74686973206973206120746167 C8010000 " +
+    "74686973206973206D6F7265206164646974696F6E616C44617461 " +
+    "OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 OP_PICK " +
+    "OP_TOALTSTACK OP_6 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY " +
+    "OP_CAT OP_6 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT " +
+    "OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_TOALTSTACK " +
+    "FF1F00E0 OP_DUP OP_INVERT OP_TOALTSTACK OP_AND OP_SWAP OP_FROMALTSTACK " +
+    "OP_AND OP_OR OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 " +
+    "OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 " +
+    "OP_EQUALVERIFY OP_CAT OP_HASH256 00 OP_CAT OP_BIN2NUM " +
+    "OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP " +
+    "OP_BIN2NUM OP_3 21 OP_WITHIN OP_VERIFY OP_TOALTSTACK OP_DUP " +
+    "OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
+    "0000000000000000000000000000000000000000000000000000000000 " +
+    "OP_CAT OP_FROMALTSTACK OP_3 " +
+    "OP_SUB OP_8 OP_MUL OP_RSHIFT 00 OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY " +
+    "OP_DUP OP_HASH160 OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG";
+
+  const expectedUnlockingScriptBountyV1 =
+    "300602010A02010B41 " +
+    "020000000000000000000000000000000000000000000000000000000000000007 " +
+    "F8FC1600 12300009 0000000300000003 02000000 " +
+    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F";
+
+  const expectedUnlockingScriptBountyV2 =
+    "300602010A02010B41 " +
+    "020000000000000000000000000000000000000000000000000000000000000007 " +
+    "04670400 12300009 0000000300000003 02000000 FFFFFFFF " +
+    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F";
+
+  const expectedUnlockingScriptContractV1 = "300602010A02010B41 " +
+    "020000000000000000000000000000000000000000000000000000000000000007 " +
+    "F8FC1600 12300009 0000000300000003 02000000";
+
+  const expectedUnlockingScriptContractV2 = "300602010A02010B41 " +
+    "020000000000000000000000000000000000000000000000000000000000000007 " +
+    "04670400 12300009 0000000300000003 02000000 FFFFFFFF";
+
+  const lockingScriptBountyV1 = jobBountyV1.toScript().toASM().toUpperCase();
+  const unlockingScriptBountyV1 = solutionBountyV1.toScript().toASM().toUpperCase();
+
+  const lockingScriptBountyV2 = jobBountyV2.toScript().toASM().toUpperCase();
+  const unlockingScriptBountyV2 = solutionBountyV2.toScript().toASM().toUpperCase();
+
+  const lockingScriptContractV1 = jobContractV1.toScript().toASM().toUpperCase();
+  const unlockingScriptContractV1 = solutionContractV1.toScript().toASM().toUpperCase();
+
+  const lockingScriptContractV2 = jobContractV2.toScript().toASM().toUpperCase();
+  const unlockingScriptContractV2 = solutionContractV2.toScript().toASM().toUpperCase();
+
+  // check if scripts are correct.
+  it("should create the correct locking scripts", async () => {
+    expect(lockingScriptBountyV1).to.eql(expectedLockingScriptBountyV1);
+    expect(lockingScriptBountyV2).to.eql(expectedLockingScriptBountyV2);
+    expect(lockingScriptContractV1).to.eql(expectedLockingScriptContractV1);
+    expect(lockingScriptContractV2).to.eql(expectedLockingScriptContractV2);
+  });
+
+  it("should create the correct unlocking scripts", async () => {
+    expect(unlockingScriptBountyV1).to.eql(expectedUnlockingScriptBountyV1);
+    expect(unlockingScriptBountyV2).to.eql(expectedUnlockingScriptBountyV2);
+    expect(unlockingScriptContractV1).to.eql(expectedUnlockingScriptContractV1);
+    expect(unlockingScriptContractV2).to.eql(expectedUnlockingScriptContractV2);
+  });
+
   // metadata corresponds to the coinbase tx in the standard Bitcoin work
   // function. It includes a tag, some extra entropy, the miner address, and
   // whatever other data is desired.
@@ -352,97 +713,6 @@ describe("boost integration test ", () => {
     "000017EFE2D4079F311DB00D8696A33CF6E8986174BB7CC29562DD2B2D328664";
   const proofHashBufferV2 = new Buffer(proofHashHexV2, "hex").reverse();
 
-  const expectedLockingScriptV1 =
-    "626F6F7374706F77 OP_DROP D2040000 " +
-    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
-    "D80F271E 74686973206973206120746167 C8010000 " +
-    "74686973206973206D6F7265206164646974696F6E616C44617461 " +
-    "OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 " +
-    "OP_PICK OP_TOALTSTACK OP_5 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY " +
-    "OP_CAT OP_5 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP " +
-    "OP_CAT OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_CAT OP_SWAP " +
-    "OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_FROMALTSTACK OP_CAT " +
-    "OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY OP_CAT OP_HASH256 00 OP_CAT " +
-    "OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 OP_EQUALVERIFY OP_3 " +
-    "OP_SPLIT OP_DUP OP_BIN2NUM OP_3 21 OP_WITHIN OP_VERIFY " +
-    "OP_TOALTSTACK OP_DUP OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
-    "0000000000000000000000000000000000000000000000000000000000 " +
-    "OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 00 " +
-    "OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
-    "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG";
-
-const expectedLockingScriptV2 =
-    "626F6F7374706F77 OP_DROP D2040000 " +
-    "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
-    "D80F271E 74686973206973206120746167 C8010000 " +
-    "74686973206973206D6F7265206164646974696F6E616C44617461 " +
-    "OP_CAT OP_SWAP OP_5 OP_ROLL OP_DUP OP_TOALTSTACK OP_CAT OP_2 " +
-    "OP_PICK OP_TOALTSTACK OP_6 OP_ROLL OP_SIZE OP_4 OP_EQUALVERIFY " +
-    "OP_CAT OP_6 OP_ROLL OP_SIZE OP_8 OP_EQUALVERIFY OP_CAT OP_SWAP OP_CAT " +
-    "OP_HASH256 OP_SWAP OP_TOALTSTACK OP_CAT OP_TOALTSTACK FF1F00E0 " +
-    "OP_DUP OP_INVERT OP_TOALTSTACK OP_AND OP_SWAP OP_FROMALTSTACK OP_AND " +
-    "OP_OR OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY " +
-    "OP_CAT OP_FROMALTSTACK OP_CAT OP_SWAP OP_SIZE OP_4 OP_EQUALVERIFY " +
-    "OP_CAT OP_HASH256 00 OP_CAT OP_BIN2NUM OP_FROMALTSTACK OP_SIZE OP_4 " +
-    "OP_EQUALVERIFY OP_3 OP_SPLIT OP_DUP OP_BIN2NUM OP_3 21 OP_WITHIN " +
-    "OP_VERIFY OP_TOALTSTACK OP_DUP OP_BIN2NUM 0 OP_GREATERTHAN OP_VERIFY " +
-    "0000000000000000000000000000000000000000000000000000000000 " +
-    "OP_CAT OP_FROMALTSTACK OP_3 OP_SUB OP_8 OP_MUL OP_RSHIFT 00 " +
-    "OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
-    "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG"
-
-  const expectedUnlockingScriptV1 =
-    "300602010A02010B41 " +
-    "020000000000000000000000000000000000000000000000000000000000000007 " +
-    "F8FC1600 12300009 0000000300000003 02000000 " +
-    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F";
-
-  const expectedUnlockingScriptV2 =
-    "300602010A02010B41 " +
-    "020000000000000000000000000000000000000000000000000000000000000007 " +
-    "04670400 12300009 0000000300000003 02000000 FFFFFFFF " +
-    "1A7340DA6FB3F728439A4BECFCA9CBEDDAF8795F";
-
-  const jobV1 = index.BoostPowJob.fromObject({
-    category: categoryHex,
-    content: contentHex,
-    diff: difficulty,
-    tag: tagHex,
-    additionalData: dataHex,
-    userNonce: userNonceHex,
-  });
-
-  const jobV2 = index.BoostPowJob.fromObject({
-    category: categoryHex,
-    content: contentHex,
-    diff: difficulty,
-    tag: tagHex,
-    additionalData: dataHex,
-    userNonce: userNonceHex,
-    useGeneralPurposeBits: true
-  });
-
-  const solutionV1 = index.BoostPowJobProof.fromObject({
-    signature: signatureHex,
-    minerPubKeyHash: minerPubKeyHashHex,
-    extraNonce1: extraNonce1Hex,
-    extraNonce2: extraNonce2Hex,
-    minerPubKey: minerPubKeyHex,
-    time: timeHex,
-    nonce: nonceV1Hex,
-  });
-
-  const solutionV2 = index.BoostPowJobProof.fromObject({
-    signature: signatureHex,
-    minerPubKeyHash: minerPubKeyHashHex,
-    extraNonce1: extraNonce1Hex,
-    extraNonce2: extraNonce2Hex,
-    minerPubKey: minerPubKeyHex,
-    time: timeHex,
-    nonce: nonceV2Hex,
-    generalPurposeBits: generalPurposeBitsHex
-  });
-
   const metadata = index.BoostPowMetadata.fromObject({
     tag: tagHex,
     minerPubKeyHash: minerPubKeyHashHex,
@@ -450,145 +720,6 @@ const expectedLockingScriptV2 =
     extraNonce2: extraNonce2Hex,
     userNonce: userNonceHex,
     additionalData: dataHex,
-  });
-
-  const proofV1 = index.BoostPowJob.tryValidateJobProof(jobV1, solutionV1);
-  const proofV2 = index.BoostPowJob.tryValidateJobProof(jobV2, solutionV2);
-
-  console.log("integration test: generating scripts");
-  const lockingScriptV1 = jobV1.toScript().toASM().toUpperCase();
-  const unlockingScriptV1 = solutionV1.toScript().toASM().toUpperCase();
-
-  const lockingScriptV2 = jobV2.toScript().toASM().toUpperCase();
-  const unlockingScriptV2 = solutionV2.toScript().toASM().toUpperCase();
-  console.log("scripts generated");
-
-  // check if scripts are correct.
-  it("should create the correct locking script", async () => {
-    expect(lockingScriptV1).to.eql(expectedLockingScriptV1);
-    expect(lockingScriptV2).to.eql(expectedLockingScriptV2);
-  });
-
-  it("should create the correct unlocking script", async () => {
-    expect(unlockingScriptV1).to.eql(expectedUnlockingScriptV1);
-    expect(unlockingScriptV2).to.eql(expectedUnlockingScriptV2);
-  });
-
-  // check getters for job.
-  it("should get category from locking script", async () => {
-    expect(jobV1.category.hex).to.eql(categoryHex);
-    expect(jobV1.category.number).to.eql(categoryNumber);
-    expect(jobV1.category.buffer).to.eql(categoryBuffer);
-
-    expect(jobV2.category.hex).to.eql(categoryHex);
-    expect(jobV2.category.number).to.eql(categoryNumber);
-    expect(jobV2.category.buffer).to.eql(categoryBuffer);
-  });
-
-  it("should get content from locking script", async () => {
-    expect(jobV1.content.hex).to.eql(contentHex);
-    expect(jobV1.content.buffer).to.eql(contentBuffer);
-    expect(jobV1.content.string).to.eql(contentString);
-
-    expect(jobV2.content.hex).to.eql(contentHex);
-    expect(jobV2.content.buffer).to.eql(contentBuffer);
-    expect(jobV2.content.string).to.eql(contentString);
-  });
-
-  it("should get difficulty from locking script", async () => {
-    expect(jobV1.difficulty).to.eql(difficulty);
-    expect(jobV1.bits.number.toString(16)).to.eql(compactHex);
-
-    expect(jobV2.difficulty).to.eql(difficulty);
-    expect(jobV2.bits.number.toString(16)).to.eql(compactHex);
-  });
-
-  it("should get tag from locking script", async () => {
-    expect(jobV1.tag.hex).to.eql(tagHex);
-    expect(jobV1.tag.string).to.eql(tagString);
-    expect(jobV1.tag.buffer).to.eql(tagBuffer);
-
-    expect(jobV2.tag.hex).to.eql(tagHex);
-    expect(jobV2.tag.string).to.eql(tagString);
-    expect(jobV2.tag.buffer).to.eql(tagBuffer);
-  });
-
-  it("should get addational data from locking script", async () => {
-    expect(jobV1.additionalData.hex).to.eql(dataHex);
-    expect(jobV1.additionalData.string).to.eql(dataString);
-    expect(jobV1.additionalData.buffer).to.eql(dataBuffer);
-
-    expect(jobV2.additionalData.hex).to.eql(dataHex);
-    expect(jobV2.additionalData.string).to.eql(dataString);
-    expect(jobV2.additionalData.buffer).to.eql(dataBuffer);
-  });
-
-  it("should get user nonce from locking script", async () => {
-    expect(jobV1.userNonce.hex).to.eql(userNonceHex);
-    expect(jobV1.userNonce.number).to.eql(userNonceNumber);
-    expect(jobV1.userNonce.buffer).to.eql(userNonceBuffer);
-
-    expect(jobV2.userNonce.hex).to.eql(userNonceHex);
-    expect(jobV2.userNonce.number).to.eql(userNonceNumber);
-    expect(jobV2.userNonce.buffer).to.eql(userNonceBuffer);
-  });
-
-  // check getters for solution
-  it("should get signature", async () => {
-    expect(solutionV1.signature.buffer).to.eql(signatureBuffer);
-    expect(solutionV1.signature.hex).to.eql(signatureHex);
-
-    expect(solutionV2.signature.buffer).to.eql(signatureBuffer);
-    expect(solutionV2.signature.hex).to.eql(signatureHex);
-  });
-
-  it("should get miner pubkey", async () => {
-    expect(solutionV1.minerPubKey.buffer).to.eql(minerPubKeyBuffer);
-    expect(solutionV1.minerPubKey.hex).to.eql(minerPubKeyHex);
-
-    expect(solutionV2.minerPubKey.buffer).to.eql(minerPubKeyBuffer);
-    expect(solutionV2.minerPubKey.hex).to.eql(minerPubKeyHex);
-  });
-
-  it("should get nonce", async () => {
-    expect(solutionV1.nonce.number).to.eql(nonceV1Number);
-    expect(solutionV1.nonce.buffer).to.eql(nonceV1Buffer);
-
-    expect(solutionV2.nonce.number).to.eql(nonceV2Number);
-    expect(solutionV2.nonce.buffer).to.eql(nonceV2Buffer);
-  });
-
-  it("should get time", async () => {
-    expect(solutionV1.time.number).to.eql(timeNumber);
-    expect(solutionV1.time.buffer).to.eql(timeBuffer);
-
-    expect(solutionV2.time.number).to.eql(timeNumber);
-    expect(solutionV2.time.buffer).to.eql(timeBuffer);
-  });
-
-  it("should get miner pubkey hash from solution", async () => {
-    expect(solutionV1.minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
-    expect(solutionV1.minerPubKeyHash.hex.toUpperCase()).to.eql(
-      minerPubKeyHashHex
-    );
-
-    expect(solutionV2.minerPubKeyHash.buffer).to.eql(minerPubKeyHashBuffer);
-    expect(solutionV2.minerPubKeyHash.hex.toUpperCase()).to.eql(
-      minerPubKeyHashHex
-    );
-  });
-
-  it("should get extra nonce 1 from solution", async () => {
-    expect(solutionV1.extraNonce1.number).to.eql(extraNonce1Number);
-    expect(solutionV1.extraNonce1.buffer).to.eql(extraNonce1Buffer);
-
-    expect(solutionV2.extraNonce1.number).to.eql(extraNonce1Number);
-    expect(solutionV2.extraNonce1.buffer).to.eql(extraNonce1Buffer);
-  });
-
-  it("should get extra nonce 2 from solution", async () => {
-    expect(solutionV1.extraNonce2.buffer).to.eql(extraNonce2Buffer);
-    expect(solutionV2.extraNonce2.buffer).to.eql(extraNonce2Buffer);
   });
 
   // check valid metadata
@@ -630,10 +761,29 @@ const expectedLockingScriptV2 =
     expect(metadata.extraNonce2.buffer).to.eql(extraNonce2Buffer);
   });
 
+  it("should write as objects and back", async () => {
+    expect(index.BoostPowJob.fromObject(jobBountyV1.toObject())).to.eql(jobBountyV1);
+    expect(index.BoostPowJob.fromObject(jobBountyV2.toObject())).to.eql(jobBountyV2);
+    expect(index.BoostPowJob.fromObject(jobContractV1.toObject())).to.eql(jobContractV1);
+    expect(index.BoostPowJob.fromObject(jobContractV2.toObject())).to.eql(jobContractV2);
+    expect(index.BoostPowJobProof.fromObject(solutionBountyV1.toObject())).to.eql(solutionBountyV1);
+    expect(index.BoostPowJobProof.fromObject(solutionBountyV2.toObject())).to.eql(solutionBountyV2);
+    expect(index.BoostPowJobProof.fromObject(solutionContractV1.toObject())).to.eql(solutionContractV1);
+    expect(index.BoostPowJobProof.fromObject(solutionContractV2.toObject())).to.eql(solutionContractV2);
+    expect(index.BoostPowMetadata.fromObject(metadata.toObject())).to.eql(
+      metadata
+    );
+  });
+
+  const proofV1 = index.BoostPowJob.tryValidateJobProof(jobBountyV1, solutionBountyV1);
+  const proofV2 = index.BoostPowJob.tryValidateJobProof(jobBountyV2, solutionBountyV2);
+
   // check valid string
   it("should generate valid string v1", async () => {
     expect(proofV1).to.not.eql(null);
-    let temp = proofV1.toString();
+
+    expect(proofV1).to.eql(index.BoostPowJob.tryValidateJobProof(jobContractV1, solutionContractV1));
+
     expect(proofV1.boostPowString.toString().toUpperCase()).to.eql(
       proofStringHexV1
     );
@@ -655,7 +805,9 @@ const expectedLockingScriptV2 =
 
   it("should generate valid string v2", async () => {
     expect(proofV2).to.not.eql(null);
-    let temp = proofV1.toString();
+
+    expect(proofV2).to.eql(index.BoostPowJob.tryValidateJobProof(jobContractV2, solutionContractV2));
+
     expect(proofV2.boostPowString.toString().toUpperCase()).to.eql(
       proofStringHexV2
     );
@@ -672,16 +824,6 @@ const expectedLockingScriptV2 =
     expect(proofV2.boostPowString.bits.number).to.eql(compactNumber);
     expect(proofV2.boostPowString.metadataHash.hex.toUpperCase()).to.eql(
       metadataHashHex
-    );
-  });
-
-  it("should write as objects and back", async () => {
-    expect(index.BoostPowJob.fromObject(jobV1.toObject())).to.eql(jobV1);
-    expect(index.BoostPowJob.fromObject(jobV2.toObject())).to.eql(jobV2);
-    expect(index.BoostPowJobProof.fromObject(solutionV1.toObject())).to.eql(solutionV1);
-    expect(index.BoostPowJobProof.fromObject(solutionV2.toObject())).to.eql(solutionV2);
-    expect(index.BoostPowMetadata.fromObject(metadata.toObject())).to.eql(
-      metadata
     );
   });
 });

@@ -51,10 +51,7 @@ class BoostPowJobProofModel {
             if (params.minerPubKeyHash.length != 40) {
                 throw new Error('minerPubKeyHash too large. Max 20 bytes.');
             }
-            minerPubKeyHash = params.minerPubKeyHash;
-        }
-        else {
-            minerPubKeyHash = bsv.crypto.hash.sha256ripemd160(minerPubKey).toString('hex');
+            minerPubKeyHash = new digest20_1.Digest20(Buffer.from(params.minerPubKeyHash, 'hex'));
         }
         let generalPurposeBits;
         if (params.generalPurposeBits) {
@@ -63,7 +60,7 @@ class BoostPowJobProofModel {
             }
             generalPurposeBits = new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false));
         }
-        return new BoostPowJobProofModel(new bytes_1.Bytes(Buffer.from(params.signature, 'hex')), new bytes_1.Bytes(minerPubKey), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false)), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new uint64Big_1.UInt64Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false)), new digest20_1.Digest20(Buffer.from(minerPubKeyHash, 'hex')), generalPurposeBits);
+        return new BoostPowJobProofModel(new bytes_1.Bytes(Buffer.from(params.signature, 'hex')), new bytes_1.Bytes(minerPubKey), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false)), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new uint64Big_1.UInt64Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false)), minerPubKeyHash, generalPurposeBits);
     }
     get time() {
         return this.Time;

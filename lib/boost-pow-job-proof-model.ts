@@ -61,14 +61,12 @@ export class BoostPowJobProofModel {
         }
 
         let minerPubKey = Buffer.from(params.minerPubKey, 'hex');
-        let minerPubKeyHash: string;
+        let minerPubKeyHash;
         if (params.minerPubKeyHash) {
             if (params.minerPubKeyHash.length != 40) {
                throw new Error('minerPubKeyHash too large. Max 20 bytes.');
             }
-            minerPubKeyHash = params.minerPubKeyHash;
-        } else {
-            minerPubKeyHash = bsv.crypto.hash.sha256ripemd160(minerPubKey).toString('hex');
+            minerPubKeyHash = new Digest20(Buffer.from(params.minerPubKeyHash, 'hex'));
         }
 
         let generalPurposeBits;
@@ -86,7 +84,7 @@ export class BoostPowJobProofModel {
             new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4,false)),
             new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
             new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
-            new Digest20(Buffer.from(minerPubKeyHash, 'hex')),
+            minerPubKeyHash,
             generalPurposeBits
         );
     }
