@@ -15,7 +15,7 @@ export declare class BoostPowJobProofModel {
     private ExtraNonce1;
     private ExtraNonce2;
     private Nonce;
-    private MinerPubKeyHash;
+    private MinerPubKeyHash?;
     private GeneralPurposeBits?;
     private Txid?;
     private Vin?;
@@ -37,9 +37,11 @@ export declare class BoostPowJobProofModel {
     get extraNonce1(): UInt32Big;
     get extraNonce2(): UInt64Big;
     get nonce(): UInt32Little;
-    get minerPubKeyHash(): Digest20;
+    get minerPubKeyHash(): Digest20 | undefined;
     get signature(): Bytes;
     get minerPubKey(): Bytes;
+    isContract(): boolean;
+    isBounty(): boolean;
     toObject(): {
         signature: string;
         minerPubKey: string;
@@ -47,17 +49,6 @@ export declare class BoostPowJobProofModel {
         nonce: string;
         extraNonce1: string;
         extraNonce2: string;
-        generalPurposeBits: string;
-        minerPubKeyHash: string;
-    } | {
-        signature: string;
-        minerPubKey: string;
-        time: string;
-        nonce: string;
-        extraNonce1: string;
-        extraNonce2: string;
-        minerPubKeyHash: string;
-        generalPurposeBits?: undefined;
     };
     toScript(): bsv.Script;
     static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined;

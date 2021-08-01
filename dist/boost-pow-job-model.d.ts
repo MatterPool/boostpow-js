@@ -3,6 +3,7 @@ import { Int32Little } from './fields/int32Little';
 import { UInt32Little } from './fields/uint32Little';
 import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
+import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
 import { BoostPowStringModel } from './boost-pow-string-model';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
@@ -15,6 +16,7 @@ export declare class BoostPowJobModel {
     private AdditionalData;
     private UserNonce;
     private useGeneralPurposeBits;
+    private MinerPubKeyHash?;
     private Txid?;
     private Vout?;
     private Value?;
@@ -27,6 +29,10 @@ export declare class BoostPowJobModel {
     get userNonce(): UInt32Little;
     get difficulty(): number;
     get bits(): UInt32Little;
+    get minerPubKeyHash(): Digest20 | undefined;
+    get id(): string;
+    isContract(): boolean;
+    isBounty(): boolean;
     static fromObject(params: {
         content: string;
         diff: number;
@@ -34,6 +40,7 @@ export declare class BoostPowJobModel {
         tag?: string;
         additionalData?: string;
         userNonce?: string;
+        minerPubKeyHash?: string;
         useGeneralPurposeBits?: boolean;
     }): BoostPowJobModel;
     toObject(): {
@@ -43,9 +50,18 @@ export declare class BoostPowJobModel {
         tag: string;
         additionalData: string;
         userNonce: string;
+        minerPubKeyHash: string;
         useGeneralPurposeBits: boolean;
+    } | {
+        content: string;
+        diff: number;
+        category: string;
+        tag: string;
+        additionalData: string;
+        userNonce: string;
+        useGeneralPurposeBits: boolean;
+        minerPubKeyHash?: undefined;
     };
-    get id(): string;
     toHex(): string;
     private toOpCode;
     private static fromOpCode;

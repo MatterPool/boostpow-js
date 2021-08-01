@@ -19,7 +19,7 @@ export class BoostPowJobProofModel {
         private ExtraNonce1: UInt32Big,
         private ExtraNonce2: UInt64Big,
         private Nonce: UInt32Little,
-        private MinerPubKeyHash: Digest20,
+        private MinerPubKeyHash?: Digest20,
         private GeneralPurposeBits?: UInt32Little,
         // Optional tx information attached or not
         private Txid?: string,
@@ -112,7 +112,7 @@ export class BoostPowJobProofModel {
     }
 
     // Should add bsv.Address version and string version too
-    get minerPubKeyHash(): Digest20 {
+    get minerPubKeyHash(): Digest20 | undefined {
         return this.MinerPubKeyHash;
     }
 
@@ -124,31 +124,34 @@ export class BoostPowJobProofModel {
         return this.MinerPubKey;
     }
 
+    isContract(): boolean {
+        return !this.MinerPubKeyHash;
+    }
+
+    isBounty(): boolean {
+        return !!this.MinerPubKeyHash;
+    }
+
     toObject () {
+        let obj = {
+            // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
+            signature: this.signature.hex,
+            minerPubKey: this.minerPubKey.hex,
+            time: this.time.hex,
+            nonce: this.nonce.hex,
+            extraNonce1: this.extraNonce1.hex,
+            extraNonce2: this.extraNonce2.hex
+        };
+
         if (this.generalPurposeBits) {
-          return {
-              // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-              signature: this.signature.hex,
-              minerPubKey: this.minerPubKey.hex,
-              time: this.time.hex,
-              nonce: this.nonce.hex,
-              extraNonce1: this.extraNonce1.hex,
-              extraNonce2: this.extraNonce2.hex,
-              generalPurposeBits: this.generalPurposeBits.hex,
-              minerPubKeyHash: this.minerPubKeyHash.hex,
-          };
-        } else {
-          return {
-              // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-              signature: this.signature.hex,
-              minerPubKey: this.minerPubKey.hex,
-              time: this.time.hex,
-              nonce: this.nonce.hex,
-              extraNonce1: this.extraNonce1.hex,
-              extraNonce2: this.extraNonce2.hex,
-              minerPubKeyHash: this.minerPubKeyHash.hex,
-          };
+            obj["generalPurposeBits"] = this.generalPurposeBits.hex;
         }
+
+        if (this.minerPubKeyHash) {
+            obj["minerPubKeyHash"] = this.minerPubKeyHash.hex;
+        }
+
+        return obj;
     }
 
     toScript(): bsv.Script {
@@ -180,8 +183,9 @@ export class BoostPowJobProofModel {
           buildOut.add(this.generalPurposeBits.buffer);
         }
 
-        // Add miner address
-        buildOut.add(this.minerPubKeyHash.buffer);
+        if (this.minerPubKeyHash) {
+          buildOut.add(this.minerPubKeyHash.buffer);
+        }
 
         return buildOut;
     }

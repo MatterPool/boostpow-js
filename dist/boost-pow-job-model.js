@@ -11,7 +11,7 @@ const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
-    constructor(Content, Difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, 
+    constructor(Content, Difficulty, Category, Tag, AdditionalData, UserNonce, useGeneralPurposeBits, MinerPubKeyHash, 
     // Optional tx information attached or not
     Txid, Vout, Value) {
         this.Content = Content;
@@ -21,6 +21,7 @@ class BoostPowJobModel {
         this.AdditionalData = AdditionalData;
         this.UserNonce = UserNonce;
         this.useGeneralPurposeBits = useGeneralPurposeBits;
+        this.MinerPubKeyHash = MinerPubKeyHash;
         this.Txid = Txid;
         this.Vout = Vout;
         this.Value = Value;
@@ -49,6 +50,18 @@ class BoostPowJobModel {
     get bits() {
         return uint32Little_1.UInt32Little.fromNumber(boost_utils_1.BoostUtils.difficulty2bits(this.difficulty));
     }
+    get minerPubKeyHash() {
+        return this.MinerPubKeyHash;
+    }
+    get id() {
+        return this.scriptHash;
+    }
+    isContract() {
+        return !!this.MinerPubKeyHash;
+    }
+    isBounty() {
+        return !this.MinerPubKeyHash;
+    }
     static fromObject(params) {
         if (params.content && params.content.length > 64) {
             throw new Error('content too large. Max 32 bytes.');
@@ -65,30 +78,52 @@ class BoostPowJobModel {
         if (params.userNonce && params.userNonce.length > 8) {
             throw new Error('userNonce too large. Max 4 bytes.');
         }
+        let userNonce;
         if (!params.userNonce) {
             let getRandomInt = (max) => {
                 return Math.floor(Math.random() * max);
             };
             let tempBuffer = Buffer.from([getRandomInt(0xff), getRandomInt(0xff), getRandomInt(0xff), getRandomInt(0xff)]);
-            params.userNonce = tempBuffer.toString('hex');
+            userNonce = tempBuffer.toString('hex');
+        }
+        else {
+            userNonce = params.userNonce;
+        }
+        let minerPubKeyHash;
+        if (params.minerPubKeyHash) {
+            if (params.minerPubKeyHash.length > 40) {
+                throw new Error('minerPubKeyHash too large. Max 4 bytes.');
+            }
+            minerPubKeyHash = new bytes_1.Bytes(new Buffer(params.minerPubKeyHash, 'hex'));
         }
         return new BoostPowJobModel(new digest32_1.Digest32(boost_utils_1.BoostUtils.createBufferAndPad(params.content, 32)), params.diff, new int32Little_1.Int32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.category, 4, false)), new bytes_1.Bytes(params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0)), new bytes_1.Bytes(params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0)), 
         // TODO: if userNonce is not provided, it should be generated randomly, not defaulted to zero.
-        new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.userNonce, 4, false)), params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false);
+        new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(userNonce, 4, false)), params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false, minerPubKeyHash);
     }
     toObject() {
-        return {
-            content: this.content.hex,
-            diff: this.difficulty,
-            category: this.category.hex,
-            tag: this.tag.hex,
-            additionalData: this.additionalData.hex,
-            userNonce: this.userNonce.hex,
-            useGeneralPurposeBits: this.useGeneralPurposeBits
-        };
-    }
-    get id() {
-        return this.scriptHash;
+        if (this.minerPubKeyHash) {
+            return {
+                content: this.content.hex,
+                diff: this.difficulty,
+                category: this.category.hex,
+                tag: this.tag.hex,
+                additionalData: this.additionalData.hex,
+                userNonce: this.userNonce.hex,
+                minerPubKeyHash: this.minerPubKeyHash.hex,
+                useGeneralPurposeBits: this.useGeneralPurposeBits
+            };
+        }
+        else {
+            return {
+                content: this.content.hex,
+                diff: this.difficulty,
+                category: this.category.hex,
+                tag: this.tag.hex,
+                additionalData: this.additionalData.hex,
+                userNonce: this.userNonce.hex,
+                useGeneralPurposeBits: this.useGeneralPurposeBits
+            };
+        }
     }
     toHex() {
         return this.toScript().toHex();
@@ -119,6 +154,9 @@ class BoostPowJobModel {
         let buildOut = bsv.Script();
         buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')));
         buildOut.add(bsv.Opcode.OP_DROP);
+        if (this.minerPubKeyHash) {
+            buildOut.add(this.toOpCode(this.minerPubKeyHash.buffer));
+        }
         buildOut.add(this.toOpCode(this.category.buffer));
         buildOut.add(this.toOpCode(this.content.buffer));
         buildOut.add(this.toOpCode(this.bits.buffer));
@@ -160,52 +198,111 @@ class BoostPowJobModel {
         let tag;
         let additionalData;
         let userNonce;
+        let minerPubKeyHash;
         let useGeneralPurposeBits;
-        // console.log('script.chunks', script.chunks,  script.chunks.length);
-        if (
+        if (!(
         // boostv01
         script.chunks[0].buf.toString('utf8') === 'boostpow' &&
             // Drop the identifier
-            script.chunks[1].opcodenum === bsv.Opcode.OP_DROP &&
-            // Category
-            script.chunks[2].buf &&
-            script.chunks[2].opcodenum === 4 &&
+            script.chunks[1].opcodenum === bsv.Opcode.OP_DROP))
+            throw new Error('Not valid Boost Output');
+        let is_bounty;
+        if (
+        // Category
+        script.chunks[2].buf &&
+            script.chunks[2].opcodenum === 4) {
+            is_bounty = true;
+        }
+        else if (
+        // minerPubKeyHash
+        script.chunks[2].buf &&
+            script.chunks[2].opcodenum === 20) {
+            is_bounty = false;
+        }
+        else
+            throw new Error('Not valid Boost Output');
+        if (is_bounty) {
+            if (
             // Content
             script.chunks[3].buf &&
-            script.chunks[3].len === 32 &&
-            // Target
-            script.chunks[4].buf &&
-            script.chunks[4].len === 4 &&
-            // Tag
-            ((script.chunks[5].buf &&
-                script.chunks[5].len <= 20) || (script.chunks[5].opcodenum >= bsv.Opcode.OP_1 && script.chunks[5].opcodenum <= bsv.Opcode.OP_16)) &&
-            // User Nonce
-            script.chunks[6].buf &&
-            script.chunks[6].len === 4 &&
-            // Additional Data
-            (script.chunks[7].buf || (script.chunks[7].opcodenum >= bsv.Opcode.OP_1 && script.chunks[7].opcodenum <= bsv.Opcode.OP_16))) {
-            if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
-                useGeneralPurposeBits = false;
-            }
-            else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
-                useGeneralPurposeBits = true;
+                script.chunks[3].len === 32 &&
+                // Target
+                script.chunks[4].buf &&
+                script.chunks[4].len === 4 &&
+                // Tag
+                ((script.chunks[5].buf &&
+                    script.chunks[5].len <= 20) || (script.chunks[5].opcodenum >= bsv.Opcode.OP_1 && script.chunks[5].opcodenum <= bsv.Opcode.OP_16)) &&
+                // User Nonce
+                script.chunks[6].buf &&
+                script.chunks[6].len === 4 &&
+                // Additional Data
+                (script.chunks[7].buf || (script.chunks[7].opcodenum >= bsv.Opcode.OP_1 && script.chunks[7].opcodenum <= bsv.Opcode.OP_16))) {
+                if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+                    useGeneralPurposeBits = false;
+                }
+                else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+                    useGeneralPurposeBits = true;
+                }
+                else
+                    throw new Error('Not valid Boost Output');
+                category = new int32Little_1.Int32Little(this.fromOpCode(script.chunks[2]));
+                content = new digest32_1.Digest32(this.fromOpCode(script.chunks[3]));
+                let targetHex = (this.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('');
+                let targetInt = parseInt(targetHex, 16);
+                diff = boost_utils_1.BoostUtils.difficulty(targetInt);
+                tag = new bytes_1.Bytes(this.fromOpCode(script.chunks[5]));
+                //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
+                userNonce = new uint32Little_1.UInt32Little(this.fromOpCode(script.chunks[6]));
+                //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
+                additionalData = new bytes_1.Bytes(this.fromOpCode(script.chunks[7]));
+                //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
             }
             else
                 throw new Error('Not valid Boost Output');
-            category = new int32Little_1.Int32Little(this.fromOpCode(script.chunks[2]));
-            content = new digest32_1.Digest32(this.fromOpCode(script.chunks[3]));
-            let targetHex = (this.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('');
-            let targetInt = parseInt(targetHex, 16);
-            diff = boost_utils_1.BoostUtils.difficulty(targetInt);
-            tag = new bytes_1.Bytes(this.fromOpCode(script.chunks[5]));
-            //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
-            userNonce = new uint32Little_1.UInt32Little(this.fromOpCode(script.chunks[6]));
-            //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
-            additionalData = new bytes_1.Bytes(this.fromOpCode(script.chunks[7]));
-            //additionalData = (script.chunks[7].buf.toString('hex').match(/../g) || []).reverse().join('');
-            return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, txid, vout, value);
         }
-        throw new Error('Not valid Boost Output');
+        else {
+            if (
+            // Category
+            script.chunks[3].buf &&
+                script.chunks[3].opcodenum === 4 &&
+                // Content
+                script.chunks[4].buf &&
+                script.chunks[4].len === 32 &&
+                // Target
+                script.chunks[5].buf &&
+                script.chunks[5].len === 4 &&
+                // Tag
+                ((script.chunks[6].buf &&
+                    script.chunks[6].len <= 20) || (script.chunks[5].opcodenum >= bsv.Opcode.OP_1 && script.chunks[6].opcodenum <= bsv.Opcode.OP_16)) &&
+                // User Nonce
+                script.chunks[7].buf &&
+                script.chunks[7].len === 4 &&
+                // Additional Data
+                (script.chunks[8].buf || (script.chunks[8].opcodenum >= bsv.Opcode.OP_1 && script.chunks[8].opcodenum <= bsv.Opcode.OP_16))) {
+                if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 9, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+                    useGeneralPurposeBits = false;
+                }
+                else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 9, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+                    useGeneralPurposeBits = true;
+                }
+                else
+                    throw new Error('Not valid Boost Output');
+                minerPubKeyHash = new bytes_1.Bytes(this.fromOpCode(script.chunks[2]));
+                category = new int32Little_1.Int32Little(this.fromOpCode(script.chunks[3]));
+                content = new digest32_1.Digest32(this.fromOpCode(script.chunks[4]));
+                let targetHex = (this.fromOpCode(script.chunks[5]).toString('hex').match(/../g) || []).reverse().join('');
+                let targetInt = parseInt(targetHex, 16);
+                diff = boost_utils_1.BoostUtils.difficulty(targetInt);
+                tag = new bytes_1.Bytes(this.fromOpCode(script.chunks[6]));
+                //tag = (script.chunks[5].buf.toString('hex').match(/../g) || []).reverse().join('');
+                userNonce = new uint32Little_1.UInt32Little(this.fromOpCode(script.chunks[7]));
+                //userNonce = (script.chunks[6].buf.toString('hex').match(/../g) || []).reverse().join('');
+                additionalData = new bytes_1.Bytes(this.fromOpCode(script.chunks[8]));
+            }
+            else
+                throw new Error('Not valid Boost Output');
+        }
+        return new BoostPowJobModel(content, diff, category, tag, additionalData, userNonce, useGeneralPurposeBits, minerPubKeyHash, txid, vout, value);
     }
     static fromHex(asm, txid, vout, value) {
         return BoostPowJobModel.readScript(new bsv.Script(asm), txid, vout, value);
@@ -339,15 +436,26 @@ class BoostPowJobModel {
             .add(boostPowJobProof.nonce.buffer)
             .add(boostPowJobProof.time.buffer)
             .add(boostPowJobProof.extraNonce2.buffer)
-            .add(boostPowJobProof.extraNonce1.buffer)
-            .add(boostPowJobProof.minerPubKeyHash.buffer);
+            .add(boostPowJobProof.extraNonce1.buffer);
+        if (boostPowJobProof.minerPubKeyHash) {
+            unlockingScript.add(boostPowJobProof.minerPubKeyHash.buffer);
+        }
         tx.inputs[0].setScript(unlockingScript);
         return tx;
     }
     static createBoostPowMetadata(boostPowJob, boostPowJobProof) {
+        let minerPubKeyHash;
+        if (boostPowJobProof.minerPubKeyHash) {
+            minerPubKeyHash = boostPowJobProof.minerPubKeyHash;
+        }
+        else if (boostPowJob.minerPubKeyHash) {
+            minerPubKeyHash = boostPowJob.minerPubKeyHash;
+        }
+        else
+            throw "invalid proof";
         return boost_pow_metadata_model_1.BoostPowMetadataModel.fromBuffer({
             tag: boostPowJob.tag.buffer,
-            minerPubKeyHash: boostPowJobProof.minerPubKeyHash.buffer,
+            minerPubKeyHash: minerPubKeyHash.buffer,
             extraNonce1: boostPowJobProof.extraNonce1.buffer,
             extraNonce2: boostPowJobProof.extraNonce2.buffer,
             userNonce: boostPowJob.userNonce.buffer,

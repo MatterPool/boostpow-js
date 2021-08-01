@@ -90,32 +90,29 @@ class BoostPowJobProofModel {
     get minerPubKey() {
         return this.MinerPubKey;
     }
+    isContract() {
+        return !this.MinerPubKeyHash;
+    }
+    isBounty() {
+        return !!this.MinerPubKeyHash;
+    }
     toObject() {
+        let obj = {
+            // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
+            signature: this.signature.hex,
+            minerPubKey: this.minerPubKey.hex,
+            time: this.time.hex,
+            nonce: this.nonce.hex,
+            extraNonce1: this.extraNonce1.hex,
+            extraNonce2: this.extraNonce2.hex
+        };
         if (this.generalPurposeBits) {
-            return {
-                // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-                signature: this.signature.hex,
-                minerPubKey: this.minerPubKey.hex,
-                time: this.time.hex,
-                nonce: this.nonce.hex,
-                extraNonce1: this.extraNonce1.hex,
-                extraNonce2: this.extraNonce2.hex,
-                generalPurposeBits: this.generalPurposeBits.hex,
-                minerPubKeyHash: this.minerPubKeyHash.hex,
-            };
+            obj["generalPurposeBits"] = this.generalPurposeBits.hex;
         }
-        else {
-            return {
-                // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-                signature: this.signature.hex,
-                minerPubKey: this.minerPubKey.hex,
-                time: this.time.hex,
-                nonce: this.nonce.hex,
-                extraNonce1: this.extraNonce1.hex,
-                extraNonce2: this.extraNonce2.hex,
-                minerPubKeyHash: this.minerPubKeyHash.hex,
-            };
+        if (this.minerPubKeyHash) {
+            obj["minerPubKeyHash"] = this.minerPubKeyHash.hex;
         }
+        return obj;
     }
     toScript() {
         let buildOut = bsv.Script();
@@ -138,8 +135,9 @@ class BoostPowJobProofModel {
         if (this.generalPurposeBits) {
             buildOut.add(this.generalPurposeBits.buffer);
         }
-        // Add miner address
-        buildOut.add(this.minerPubKeyHash.buffer);
+        if (this.minerPubKeyHash) {
+            buildOut.add(this.minerPubKeyHash.buffer);
+        }
         return buildOut;
     }
     static fromTransaction(tx) {

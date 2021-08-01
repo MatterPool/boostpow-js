@@ -250,6 +250,7 @@ describe("BoostPowString", () => {
 // this test was generated using the c++ library Gigamonkey, which has the
 // reference implementation of Boost.
 describe("boost integration test ", () => {
+
   // category corresponds to version in the Bitcoin protocol.
   const categoryHex = "d2040000";
   const categoryBuffer = new Buffer(categoryHex, "hex");
