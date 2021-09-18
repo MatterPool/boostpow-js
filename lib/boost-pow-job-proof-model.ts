@@ -2,7 +2,6 @@ import * as bsv from 'bsv';
 import { BoostUtils } from './boost-utils';
 import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
-import { UInt64Big } from './fields/uint64Big';
 import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
 
@@ -17,7 +16,7 @@ export class BoostPowJobProofModel {
         private MinerPubKey: Bytes,
         private Time: UInt32Little,
         private ExtraNonce1: UInt32Big,
-        private ExtraNonce2: UInt64Big,
+        private ExtraNonce2: Bytes,
         private Nonce: UInt32Little,
         private MinerPubKeyHash?: Digest20,
         private GeneralPurposeBits?: UInt32Little,
@@ -56,10 +55,6 @@ export class BoostPowJobProofModel {
             throw new Error('extraNonce1 too large. Max 4 bytes.')
         }
 
-        if (params.extraNonce2.length > 16) {
-            throw new Error('extraNonce2 too large. Max 8 bytes.')
-        }
-
         let minerPubKey = Buffer.from(params.minerPubKey, 'hex');
         let minerPubKeyHash;
         if (params.minerPubKeyHash) {
@@ -75,6 +70,14 @@ export class BoostPowJobProofModel {
               throw new Error('generalPurposeBits too large. Max 8 bytes.');
             }
             generalPurposeBits = new UInt32Little(BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false));
+
+            if (params.extraNonce2.length > 32) {
+                throw new Error('extraNonce2 too large. Max 32 bytes.')
+            }
+        } else {
+          if (params.extraNonce2.length != 16) {
+              throw new Error('extraNonce2 too large. Max 8 bytes.')
+          }
         }
 
         return new BoostPowJobProofModel(
@@ -82,7 +85,7 @@ export class BoostPowJobProofModel {
             new Bytes(minerPubKey),
             new UInt32Little(BoostUtils.createBufferAndPad(params.time, 4, false)),
             new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4,false)),
-            new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
+            new Bytes(Buffer.from(params.extraNonce2, 'hex')),
             new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
             minerPubKeyHash,
             generalPurposeBits
@@ -101,7 +104,7 @@ export class BoostPowJobProofModel {
         return this.ExtraNonce1;
     }
 
-    get extraNonce2(): UInt64Big {
+    get extraNonce2(): Bytes {
         return this.ExtraNonce2;
     }
 
@@ -290,8 +293,8 @@ export class BoostPowJobProofModel {
       nonce = new UInt32Little(script.chunks[2].buf);
       time = new UInt32Little(script.chunks[3].buf);
 
-      extraNonce2 = new UInt32Big(script.chunks[4].buf);
-      extraNonce1 = new UInt64Big(script.chunks[5].buf);
+      extraNonce2 = new Bytes(script.chunks[4].buf);
+      extraNonce1 = new UInt32Big(script.chunks[5].buf);
 
       return new BoostPowJobProofModel(
         signature,

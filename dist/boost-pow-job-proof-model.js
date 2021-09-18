@@ -5,7 +5,6 @@ const bsv = require("bsv");
 const boost_utils_1 = require("./boost-utils");
 const uint32Little_1 = require("./fields/uint32Little");
 const uint32Big_1 = require("./fields/uint32Big");
-const uint64Big_1 = require("./fields/uint64Big");
 const digest20_1 = require("./fields/digest20");
 const bytes_1 = require("./fields/bytes");
 /**
@@ -42,9 +41,6 @@ class BoostPowJobProofModel {
         if (params.extraNonce1.length > 8) {
             throw new Error('extraNonce1 too large. Max 4 bytes.');
         }
-        if (params.extraNonce2.length > 16) {
-            throw new Error('extraNonce2 too large. Max 8 bytes.');
-        }
         let minerPubKey = Buffer.from(params.minerPubKey, 'hex');
         let minerPubKeyHash;
         if (params.minerPubKeyHash) {
@@ -59,8 +55,16 @@ class BoostPowJobProofModel {
                 throw new Error('generalPurposeBits too large. Max 8 bytes.');
             }
             generalPurposeBits = new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false));
+            if (params.extraNonce2.length > 32) {
+                throw new Error('extraNonce2 too large. Max 32 bytes.');
+            }
         }
-        return new BoostPowJobProofModel(new bytes_1.Bytes(Buffer.from(params.signature, 'hex')), new bytes_1.Bytes(minerPubKey), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false)), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new uint64Big_1.UInt64Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false)), minerPubKeyHash, generalPurposeBits);
+        else {
+            if (params.extraNonce2.length != 16) {
+                throw new Error('extraNonce2 too large. Max 8 bytes.');
+            }
+        }
+        return new BoostPowJobProofModel(new bytes_1.Bytes(Buffer.from(params.signature, 'hex')), new bytes_1.Bytes(minerPubKey), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.time, 4, false)), new uint32Big_1.UInt32Big(boost_utils_1.BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)), new bytes_1.Bytes(Buffer.from(params.extraNonce2, 'hex')), new uint32Little_1.UInt32Little(boost_utils_1.BoostUtils.createBufferAndPad(params.nonce, 4, false)), minerPubKeyHash, generalPurposeBits);
     }
     get time() {
         return this.Time;
@@ -212,8 +216,8 @@ class BoostPowJobProofModel {
         minerPubKey = new bytes_1.Bytes(script.chunks[1].buf);
         nonce = new uint32Little_1.UInt32Little(script.chunks[2].buf);
         time = new uint32Little_1.UInt32Little(script.chunks[3].buf);
-        extraNonce2 = new uint32Big_1.UInt32Big(script.chunks[4].buf);
-        extraNonce1 = new uint64Big_1.UInt64Big(script.chunks[5].buf);
+        extraNonce2 = new bytes_1.Bytes(script.chunks[4].buf);
+        extraNonce1 = new uint32Big_1.UInt32Big(script.chunks[5].buf);
         return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, generalPurposeBits, txid, vin, spentTxid, spentVout);
     }
     static fromHex(asm, txid, vin, spentTxid, spentVout) {

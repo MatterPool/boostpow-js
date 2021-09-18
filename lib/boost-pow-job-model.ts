@@ -744,8 +744,9 @@ export class BoostPowJobModel {
         bsv.Opcode.OP_6,
         bsv.Opcode.OP_ROLL,
         bsv.Opcode.OP_SIZE,
-        bsv.Opcode.OP_8,
-        bsv.Opcode.OP_EQUALVERIFY,
+        Buffer.from("0120", "hex"),                   // push 32 to the stack.
+        bsv.Opcode.OP_GREATERTHANOREQUAL,
+        bsv.Opcode.OP_VERIFY,
         bsv.Opcode.OP_CAT,
 
         // SWAP CAT HASH256                           // create metadata string and hash it.

@@ -1,7 +1,6 @@
 import * as bsv from 'bsv';
 import { UInt32Little } from './fields/uint32Little';
 import { UInt32Big } from './fields/uint32Big';
-import { UInt64Big } from './fields/uint64Big';
 import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
 /**
@@ -35,7 +34,7 @@ export declare class BoostPowJobProofModel {
     get time(): UInt32Little;
     get generalPurposeBits(): UInt32Little | undefined;
     get extraNonce1(): UInt32Big;
-    get extraNonce2(): UInt64Big;
+    get extraNonce2(): Bytes;
     get nonce(): UInt32Little;
     get minerPubKeyHash(): Digest20 | undefined;
     get signature(): Bytes;
