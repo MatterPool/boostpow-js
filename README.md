@@ -2,13 +2,7 @@
 > Boost Proof of Work Protocol
 > https://boostpow.com
 
-See also Boost Publisher:  [https://github.com/MatterPool/boostpow-publish](https://github.com/MatterPool/boostpow-publish) and [https://publish.boostpow.com/docs.html](https://publish.boostpow.com/docs.html) 
-
 Boost is a new type of content ranking system that enables users to increase the amount of energy required to mine or process their content. Users will boost their post as a way to signal to the network that they believe their information is valuable. Boosted posts will appear in the boost feed – ordered by the amount of energy requested for their information.
-
-![header](header.png)
-
----
 
 ## Preview
 
@@ -46,7 +40,7 @@ console.log(powString.toObject());
 ## Installation
 
 ```sh
-npm install boostpow-js --save
+npm install boostpow --save
 ```
 
 # Boost POW
@@ -59,11 +53,8 @@ Boost is a new type of content ranking system that enables users to increase the
 
 **Links**:
 
-- <a href='https://github.com/matterpool/boostpow-js'>Javascript SDK: boostpow-js</a>
-- <a href='https://github.com/matterpool/boostpow-api'>Standalone API Server: boostpow-api</a>
+- <a href='https://github.com/ProofOfWorkCompany/boostpow-js'>Javascript SDK: boostpow</a>
 - <a href='https://media.bitcoinfiles.org/52fb4bedc85854638af61a7f906bf8e93da847d2ddb522b1aec53cfc6a0b2023'>Whitepaper</a>
-
->See also Boost Publisher:  [https://github.com/MatterPool/boostpow-publish](https://github.com/MatterPool/boostpow-publish) and [https://publish.boostpow.com/docs.html](https://publish.boostpow.com/docs.html) 
 
 ## MoneyButton, Relay, TwetchPay Integration
 
@@ -72,7 +63,7 @@ Easily integrate <a href='https://moneybutton.com'>MoneyButton</a>, <a href='htt
 Consult the respective documentation for additional details. All services support the 'outputs' format presented below for easy integration.
 
 ```javascript
-const boost = require('boostpow-js');
+const boost = require('boostpow');
 // Create a Boost request with your data
 const boostJob = boost.BoostPowJob.fromObject({
   content: Buffer.from('hello world', 'utf8').toString('hex'),
@@ -150,9 +141,6 @@ twetchPay.pay({
 Create Boost Job Request.
 
 
-<a href='https://github.com/MatterPool/boostpow-js/tree/master/test'>See unit tests for more examples</a>
-
-
 ```shell
 curl -X POST https://graph.boostpow.com/api/v1/main/boost/jobs -H 'Content-Type: application/json' \
 -d '{ "rawtx": "...raw tx hex containing boost output..."}'
@@ -160,7 +148,7 @@ curl -X POST https://graph.boostpow.com/api/v1/main/boost/jobs -H 'Content-Type:
 ```
 
 ```javascript
-const boost = require('boostpow-js');
+const boost = require('boostpow');
 const result = await boost.Graph().submitBoostJob('...rawboost tx...');
 ```
 
@@ -219,8 +207,6 @@ rawtx |  Raw boost tx
 
 ## Get Boost Job Status
 
-Get Boost Job Status. Returns the status of a Boost Job. If it's mined you will see the 'boostPowString' and other fields populated.
-
 <a href='https://github.com/MatterPool/boostpow-js/tree/master/test'>See unit tests for more examples</a>
 
 ```shell
@@ -229,7 +215,7 @@ curl  https://graph.boostpow.com/api/v1/main/boost/jobs/cdd2822902bcc90bd6e46514
 ```
 
 ```javascript
-const boost = require('boostpow-js');
+const boost = require('boostpow');
 const result = await boost.Graph().getBoostJobStatus('cdd2822902bcc90bd6e4651475e2476034700353e7a0335a42783c1a1050d267');
 ```
 
@@ -290,8 +276,6 @@ txid |  Txid of the boost job to get the status
 
 Search by specific fields in utf8 or raw hex (make sure to use the file byte padding length).
 
-<a href='https://github.com/MatterPool/boostpow-js/tree/master/test'>See unit tests for more examples</a>
-
 NOTE: You must validate the boostPowString and boostPowMetadata to confirm POW is correct.
 Use BoostSignalRanker, BoostSignalSummary, or BoostPowString to do this efficiently to produce a list sorted by difficulty (energy)
 
@@ -311,7 +295,7 @@ curl "https://graph.boostpow.com/api/v1/main/boost/search?content=hello&contenth
 ```
 
 ```javascript
-const boost = require('boostpow-js');
+const boost = require('boostpow');
 
 const result = await boost.Graph(options).search({
   // content: 'test1235',           // Optional. String or array of content match in utf8
@@ -472,7 +456,7 @@ Contact us for feedback and questions, we love to hear your feedback.
 ## Browser Include
 ```javascript
 // Node
-var boost = require('boostpow-js');
+var boost = require('boostpow');
 
 ```
 
@@ -495,7 +479,7 @@ It leaves your existing objects the same, but adds a 'hash' and 'boostpow' membe
 Sample:
 
 ```javascript
-  const boostpow = require('boostpow-js');
+  const boostpow = require('boostpow');
   const ranker = await boostpow.Graph().search({
       // Get all mined boost signals in past 3 days
       minedTimeFrom: Math.round((new Date()).getTime() / 1000) - (3600 * 72)
