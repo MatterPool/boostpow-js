@@ -1,7 +1,7 @@
 {
-  "name": "@matterpool/boostpow-js",
-  "version": "1.2.32",
-  "description": "BoostPow Javascript SDK - matterpool.io",
+  "name": "boostpow",
+  "version": "1.3.1",
+  "description": "BoostPow Javascript SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
@@ -20,13 +20,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MatterPool/boostpow-js.git"
+    "url": "git+https://github.com/ProofOfWorkCompany/boostpow-js.git"
   },
-  "author": "MatterPool Inc.",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/MatterPool/boostpow-js/issues"
-  },
+  "author": "",
   "keywords": [
     "bitcoin",
     "bsv",
@@ -39,11 +35,9 @@
     "boost-protocal",
     "hashcash",
     "blockchain",
-    "matterpool",
     "satoshi",
     "satoshi-vision"
   ],
-  "homepage": "https://github.com/MatterPool/boostpow-js#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
