@@ -52,20 +52,6 @@ class BoostPowStringModel {
     get time() {
         return uint32Little_1.UInt32Little.fromNumber(this._blockheader.time);
     }
-    /*
-        static nBitsHexToDifficultyNumber(nbits: string): number {
-            return BoostUtils.getTargetDifficulty(parseInt(nbits, 16));
-        }
-    
-        getTargetAsNumberBuffer(): any {
-            const i = BoostUtils.difficulty2bits(this.difficulty());
-            return Buffer.from(i.toString(16), 'hex').reverse();
-        }
-    
-        static difficultyNumberToNBitsHex(diff: number): string {
-            const bitsInt32 = BoostUtils.difficulty2bits(diff);
-            return bitsInt32.toString(16);
-        }*/
     static validProofOfWorkFromBuffer(buf) {
         const blockheader = bsv.BlockHeader.fromBuffer(buf);
         if (blockheader.validProofOfWork()) {

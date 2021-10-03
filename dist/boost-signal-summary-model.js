@@ -22,7 +22,6 @@ class BoostSignalSummary {
             }
         }
     }
-    ;
     static dedupSignalObjects(items) {
         const dedupMap = {};
         const newList = [];

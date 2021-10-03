@@ -1,6 +1,5 @@
-
-import { BoostSignalModel } from './boost-signal-model';
-import { BoostSignalSummary } from './boost-signal-summary-model';
+import { BoostSignalModel } from './boost-signal-model'
+import { BoostSignalSummary } from './boost-signal-summary-model'
 
 export interface BoostSignalEntitySerialize {
     boosthash: string,
@@ -21,109 +20,118 @@ export interface BoostSignalEntitySerialize {
     time: number,
     difficulty: number,
     energy: number,
-};
+}
 
 export interface BoostSignalSummarySerialize {
-    totalDifficulty: number;
-    totalEnergy: number;
-    recentSignalTime?: number;
+    totalDifficulty: number
+    totalEnergy: number
+    recentSignalTime?: number
     entity: BoostSignalEntitySerialize
     signals: any[]
-};
+}
 
 export class BoostSignalRankerModel {
-    private lastSignalTime_ = 0;
-    private recentSignalTime_ = 0;
-    private totalDifficulty_ = 0;
+    private lastSignalTime_ = 0
+    private recentSignalTime_ = 0
+    private totalDifficulty_ = 0
 
     private constructor(
         private boostSignals: BoostSignalModel[],
     ) {
-        this.boostSignals.sort((a, b) => (a.difficulty > b.difficulty) ? -1 : 1);
+        this.boostSignals.sort((a, b) => (a.difficulty > b.difficulty) ? -1 : 1)
 
         for (const signal of boostSignals) {
-            this.totalDifficulty_ += signal.difficulty;
+            this.totalDifficulty_ += signal.difficulty
         }
         for (const sig of this.boostSignals) {
             if (!this.lastSignalTime_ || this.lastSignalTime_ >= sig.time.number) {
-                this.lastSignalTime_ = sig.time.number;
+                this.lastSignalTime_ = sig.time.number
             }
             if (!this.recentSignalTime_ || this.recentSignalTime_ <= sig.time.number) {
-                this.recentSignalTime_ = sig.time.number;
+                this.recentSignalTime_ = sig.time.number
             }
         }
-    };
+    }
+
     get lastSignalTime(): number {
-        return this.lastSignalTime_;
+        return this.lastSignalTime_
     }
+
     get recentSignalTime(): number {
-        return this.recentSignalTime_;
+        return this.recentSignalTime_
     }
+
     get first(): BoostSignalSummary | null {
-        const sigs = this.list;
-        return sigs && sigs.length ? sigs[0] : null;
+        const sigs = this.list
+        return sigs && sigs.length ? sigs[0] : null
     }
 
     get second(): BoostSignalSummary | null {
-        const sigs = this.list;
-        return sigs && sigs.length && sigs[1] ? sigs[1] : null;
+        const sigs = this.list
+        return sigs && sigs.length && sigs[1] ? sigs[1] : null
     }
 
     get third(): BoostSignalSummary | null {
-        const sigs = this.list;
-        return sigs && sigs.length && sigs[2] ? sigs[2] : null;
+        const sigs = this.list
+        return sigs && sigs.length && sigs[2] ? sigs[2] : null
     }
 
     get fourth(): BoostSignalSummary | null {
-        const sigs = this.list;
-        return sigs && sigs.length && sigs[3] ? sigs[3] : null;
+        const sigs = this.list
+        return sigs && sigs.length && sigs[3] ? sigs[3] : null
     }
 
     get last(): BoostSignalSummary | null {
-        const sigs = this.list;
-        return sigs && sigs.length && sigs[sigs.length - 1] ? sigs[sigs.length - 1] : null;
+        const sigs = this.list
+        return sigs && sigs.length && sigs[sigs.length - 1] ? sigs[sigs.length - 1] : null
     }
 
     get totalDifficulty() {
-        return this.totalDifficulty_;
+        return this.totalDifficulty_
     }
+
     get totalEnergy() {
-        return this.totalDifficulty_;
+        return this.totalDifficulty_
     }
+
     get list(): BoostSignalSummary[] {
         const groups: any = {}
         for (const item of this.boostSignals) {
-            const itemKey = item.category.hex + item.content.hex;
+            const itemKey = item.category.hex + item.content.hex
             if (!groups[itemKey]) {
-                groups[itemKey] = [];
+                groups[itemKey] = []
             }
-            groups[itemKey].push(item);
+            groups[itemKey].push(item)
         }
-        const resultList: BoostSignalSummary[] = [];
+        const resultList: BoostSignalSummary[] = []
         for (const groupedKey in groups) {
             if (!groups.hasOwnProperty(groupedKey)) {
-                continue;
+                continue
             }
-            resultList.push(new BoostSignalSummary(groups[groupedKey]));
+            resultList.push(new BoostSignalSummary(groups[groupedKey]))
         }
-        resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1);
-        return resultList;
+        resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1)
+        return resultList
     }
 
     get length(): number {
-        return this.list.length;
+        return this.list.length
     }
+
     groupByCategory(): BoostSignalSummary[] {
-        return this.groupPrivate('category');
+        return this.groupPrivate('category')
     }
+
     groupByContent(): BoostSignalSummary[] {
-        return this.groupPrivate('content');
+        return this.groupPrivate('content')
     }
+
     groupByTag(): BoostSignalSummary[] {
-        return this.groupPrivate('tag');
+        return this.groupPrivate('tag')
     }
+
     groupByAdditionalData(): BoostSignalSummary[] {
-        return this.groupPrivate('additionalData');
+        return this.groupPrivate('additionalData')
     }
 
     /**
@@ -136,28 +144,29 @@ export class BoostSignalRankerModel {
      * @param txidsOrObjects ["txid1", { hash: "txid2" }, "txidn"]
      */
     rank(txidsOrObjects: any[] | Array<{ hash: string }>, debug?: boolean): Array<{ hash: string, boostpow: any}> {
-        const grouped = this.groupByContent();
-        const boostrank: any = [];
-        const checkHashMap = new Map();
+        const grouped = this.groupByContent()
+        const boostrank: any = []
+        const checkHashMap = new Map()
 
         // For fast lookup by hash whether it's a string or in the .hash property
         for (const item of txidsOrObjects) {
-            const TXID_REGEX = new RegExp('^[0-9a-fA-F]{64}$');
+            const TXID_REGEX = new RegExp('^[0-9a-fA-F]{64}$')
             if (item['hash']) {
-                checkHashMap.set(item['hash'], item);
-                continue;
+                checkHashMap.set(item['hash'], item)
+                continue
             }
+
             if (TXID_REGEX.test(item)) {
-                checkHashMap.set(item, { hash: item });
+                checkHashMap.set(item, { hash: item })
             }
         }
         for (const item of grouped) {
 
-            const hash = item.entity.content.hex;
-            const matched = checkHashMap.get(hash);
+            const hash = item.entity.content.hex
+            const matched = checkHashMap.get(hash)
             if (matched) {
                 if (!matched.hash) {
-                    matched.hash = hash;
+                    matched.hash = hash
                 }
 
 
@@ -169,14 +178,16 @@ export class BoostSignalRankerModel {
                     recentSignalTime: item.recentSignalTime
                 }
 
-                console.log('matched', matched);
-                boostrank.push(matched);
+                console.log('matched', matched)
+                boostrank.push(matched)
             }
         }
-        return boostrank;
+
+        return boostrank
     }
+
     public serializeBoostSignals(signals: any, debug?: boolean): Array<BoostSignalEntitySerialize> {
-        const boostSignalSummaries: any = [];
+        const boostSignalSummaries: any = []
         for (const item of signals) {
             boostSignalSummaries.push({
                 boosthash: item.getBoostPowString().hash(),
@@ -196,59 +207,60 @@ export class BoostSignalRankerModel {
                 minerPubKeyHash: item.minerPubKeyHash(),
                 time: item.time(),
                 difficulty: item.difficulty()
-            });
+            })
         }
-        return boostSignalSummaries;
+
+        return boostSignalSummaries
     }
 
     private groupPrivate(field1: string): BoostSignalSummary[] {
         if (!field1 || field1 === '') {
-            throw new Error('invalid arg');
+            throw new Error('invalid arg')
         }
         const groups: any = {}
         for (const item of this.boostSignals) {
             if (!groups[item[field1]()]) {
-                groups[item[field1]()] = [];
+                groups[item[field1]()] = []
             }
-            groups[item[field1]()].push(item);
+            groups[item[field1]()].push(item)
         }
-        const resultList: BoostSignalSummary[] = [];
+        const resultList: BoostSignalSummary[] = []
         for (const groupedKey in groups) {
             if (!groups.hasOwnProperty(groupedKey)) {
-                continue;
+                continue
             }
-            resultList.push(new BoostSignalSummary(groups[groupedKey]));
+            resultList.push(new BoostSignalSummary(groups[groupedKey]))
         }
-        resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1);
-        return resultList;
+        resultList.sort((a, b) => (a.totalDifficulty > b.totalDifficulty) ? -1 : 1)
+        return resultList
     }
 
     static dedupPlainObjects(items: any): any[] {
-        const dedupMap = {};
-        const newList: any = [];
+        const dedupMap = {}
+        const newList: any = []
         for (const item of items) {
             if (!item.boostPowString || dedupMap[item.boostPowString]) {
-                continue;
+                continue
             }
-            dedupMap[item.boostPowString] = true;
-            newList.push(item);
+            dedupMap[item.boostPowString] = true
+            newList.push(item)
         }
-       return newList;
+       return newList
     }
     static dedupSignalObjects(items: any[]): any[] {
-        const dedupMap = {};
-        const newList: any = [];
+        const dedupMap = {}
+        const newList: any = []
         for (const item of items) {
             if (dedupMap[item.getBoostPowString().toString()]) {
-                continue;
+                continue
             }
-            dedupMap[item.getBoostPowString().toString()] = true;
-            newList.push(item);
+            dedupMap[item.getBoostPowString().toString()] = true
+            newList.push(item)
         }
-       return newList;
+       return newList
     }
 
     static fromSignals(signals: BoostSignalModel[]): BoostSignalRankerModel {
-        return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals));
+        return new BoostSignalRankerModel(BoostSignalRankerModel.dedupSignalObjects(signals))
     }
 }

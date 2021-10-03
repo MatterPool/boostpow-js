@@ -1,5 +1,5 @@
-import * as bsv from 'bsv';
-import { BoostUtils } from '../boost-utils';
+import * as bsv from 'bsv'
+import { BoostUtils } from '../boost-utils'
 
 export class Digest20 {
   constructor(
@@ -8,18 +8,18 @@ export class Digest20 {
   }
 
   get hex(): string {
-    return new Buffer(this.data).toString('hex');
+    return new Buffer(this.data).toString('hex')
   }
 
   get buffer(): Buffer {
-    return this.data;
+    return this.data
   }
 
   get string(): string {
-    return this.utf8;
+    return this.utf8
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true);
+    return BoostUtils.trimBufferString(this.data, true)
   }
 }
