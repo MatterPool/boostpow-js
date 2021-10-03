@@ -1,9 +1,9 @@
-import * as bsv from 'bsv';
-import { BoostUtils } from './boost-utils';
-import { UInt32Little } from './fields/uint32Little';
-import { UInt32Big } from './fields/uint32Big';
-import { Digest20 } from './fields/digest20';
-import { Bytes } from './fields/bytes';
+import * as bsv from 'bsv'
+import { BoostUtils } from './boost-utils'
+import { UInt32Little } from './fields/uint32Little'
+import { UInt32Big } from './fields/uint32Big'
+import { Digest20 } from './fields/digest20'
+import { Bytes } from './fields/bytes'
 
 /**
  * Responsible for redeem script proof that work was done.
@@ -44,7 +44,7 @@ export class BoostPowJobProofModel {
         }
 
         if (params.minerPubKey.length != 66 && params.minerPubKey.length != 130) {
-            throw new Error('minerPubKey too large. Max 65 bytes.');
+            throw new Error('minerPubKey too large. Max 65 bytes.')
         }
 
         if (params.nonce.length > 8) {
@@ -55,21 +55,21 @@ export class BoostPowJobProofModel {
             throw new Error('extraNonce1 too large. Max 4 bytes.')
         }
 
-        let minerPubKey = Buffer.from(params.minerPubKey, 'hex');
-        let minerPubKeyHash;
+        let minerPubKey = Buffer.from(params.minerPubKey, 'hex')
+        let minerPubKeyHash
         if (params.minerPubKeyHash) {
             if (params.minerPubKeyHash.length != 40) {
-               throw new Error('minerPubKeyHash too large. Max 20 bytes.');
+               throw new Error('minerPubKeyHash too large. Max 20 bytes.')
             }
-            minerPubKeyHash = new Digest20(Buffer.from(params.minerPubKeyHash, 'hex'));
+            minerPubKeyHash = new Digest20(Buffer.from(params.minerPubKeyHash, 'hex'))
         }
 
-        let generalPurposeBits;
+        let generalPurposeBits
         if (params.generalPurposeBits) {
             if (params.generalPurposeBits.length > 8) {
-              throw new Error('generalPurposeBits too large. Max 8 bytes.');
+              throw new Error('generalPurposeBits too large. Max 8 bytes.')
             }
-            generalPurposeBits = new UInt32Little(BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false));
+            generalPurposeBits = new UInt32Little(BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false))
 
             if (params.extraNonce2.length > 32) {
                 throw new Error('extraNonce2 too large. Max 32 bytes.')
@@ -89,141 +89,141 @@ export class BoostPowJobProofModel {
             new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
             minerPubKeyHash,
             generalPurposeBits
-        );
+        )
     }
 
     get time(): UInt32Little {
-        return this.Time;
+      return this.Time
     }
 
     get generalPurposeBits(): UInt32Little | undefined {
-        return this.GeneralPurposeBits;
+      return this.GeneralPurposeBits
     }
 
     get extraNonce1(): UInt32Big {
-        return this.ExtraNonce1;
+      return this.ExtraNonce1
     }
 
     get extraNonce2(): Bytes {
-        return this.ExtraNonce2;
+      return this.ExtraNonce2
     }
 
     get nonce(): UInt32Little {
-        return this.Nonce;
+      return this.Nonce
     }
 
     // Should add bsv.Address version and string version too
     get minerPubKeyHash(): Digest20 | undefined {
-        return this.MinerPubKeyHash;
+      return this.MinerPubKeyHash
     }
 
     get signature(): Bytes {
-        return this.Signature;
+      return this.Signature
     }
 
     get minerPubKey(): Bytes {
-        return this.MinerPubKey;
+      return this.MinerPubKey
     }
 
     isContract(): boolean {
-        return !this.MinerPubKeyHash;
+      return !this.MinerPubKeyHash
     }
 
     isBounty(): boolean {
-        return !!this.MinerPubKeyHash;
+      return !!this.MinerPubKeyHash
     }
 
     toObject () {
-        let obj = {
-            // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
-            signature: this.signature.hex,
-            minerPubKey: this.minerPubKey.hex,
-            time: this.time.hex,
-            nonce: this.nonce.hex,
-            extraNonce1: this.extraNonce1.hex,
-            extraNonce2: this.extraNonce2.hex
-        };
+      let obj = {
+        // Output to string first, then flip endianness so we do not accidentally modify underlying buffer
+        signature: this.signature.hex,
+        minerPubKey: this.minerPubKey.hex,
+        time: this.time.hex,
+        nonce: this.nonce.hex,
+        extraNonce1: this.extraNonce1.hex,
+        extraNonce2: this.extraNonce2.hex
+      }
 
-        if (this.generalPurposeBits) {
-            obj["generalPurposeBits"] = this.generalPurposeBits.hex;
-        }
+      if (this.generalPurposeBits) {
+        obj["generalPurposeBits"] = this.generalPurposeBits.hex
+      }
 
-        if (this.minerPubKeyHash) {
-            obj["minerPubKeyHash"] = this.minerPubKeyHash.hex;
-        }
+      if (this.minerPubKeyHash) {
+        obj["minerPubKeyHash"] = this.minerPubKeyHash.hex
+      }
 
-        return obj;
+      return obj
     }
 
     toScript(): bsv.Script {
 
-        let buildOut = bsv.Script();
-        // Add signature
-     buildOut.add(this.signature.buffer);
-       /* Buffer.concat([
-            this.signature.toBuffer(),
-            Buffer.from([sigtype & 0xff])
-          ]*/
+      let buildOut = bsv.Script()
 
-        // Add miner pub key
-        buildOut.add(this.minerPubKey.buffer);
+      // Add signature
+      buildOut.add(this.signature.buffer)
 
-        // Add miner nonce
-        buildOut.add(this.nonce.buffer);
+      // Add miner pub key
+      buildOut.add(this.minerPubKey.buffer)
 
-        // Add time
-        buildOut.add(this.time.buffer);
+      // Add miner nonce
+      buildOut.add(this.nonce.buffer)
 
-        // Add extra nonce2
-        buildOut.add(this.extraNonce2.buffer);
+      // Add time
+      buildOut.add(this.time.buffer)
 
-        // Add extra nonce 1
-        buildOut.add(this.extraNonce1.buffer);
+      // Add extra nonce2
+      buildOut.add(this.extraNonce2.buffer)
 
-        if (this.generalPurposeBits) {
-          buildOut.add(this.generalPurposeBits.buffer);
-        }
+      // Add extra nonce 1
+      buildOut.add(this.extraNonce1.buffer)
 
-        if (this.minerPubKeyHash) {
-          buildOut.add(this.minerPubKeyHash.buffer);
-        }
+      if (this.generalPurposeBits) {
+        buildOut.add(this.generalPurposeBits.buffer)
+      }
 
-        return buildOut;
+      if (this.minerPubKeyHash) {
+        buildOut.add(this.minerPubKeyHash.buffer)
+      }
+
+      return buildOut
     }
 
     static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined {
         if (!tx) {
-            return undefined;
+            return undefined
         }
-        let inp = 0;
+
+        let inp = 0
         for (const input of tx.inputs) {
             try {
-                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex); // spentTx, spentVout);
+                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex)
             } catch (ex) {
                 // Skip and try another output
             }
-            inp++;
+            inp++
         }
-        return undefined;
+
+        return undefined
     }
 
     static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined {
         if (!rawtx || rawtx === '') {
-            return undefined;
+            return undefined
         }
-        const tx = new bsv.Transaction(rawtx);
-        return BoostPowJobProofModel.fromTransaction(tx);
+
+        const tx = new bsv.Transaction(rawtx)
+        return BoostPowJobProofModel.fromTransaction(tx)
     }
 
     static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
-      let signature;
-      let minerPubKey;
-      let time;
-      let nonce;
-      let extraNonce1;
-      let extraNonce2;
-      let minerPubKeyHash;
-      let generalPurposeBits;
+      let signature
+      let minerPubKey
+      let time
+      let nonce
+      let extraNonce1
+      let extraNonce2
+      let minerPubKeyHash
+      let generalPurposeBits
 
       if (
           7 === script.chunks.length &&
@@ -251,7 +251,7 @@ export class BoostPowJobProofModel {
 
       ) {
 
-          minerPubKeyHash = new Digest20(script.chunks[6].buf);
+          minerPubKeyHash = new Digest20(script.chunks[6].buf)
 
       } else if (
 
@@ -270,7 +270,10 @@ export class BoostPowJobProofModel {
           script.chunks[3].len &&
 
           // extra Nonce 2
-          script.chunks[4].len &&
+          ((script.chunks[4].buf && script.chunks[4].len <= 20) ||
+              script.chunks[4].opcodenum == bsv.Opcode.OP_0 ||
+              script.chunks[4].opcodenum == bsv.Opcode.OP_1NEGATE ||
+              (script.chunks[4].opcodenum >= bsv.Opcode.OP_1 && script.chunks[6].opcodenum <= bsv.Opcode.OP_16)) &&
 
           // extra Nonce 1
           script.chunks[5].len &&
@@ -283,18 +286,18 @@ export class BoostPowJobProofModel {
 
       ) {
 
-        generalPurposeBits = new UInt32Little(script.chunks[6].buf);
-        minerPubKeyHash = new Digest20(script.chunks[7].buf);
+        generalPurposeBits = new UInt32Little(script.chunks[6].buf)
+        minerPubKeyHash = new Digest20(script.chunks[7].buf)
 
-      } else throw new Error('Not valid Boost Proof');
+      } else throw new Error('Not valid Boost Proof')
 
-      signature = new Bytes(script.chunks[0].buf);
-      minerPubKey = new Bytes(script.chunks[1].buf);
-      nonce = new UInt32Little(script.chunks[2].buf);
-      time = new UInt32Little(script.chunks[3].buf);
+      signature = new Bytes(script.chunks[0].buf)
+      minerPubKey = new Bytes(script.chunks[1].buf)
+      nonce = new UInt32Little(script.chunks[2].buf)
+      time = new UInt32Little(script.chunks[3].buf)
 
-      extraNonce2 = new Bytes(script.chunks[4].buf);
-      extraNonce1 = new UInt32Big(script.chunks[5].buf);
+      extraNonce2 = new Bytes(BoostUtils.fromOpCode(script.chunks[4]))
+      extraNonce1 = new UInt32Big(script.chunks[5].buf)
 
       return new BoostPowJobProofModel(
         signature,
@@ -309,16 +312,16 @@ export class BoostPowJobProofModel {
         vin,
         spentTxid,
         spentVout,
-      );
+      )
     }
 
     static fromHex(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromScript(new bsv.Script(asm), txid, vin, spentTxid, spentVout);
+        return BoostPowJobProofModel.fromScript(new bsv.Script(asm), txid, vin, spentTxid, spentVout)
     }
 
 
     static fromASM(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromScript(new bsv.Script.fromASM(asm), txid, vin, spentTxid, spentVout);
+        return BoostPowJobProofModel.fromScript(new bsv.Script.fromASM(asm), txid, vin, spentTxid, spentVout)
     }
 
     // Optional attached information if available
@@ -330,36 +333,36 @@ export class BoostPowJobProofModel {
     }
     // Optional attached information if available
     get txid(): string | undefined {
-        return this.Txid;
+        return this.Txid
     }
 
     // Optional attached information if available
     get vin(): number | undefined {
-        return this.Vin;
+        return this.Vin
     }
 
     get spentTxid(): string | undefined {
-        return this.SpentTxid;
+        return this.SpentTxid
     }
 
     // Optional attached information if available
     get spentVout(): number | undefined {
-        return this.SpentVout;
+        return this.SpentVout
     }
 
     static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str, txid, vin);
+        return BoostPowJobProofModel.fromHex(str, txid, vin)
     }
 
     toString(): string {
-        return this.toScript().toString();
+        return this.toScript().toString()
     }
 
     toBuffer(): string {
-        return this.toScript().toBuffer();
+        return this.toScript().toBuffer()
     }
 
     static fromString(str: string, txid?: string, vin?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str, txid, vin);
+        return BoostPowJobProofModel.fromHex(str, txid, vin)
     }
 }
