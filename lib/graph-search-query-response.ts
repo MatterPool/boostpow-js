@@ -1,5 +1,5 @@
-import { GraphSearchResultItem } from "./graph-search-result-item";
-import { GraphSearchQuery } from './graph-search-query';
+import { GraphSearchResultItem } from "./graph-search-result-item"
+import { GraphSearchQuery } from './graph-search-query'
 
 export interface GraphSearchQueryResponse {
     q: GraphSearchQuery,

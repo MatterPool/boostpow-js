@@ -1,18 +1,18 @@
-import axios from 'axios';
-import { BoostPowJobModel } from './boost-pow-job-model';
-import * as bsv from 'bsv';
-import { GraphSearchResultItem } from './graph-search-result-item';
-import { GraphSearchQueryResponse } from './graph-search-query-response';
-import { GraphSearchQuery, GraphSearchQueryString } from './graph-search-query';
-import { BoostSignalRanker } from '.';
-import { BoostSignalRankerModel } from './boost-signal-ranker-model';
+import axios from 'axios'
+import { BoostPowJobModel } from './boost-pow-job-model'
+import * as bsv from 'bsv'
+import { GraphSearchResultItem } from './graph-search-result-item'
+import { GraphSearchQueryResponse } from './graph-search-query-response'
+import { GraphSearchQuery, GraphSearchQueryString } from './graph-search-query'
+import { BoostSignalRanker } from '.'
+import { BoostSignalRankerModel } from './boost-signal-ranker-model'
 
 export interface BoostClientApiClientOptions {
-    graph_api_url: string;
-    api_url: string;
-    api_key?: string;
-    network: string;
-    version_path: string;
+    graph_api_url: string
+    api_url: string
+    api_key?: string
+    network: string
+    version_path: string
 }
 
 const defaultOptions: BoostClientApiClientOptions = {
@@ -23,9 +23,9 @@ const defaultOptions: BoostClientApiClientOptions = {
 }
 
 export interface BoostSignalSummarySerialize {
-    totalDifficulty: number;
-    totalEnergy: number;
-    recentSignalTime?: number;
+    totalDifficulty: number
+    totalEnergy: number
+    recentSignalTime?: number
     entity: {
         boosthash: string,
         content: string,
@@ -50,14 +50,14 @@ export interface BoostSignalSummarySerialize {
         [key: string]: number
     }
     signals: any[]
-};
+}
 
 export class BoostGraphApiClient {
-    options = defaultOptions;
-    fullUrl;
+    options = defaultOptions
+    fullUrl
     constructor(options: any) {
-        this.options = Object.assign({}, this.options, options);
-        this.fullUrl = `${this.options.api_url}/${this.options.version_path}/${this.options.network}`;
+        this.options = Object.assign({}, this.options, options)
+        this.fullUrl = `${this.options.api_url}/${this.options.version_path}/${this.options.network}`
     }
 
     // Populate api reqest header if it's set
@@ -65,14 +65,14 @@ export class BoostGraphApiClient {
         if (this.options.api_key && this.options.api_key !== '') {
             return {
                 api_key: this.options.api_key
-            };
+            }
         }
-        return {};
+        return {}
     }
 
     broadcastBoostJobProof(tx: bsv.Transaction, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
-            const boostJobProof = BoostPowJobModel.fromTransaction(tx);
+            const boostJobProof = BoostPowJobModel.fromTransaction(tx)
 
             axios.post(this.fullUrl + `/merchants/tx/broadcast`,
                 { rawtx: boostJobProof},
@@ -82,9 +82,9 @@ export class BoostGraphApiClient {
             ).then((response) => {
 
 
-                return this.resolveOrCallback(resolve, response, callback);
+                return this.resolveOrCallback(resolve, response, callback)
             }).catch((ex) => {
-                console.log('ex', ex);
+                console.log('ex', ex)
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.code,
@@ -94,7 +94,7 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     getScriptUtxos(scriptHash: string, callback?: Function): Promise<BoostPowJobModel> {
@@ -116,7 +116,7 @@ export class BoostGraphApiClient {
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
 
             })
-        });
+        })
     }
 
     submitBoostJob(rawtx: string, callback?: Function): Promise<BoostPowJobModel> {
@@ -129,7 +129,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -140,7 +140,7 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     submitBatchBoostJobRequest(rawtx: string, params: { content?: string, tag?: string, diff?: number, numOutputs?: number }, callback?: Function): Promise<BoostPowJobModel> {
@@ -154,7 +154,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -165,8 +165,9 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
+
     getBatchBoostJobRequestStatus(txid: string, callback?: Function): Promise<any> {
         return new Promise((resolve, reject) => {
             axios.get(this.options.graph_api_url + `/api/v1/main/service/jobs/${txid}`,
@@ -174,7 +175,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -185,7 +186,7 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     submitBoostSolution(params: { txid: string, vout: number, time: number, nonce: number, extraNonce1: number, extraNonce2: string}, callback?: Function): Promise<BoostPowJobModel> {
@@ -203,7 +204,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.status === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -221,7 +222,7 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     getBoostJobStatus(txid: string, callback?: Function): Promise<{
@@ -232,7 +233,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -243,7 +244,7 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     static buildGraphSearchQueryResponse(response: any): GraphSearchQueryResponse {
@@ -256,15 +257,15 @@ export class BoostGraphApiClient {
 
     rawSearch(q?: GraphSearchQuery, callback?: Function): Promise<GraphSearchQueryResponse> {
         return new Promise((resolve, reject) => {
-            let qString = '?';
-            qString += GraphSearchQueryString.build(q);
+            let qString = '?'
+            qString += GraphSearchQueryString.build(q)
             axios.get(this.options.graph_api_url + `/api/v1/main/boost/search${qString}`,
                 {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                const queryResponse = BoostGraphApiClient.buildGraphSearchQueryResponse(response);
-                return this.resolveOrCallback(resolve, queryResponse, callback);
+                const queryResponse = BoostGraphApiClient.buildGraphSearchQueryResponse(response)
+                return this.resolveOrCallback(resolve, queryResponse, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -275,12 +276,12 @@ export class BoostGraphApiClient {
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
             })
-        });
+        })
     }
 
     loadBoostJob(txid: string, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
-            const re = /^[0-9A-Fa-f]+$/;
+            const re = /^[0-9A-Fa-f]+$/
             if (!re.test(txid)) {
                 return this.rejectOrCallback(reject, this.formatErrorResponse({
                     code: 422,
@@ -300,7 +301,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                const jobs = BoostPowJobModel.fromTransactionGetAllOutputs(response.data.rawtx);
+                const jobs = BoostPowJobModel.fromTransactionGetAllOutputs(response.data.rawtx)
                 if (!jobs || !jobs.length){
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: 400,
@@ -308,7 +309,7 @@ export class BoostGraphApiClient {
                         error: 'TX_INVALID_BOOST_OUTPUT'
                     }), callback)
                 }
-                return this.resolveOrCallback(resolve, jobs, callback);
+                return this.resolveOrCallback(resolve, jobs, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -320,8 +321,9 @@ export class BoostGraphApiClient {
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
 
             })
-        });
+        })
     }
+    
     /**
      * Resolve a promise and/or invoke a callback
      * @param resolve Resolve function to call when done
@@ -330,15 +332,15 @@ export class BoostGraphApiClient {
      */
     private resolveOrCallback(resolve?: Function, data?: any, callback?: Function) {
         if (callback) {
-            callback(data);
-            return undefined;
+            callback(data)
+            return undefined
         }
         if (resolve) {
-            return resolve(data);
+            return resolve(data)
         }
         return new Promise((r, reject) => {
-            return r(data);
-        });
+            return r(data)
+        })
     }
 
     createBoostJobs(params: { boost: {
@@ -357,7 +359,7 @@ export class BoostGraphApiClient {
         currency: 'satoshi' | undefined,
      }}, callback?: Function): Promise<BoostPowJobModel> {
         return new Promise((resolve, reject) => {
-            const re = /^[0-9A-Fa-f]+$/;
+            const re = /^[0-9A-Fa-f]+$/
 
             axios.post(this.fullUrl + `/boost/jobs`,
                 {
@@ -367,7 +369,7 @@ export class BoostGraphApiClient {
                     headers: this.getHeaders()
                 }
             ).then((response) => {
-                return this.resolveOrCallback(resolve, response.data, callback);
+                return this.resolveOrCallback(resolve, response.data, callback)
             }).catch((ex) => {
                 if (ex.code === 404) {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
@@ -379,7 +381,7 @@ export class BoostGraphApiClient {
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback)
 
             })
-        });
+        })
     }
 
      /**
@@ -390,23 +392,24 @@ export class BoostGraphApiClient {
      */
     private rejectOrCallback(reject?: Function, err?: any, callback?: Function) {
         if (callback) {
-            callback(null, err);
-            return;
+            callback(null, err)
+            return
         }
         if (reject) {
-            return reject(err);
+            return reject(err)
         }
         return new Promise((resolve, r) => {
-            r(err);
-        });
+            r(err)
+        })
     }
+
     private formatErrorResponse(r: any): any {
-        let getMessage = r && r.response && r.response.data ? r.response.data : r;
+        let getMessage = r && r.response && r.response.data ? r.response.data : r
         return {
             success: getMessage.success ? getMessage.success : false,
             code: getMessage.code ? getMessage.code : -1,
             message: getMessage.message ? getMessage.message : '',
             error: getMessage.error ? getMessage.error : '',
-        };
+        }
     }
 }

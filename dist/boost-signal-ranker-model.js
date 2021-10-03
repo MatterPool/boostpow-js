@@ -2,8 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BoostSignalRankerModel = void 0;
 const boost_signal_summary_model_1 = require("./boost-signal-summary-model");
-;
-;
 class BoostSignalRankerModel {
     constructor(boostSignals) {
         this.boostSignals = boostSignals;
@@ -23,7 +21,6 @@ class BoostSignalRankerModel {
             }
         }
     }
-    ;
     get lastSignalTime() {
         return this.lastSignalTime_;
     }

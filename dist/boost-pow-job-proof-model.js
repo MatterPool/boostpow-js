@@ -119,10 +119,6 @@ class BoostPowJobProofModel {
         let buildOut = bsv.Script();
         // Add signature
         buildOut.add(this.signature.buffer);
-        /* Buffer.concat([
-             this.signature.toBuffer(),
-             Buffer.from([sigtype & 0xff])
-           ]*/
         // Add miner pub key
         buildOut.add(this.minerPubKey.buffer);
         // Add miner nonce
@@ -148,7 +144,7 @@ class BoostPowJobProofModel {
         let inp = 0;
         for (const input of tx.inputs) {
             try {
-                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex); // spentTx, spentVout);
+                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex);
             }
             catch (ex) {
                 // Skip and try another output
@@ -200,7 +196,10 @@ class BoostPowJobProofModel {
             // time
             script.chunks[3].len &&
             // extra Nonce 2
-            script.chunks[4].len &&
+            ((script.chunks[4].buf && script.chunks[4].len <= 20) ||
+                script.chunks[4].opcodenum == bsv.Opcode.OP_0 ||
+                script.chunks[4].opcodenum == bsv.Opcode.OP_1NEGATE ||
+                (script.chunks[4].opcodenum >= bsv.Opcode.OP_1 && script.chunks[6].opcodenum <= bsv.Opcode.OP_16)) &&
             // extra Nonce 1
             script.chunks[5].len &&
             // generalPurposeBits
@@ -216,7 +215,7 @@ class BoostPowJobProofModel {
         minerPubKey = new bytes_1.Bytes(script.chunks[1].buf);
         nonce = new uint32Little_1.UInt32Little(script.chunks[2].buf);
         time = new uint32Little_1.UInt32Little(script.chunks[3].buf);
-        extraNonce2 = new bytes_1.Bytes(script.chunks[4].buf);
+        extraNonce2 = new bytes_1.Bytes(boost_utils_1.BoostUtils.fromOpCode(script.chunks[4]));
         extraNonce1 = new uint32Big_1.UInt32Big(script.chunks[5].buf);
         return new BoostPowJobProofModel(signature, minerPubKey, time, extraNonce1, extraNonce2, nonce, minerPubKeyHash, generalPurposeBits, txid, vin, spentTxid, spentVout);
     }

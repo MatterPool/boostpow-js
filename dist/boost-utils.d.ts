@@ -22,6 +22,7 @@ export declare class BoostUtils {
     static difficulty2bits(difficulty: number): number;
     static getTargetAsNumberBuffer(diff: any): any;
     static stringToBuffer(str: string, length?: number): Buffer;
+    static fromOpCode(chunk: any): Buffer;
     static generalPurposeBitsMask(): number;
     static generalPurposeBits(category: number): number;
     static magicNumber(category: number): number;

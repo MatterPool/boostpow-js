@@ -21,7 +21,6 @@ class BoostSignalModel {
             throw new Error('Fatal: Invalid metadata for the pow string');
         }
     }
-    ;
     get jobId() {
         return this.boostJobId;
     }

@@ -10,7 +10,6 @@ const defaultOptions = {
     network: 'main',
     version_path: 'api/v3',
 };
-;
 class BoostGraphApiClient {
     constructor(options) {
         this.options = defaultOptions;

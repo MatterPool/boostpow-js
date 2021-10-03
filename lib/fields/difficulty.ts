@@ -1,6 +1,6 @@
-import * as bsv from 'bsv';
-import { BoostUtils } from '../boost-utils';
-import { UInt32Little } from './uint32Little';
+import * as bsv from 'bsv'
+import { BoostUtils } from '../boost-utils'
+import { UInt32Little } from './uint32Little'
 
 export class Difficulty {
   constructor(
@@ -9,30 +9,30 @@ export class Difficulty {
   }
 
   static fromBits(bits: number): Difficulty {
-    return new Difficulty(BoostUtils.difficulty(bits));
+    return new Difficulty(BoostUtils.difficulty(bits))
   }
 
   get number(): number {
-    return this.diff;
+    return this.diff
   }
 
   get bits(): number {
-    return BoostUtils.difficulty2bits(this.diff);
+    return BoostUtils.difficulty2bits(this.diff)
   }
 
   get buffer(): Buffer {
-    return UInt32Little.fromNumber(this.bits).buffer;
+    return UInt32Little.fromNumber(this.bits).buffer
   }
 
   get hex(): string {
-    return this.buffer.toString('hex');
+    return this.buffer.toString('hex')
   }
 
   get string(): string {
-    return this.hex;
+    return this.hex
   }
 
   get target(): bsv.crypto.BN {
-    return BoostUtils.getTargetDifficulty(this.bits);
+    return BoostUtils.getTargetDifficulty(this.bits)
   }
 }

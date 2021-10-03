@@ -118,6 +118,20 @@ class BoostUtils {
         let pad = Buffer.alloc(length - str.length);
         return Buffer.concat([buf, pad]);
     }
+    static fromOpCode(chunk) {
+        if (chunk.opcodenum >= bsv.Opcode.OP_1 && chunk.opcodenum <= bsv.Opcode.OP_16) {
+            return Buffer.from([(chunk.opcodenum - bsv.Opcode.OP_1) + 1]);
+        }
+        else if (chunk.opcodenum == bsv.Opcode.OP_0) {
+            return Buffer.from([]);
+        }
+        else if (chunk.opcodenum == bsv.Opcode.OP_1NEGATE) {
+            return Buffer.from([0x81]);
+        }
+        else {
+            return chunk.buf;
+        }
+    }
     static generalPurposeBitsMask() {
         return 0xE0001FFF;
     }
