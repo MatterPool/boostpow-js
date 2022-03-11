@@ -15,6 +15,19 @@ export class UInt32Little {
     return new UInt32Little(data)
   }
 
+  static fromHex(hex: string): UInt32Little | undefined {
+    if (hex.length != 8) {
+      return
+    }
+
+    let data = Buffer.from(hex, 'hex');
+    if (data.length != 4) {
+      return
+    }
+
+    return new UInt32Little(data)
+  }
+
   get hex(): string {
     return this.data.toString('hex')
   }

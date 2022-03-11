@@ -40,14 +40,14 @@ export declare class BoostGraphClient {
 }
 export declare function Graph(newOptions?: any): BoostGraphClient;
 export declare function instance(newOptions?: any): BoostGraphClient;
-export declare var BoostPowString: typeof BoostPowStringModel;
-export declare var BoostPowJob: typeof BoostPowJobModel;
-export declare var BoostPowJobProof: typeof BoostPowJobProofModel;
-export declare var BoostPowMetadata: typeof BoostPowMetadataModel;
-export declare var BoostUtilsHelper: typeof BoostUtils;
-export declare var BoostGraph: typeof BoostGraphClient;
-export declare var BoostSignal: typeof BoostSignalModel;
-export declare var BoostSignalRanker: typeof BoostSignalRankerModel;
+export declare let BoostPowString: typeof BoostPowStringModel;
+export declare let BoostPowJob: typeof BoostPowJobModel;
+export declare let BoostPowJobProof: typeof BoostPowJobProofModel;
+export declare let BoostPowMetadata: typeof BoostPowMetadataModel;
+export declare let BoostUtilsHelper: typeof BoostUtils;
+export declare let BoostGraph: typeof BoostGraphClient;
+export declare let BoostSignal: typeof BoostSignalModel;
+export declare let BoostSignalRanker: typeof BoostSignalRankerModel;
 declare function rawSearchGraph(q?: GraphSearchQuery, callback?: Function): Promise<any>;
 export declare var rawSearch: typeof rawSearchGraph;
 declare function submitBoostJobGraph(rawtx: string, callback?: Function): Promise<any>;

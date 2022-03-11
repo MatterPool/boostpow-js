@@ -124,14 +124,14 @@ catch (ex) {
   // Window is not defined, must be running in windowless env...
 }
 
-export var BoostPowString = BoostPowStringModel
-export var BoostPowJob = BoostPowJobModel
-export var BoostPowJobProof = BoostPowJobProofModel
-export var BoostPowMetadata = BoostPowMetadataModel
-export var BoostUtilsHelper = BoostUtils
-export var BoostGraph = BoostGraphClient;
-export var BoostSignal = BoostSignalModel
-export var BoostSignalRanker = BoostSignalRankerModel
+export let BoostPowString = BoostPowStringModel
+export let BoostPowJob = BoostPowJobModel
+export let BoostPowJobProof = BoostPowJobProofModel
+export let BoostPowMetadata = BoostPowMetadataModel
+export let BoostUtilsHelper = BoostUtils
+export let BoostGraph = BoostGraphClient;
+export let BoostSignal = BoostSignalModel
+export let BoostSignalRanker = BoostSignalRankerModel
 
 function rawSearchGraph(q?: GraphSearchQuery,callback?: Function): Promise<any> {
   const apiClient = new BoostGraphApiClient(defaultOptions)

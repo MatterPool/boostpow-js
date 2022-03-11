@@ -8,8 +8,19 @@ class UInt32Big {
     }
     static fromNumber(num) {
         let data = Buffer.alloc(4);
-        if (num <= 4294967295 && num >= 0) {
-            data.writeUInt32BE(num);
+        if (num > 4294967295 || num < 0) {
+            return;
+        }
+        data.writeUInt32BE(num);
+        return new UInt32Big(data);
+    }
+    static fromHex(hex) {
+        if (hex.length != 8) {
+            return;
+        }
+        let data = Buffer.from(hex, 'hex');
+        if (data.length != 4) {
+            return;
         }
         return new UInt32Big(data);
     }
