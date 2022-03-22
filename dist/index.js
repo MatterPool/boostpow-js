@@ -9,16 +9,6 @@ const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_ranker_model_1 = require("./boost-signal-ranker-model");
-/*
-import { Bytes } from './fields/bytes'
-import { Difficulty } from './fields/difficulty'
-import { Digest20 } from './fields/digest20'
-import { Digest32 } from './fields/digest32'
-import { Int32Little } from './fields/int32Little'
-import { UInt16Little } from './fields/uint16Little'
-import { UInt32Big } from './fields/uint32Big'
-import { UInt32Little } from './fields/uint32Little'
-import { UInt64Big } from './uint64Big*/
 const defaultOptions = {
     graph_api_url: 'https://graph.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
@@ -125,16 +115,6 @@ exports.BoostUtilsHelper = boost_utils_1.BoostUtils;
 exports.BoostGraph = BoostGraphClient;
 exports.BoostSignal = boost_signal_model_1.BoostSignalModel;
 exports.BoostSignalRanker = boost_signal_ranker_model_1.BoostSignalRankerModel;
-/*
-export Bytes = Bytes
-export let Difficulty = Difficulty
-export let Digest20 = Digest20
-export let Digest32 = Digest32
-export let Int32Little = Int32Little
-export let UInt16Little = UInt16Little
-export let UInt32Big = UInt32Big
-export let UInt32Little = UInt32Little
-export let UInt64Big = UInt64Big*/
 function rawSearchGraph(q, callback) {
     const apiClient = new boost_graph_api_client_1.BoostGraphApiClient(defaultOptions);
     return apiClient.rawSearch(q, callback);

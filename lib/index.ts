@@ -8,6 +8,16 @@ import { BoostSignalModel } from './boost-signal-model'
 import { BoostSignalRankerModel } from './boost-signal-ranker-model'
 import { GraphSearchQuery } from './graph-search-query'
 
+import { Bytes } from './fields/bytes'
+import { Difficulty } from './fields/difficulty'
+import { Digest20 } from './fields/digest20'
+import { Digest32 } from './fields/digest32'
+import { Int32Little } from './fields/int32Little'
+import { UInt16Little } from './fields/uint16Little'
+import { UInt32Little } from './fields/uint32Little'
+import { UInt32Big } from './fields/uint32Big'
+import { UInt64Big } from './fields/uint64Big'
+
 const defaultOptions: any = {
   graph_api_url: 'https://graph.boostpow.com',
   // graph_api_url: 'http://localhost:3000',
