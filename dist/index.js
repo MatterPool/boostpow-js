@@ -9,6 +9,12 @@ const boost_utils_1 = require("./boost-utils");
 const boost_graph_api_client_1 = require("./boost-graph-api-client");
 const boost_signal_model_1 = require("./boost-signal-model");
 const boost_signal_ranker_model_1 = require("./boost-signal-ranker-model");
+var int32Little_1 = require("./fields/int32Little");
+Object.defineProperty(exports, "Int32Little", { enumerable: true, get: function () { return int32Little_1.Int32Little; } });
+var uint32Little_1 = require("./fields/uint32Little");
+Object.defineProperty(exports, "UInt32Little", { enumerable: true, get: function () { return uint32Little_1.UInt32Little; } });
+var uint32Big_1 = require("./fields/uint32Big");
+Object.defineProperty(exports, "UInt32Big", { enumerable: true, get: function () { return uint32Big_1.UInt32Big; } });
 const defaultOptions = {
     graph_api_url: 'https://graph.boostpow.com',
     // graph_api_url: 'http://localhost:3000',
