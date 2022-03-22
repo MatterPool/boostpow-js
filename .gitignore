@@ -13,3 +13,6 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+test/boost-graph-api-client.js.bak test/boost-graph-searches.js.bak test/boost-signal-ranker.test.j
+*.bak
+*.swp

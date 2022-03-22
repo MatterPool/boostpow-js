@@ -5,6 +5,7 @@ export class UInt32Little {
   constructor(
     private data: Buffer,
   ) {
+    this.data = data;
   }
 
   static fromNumber(num: number): UInt32Little {
