@@ -5,6 +5,7 @@ const boost_utils_1 = require("../boost-utils");
 class UInt32Little {
     constructor(data) {
         this.data = data;
+        this.data = data;
     }
     static fromNumber(num) {
         let data = Buffer.alloc(4);

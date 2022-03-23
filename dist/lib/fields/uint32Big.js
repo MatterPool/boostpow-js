@@ -1,7 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UInt32Big = void 0;
+exports.UInt32Big = exports.InvalidUInt32Big = void 0;
 const boost_utils_1 = require("../boost-utils");
+class InvalidUInt32Big {
+    constructor() {
+        this.name = 'InvalidUInt32Big';
+        this.message = 'Value must be between 0 and 4294967295';
+    }
+}
+exports.InvalidUInt32Big = InvalidUInt32Big;
 class UInt32Big {
     constructor(data) {
         this.data = data;
@@ -9,18 +16,18 @@ class UInt32Big {
     static fromNumber(num) {
         let data = Buffer.alloc(4);
         if (num > 4294967295 || num < 0) {
-            return;
+            throw new InvalidUInt32Big;
         }
         data.writeUInt32BE(num);
         return new UInt32Big(data);
     }
     static fromHex(hex) {
         if (hex.length != 8) {
-            return;
+            throw new InvalidUInt32Big();
         }
         let data = Buffer.from(hex, 'hex');
         if (data.length != 4) {
-            return;
+            throw new InvalidUInt32Big();
         }
         return new UInt32Big(data);
     }
