@@ -6,6 +6,15 @@ import { BoostUtils } from './boost-utils';
 import { BoostSignalModel } from './boost-signal-model';
 import { BoostSignalRankerModel } from './boost-signal-ranker-model';
 import { GraphSearchQuery } from './graph-search-query';
+export { Bytes } from './fields/bytes';
+export { Difficulty } from './fields/difficulty';
+export { Digest20 } from './fields/digest20';
+export { Digest32 } from './fields/digest32';
+export { Int32Little } from './fields/int32Little';
+export { UInt16Little } from './fields/uint16Little';
+export { UInt32Little } from './fields/uint32Little';
+export { UInt32Big } from './fields/uint32Big';
+export { UInt64Big } from './fields/uint64Big';
 export declare class BoostGraphClient {
     options: any;
     constructor(providedOptions?: any);
@@ -54,4 +63,3 @@ declare function submitBoostJobGraph(rawtx: string, callback?: Function): Promis
 export declare var submitJob: typeof submitBoostJobGraph;
 declare function getBoostJobStatusGraph(txid: string, callback?: Function): Promise<any>;
 export declare var getJobStatus: typeof getBoostJobStatusGraph;
-export {};
