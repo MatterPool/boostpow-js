@@ -16,7 +16,8 @@
     "test_curr": "mocha --reporter spec --grep 'test_curr'",
     "test_decode": "mocha --reporter spec --grep 'test_decode'",
     "test_file": "mocha --reporter spec --grep 'filepay'",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "commit": "npx cz"
   },
   "repository": {
     "type": "git",
@@ -43,13 +44,14 @@
     "@babel/core": "^7.1.2",
     "@babel/plugin-transform-arrow-functions": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
-    "@types/jest": "^27.4.1",
     "@types/mocha": "^9.1.0",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "browserify-shim": "^3.8.14",
     "bsv": "^1.5.6",
     "chai": "^4.2.0",
+    "cz": "^1.8.2",
+    "cz-conventional-changelog": "^3.3.0",
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
     "gulp-clean-css": "^3.10.0",
@@ -90,5 +92,10 @@
   "directories": {
     "lib": "lib",
     "test": "test"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
