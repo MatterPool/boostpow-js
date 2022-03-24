@@ -1,13 +1,13 @@
 {
-  "name": "@matterpool/boostpow-js",
-  "version": "1.2.32",
-  "description": "BoostPow Javascript SDK - matterpool.io",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "typings": "dist/index.d.ts",
+  "name": "boostpow",
+  "version": "0.0.0-development",
+  "description": "BoostPow Javascript SDK",
+  "main": "dist/lib/index.js",
+  "types": "dist//lib/index.d.ts",
+  "typings": "dist/lib/index.d.ts",
   "scripts": {
     "build": "tsc && gulp build",
-    "test": "mocha --reporter spec",
+    "test": "mocha --reporter spec test/*.js test*.ts",
     "test_submitBoostJob": "mocha --reporter spec --grep 'submitBoostJob'",
     "test_BoostPowMetadata": "mocha --reporter spec --grep 'BoostPowMetadata'",
     "test_BoostPowJobProof": "mocha --reporter spec --grep 'BoostPowJobProof'",
@@ -16,17 +16,15 @@
     "test_curr": "mocha --reporter spec --grep 'test_curr'",
     "test_decode": "mocha --reporter spec --grep 'test_decode'",
     "test_file": "mocha --reporter spec --grep 'filepay'",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "commit": "npx cz",
+    "semantic-release": "npx semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MatterPool/boostpow-js.git"
+    "url": "https://github.com/ProofOfWorkCompany/boostpow-js.git"
   },
-  "author": "MatterPool Inc.",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/MatterPool/boostpow-js/issues"
-  },
+  "author": "",
   "keywords": [
     "bitcoin",
     "bsv",
@@ -39,21 +37,22 @@
     "boost-protocal",
     "hashcash",
     "blockchain",
-    "matterpool",
     "satoshi",
     "satoshi-vision"
   ],
-  "homepage": "https://github.com/MatterPool/boostpow-js#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/plugin-transform-arrow-functions": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@types/mocha": "^9.1.0",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "browserify-shim": "^3.8.14",
     "bsv": "^1.5.6",
     "chai": "^4.2.0",
+    "cz": "^1.8.2",
+    "cz-conventional-changelog": "^3.3.0",
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
     "gulp-clean-css": "^3.10.0",
@@ -74,10 +73,12 @@
     "gulp-watch": "^5.0.1",
     "mocha": "^8.4.0",
     "streamqueue": "^1.1.2",
+    "ts-node": "^10.7.0",
     "tsify": "^4.0.1",
     "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "semantic-release": "^19.0.2"
   },
   "dependencies": {
     "@types/node": "^13.7.7",
@@ -93,5 +94,10 @@
   "directories": {
     "lib": "lib",
     "test": "test"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
