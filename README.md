@@ -52,7 +52,7 @@ npm install boostpow --save
 
 **A Protocol for Buying and Selling Proof-of-Work Embedded in Bitcoin Script**
 
-<a href='https://boostpow.com/'>boostpow.com</a>
+<a href='https://pow.co/'>pow.co</a>
 
 Boost is a new type of content ranking system that enables users to increase the amount of energy required to mine or process their content. Users will boost their post as a way to signal to the network that they believe their information is valuable. Boosted posts will appear in the boost feed – ordered by the amount of energy requested for their information.
 
