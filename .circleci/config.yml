@@ -14,6 +14,9 @@ jobs:
       - run:
           name: Build From Source
           command: npm run build
+      - run:
+          name: Release New Version To NPM
+          command: npx semantic-release
 
 workflows:
   version: 2

@@ -17,11 +17,12 @@
     "test_decode": "mocha --reporter spec --grep 'test_decode'",
     "test_file": "mocha --reporter spec --grep 'filepay'",
     "prepare": "npm run build",
-    "commit": "npx cz"
+    "commit": "npx cz",
+    "semantic-release": "npx semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ProofOfWorkCompany/boostpow-js.git"
+    "url": "https://github.com/ProofOfWorkCompany/boostpow-js.git"
   },
   "author": "",
   "keywords": [
@@ -76,7 +77,8 @@
     "tsify": "^4.0.1",
     "typescript": "^3.9.6",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "semantic-release": "^19.0.2"
   },
   "dependencies": {
     "@types/node": "^13.7.7",
