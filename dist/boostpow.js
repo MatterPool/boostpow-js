@@ -1,6 +1,6 @@
 /**
  * boostpow - BoostPow Javascript SDK
- * @version v1.3.2
+ * @version v0.0.0-development
  * @link 
  *
  * Copyright (c) 2020 MatterPool Inc.
