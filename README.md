@@ -4,6 +4,11 @@
 
 Boost is a new type of content ranking system that enables users to increase the amount of energy required to mine or process their content. Users will boost their post as a way to signal to the network that they believe their information is valuable. Boosted posts will appear in the boost feed – ordered by the amount of energy requested for their information.
 
+[![ProofOfWorkCompany](https://circleci.com/gh/ProofOfWorkCompany/boostpow-js.svg?style=shield)](https://circleci.com/gh/ProofOfWorkCompany/boostpow-js)
+[![Node.js CI](https://github.com/ProofOfWorkCompany/boostpow-js/actions/workflows/node.js.yml/badge.svg)](https://github.com/ProofOfWorkCompany/boostpow-js/actions/workflows/node.js.yml)
+[![npm version](https://badge.fury.io/js/boostpow.svg)](https://badge.fury.io/js/boostpow)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 ## Preview
 
 A Boost Pow String (also called "Boost Header") consist of an 80 byte string that is encoded identically to a Bitcoin Block Header.  The string is valid if the hash256 of the string is less than the target difficulty specified inside the string.

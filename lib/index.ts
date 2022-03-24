@@ -8,6 +8,16 @@ import { BoostSignalModel } from './boost-signal-model'
 import { BoostSignalRankerModel } from './boost-signal-ranker-model'
 import { GraphSearchQuery } from './graph-search-query'
 
+export { Bytes } from './fields/bytes'
+export { Difficulty } from './fields/difficulty'
+export { Digest20 } from './fields/digest20'
+export { Digest32 } from './fields/digest32'
+export { Int32Little } from './fields/int32Little'
+export { UInt16Little } from './fields/uint16Little'
+export { UInt32Little } from './fields/uint32Little'
+export { UInt32Big } from './fields/uint32Big'
+export { UInt64Big } from './fields/uint64Big'
+
 const defaultOptions: any = {
   graph_api_url: 'https://graph.boostpow.com',
   // graph_api_url: 'http://localhost:3000',
@@ -124,14 +134,14 @@ catch (ex) {
   // Window is not defined, must be running in windowless env...
 }
 
-export var BoostPowString = BoostPowStringModel
-export var BoostPowJob = BoostPowJobModel
-export var BoostPowJobProof = BoostPowJobProofModel
-export var BoostPowMetadata = BoostPowMetadataModel
-export var BoostUtilsHelper = BoostUtils
-export var BoostGraph = BoostGraphClient;
-export var BoostSignal = BoostSignalModel
-export var BoostSignalRanker = BoostSignalRankerModel
+export let BoostPowString = BoostPowStringModel
+export let BoostPowJob = BoostPowJobModel
+export let BoostPowJobProof = BoostPowJobProofModel
+export let BoostPowMetadata = BoostPowMetadataModel
+export let BoostUtilsHelper = BoostUtils
+export let BoostGraph = BoostGraphClient;
+export let BoostSignal = BoostSignalModel
+export let BoostSignalRanker = BoostSignalRankerModel
 
 function rawSearchGraph(q?: GraphSearchQuery,callback?: Function): Promise<any> {
   const apiClient = new BoostGraphApiClient(defaultOptions)
