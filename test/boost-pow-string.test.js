@@ -1,6 +1,6 @@
 "use strict"
 const expect = require("chai").expect
-const index = require("../dist/index.js")
+const index = require("..")
 
 describe("boost #BoostPowString.fromObject", () => {
   it("should correctly decode from object to string", async () => {

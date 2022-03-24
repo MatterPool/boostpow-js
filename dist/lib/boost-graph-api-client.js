@@ -8,7 +8,7 @@ const defaultOptions = {
     graph_api_url: 'https://graph.boostpow.com',
     api_url: 'https://api.mattercloud.net',
     network: 'main',
-    version_path: 'api/v3',
+    version_path: 'api/v3', // Leave as is
 };
 class BoostGraphApiClient {
     constructor(options) {
@@ -144,7 +144,7 @@ class BoostGraphApiClient {
                     return this.rejectOrCallback(reject, this.formatErrorResponse({
                         code: ex.response.status,
                         message: ex.response.data.message,
-                        error: ex.response.data.error,
+                        error: ex.response.data.error, // 'BOOST_SUBMIT_SOLUTION_ERROR'
                     }), callback);
                 }
                 return this.rejectOrCallback(reject, this.formatErrorResponse(ex), callback);

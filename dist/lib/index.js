@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = void 0;
+exports.getJobStatus = exports.submitJob = exports.rawSearch = exports.BoostSignalRanker = exports.BoostSignal = exports.BoostGraph = exports.BoostUtilsHelper = exports.BoostPowMetadata = exports.BoostPowJobProof = exports.BoostPowJob = exports.BoostPowString = exports.instance = exports.Graph = exports.BoostGraphClient = exports.UInt64Big = exports.UInt32Big = exports.UInt32Little = exports.UInt16Little = exports.Int32Little = exports.Digest32 = exports.Digest20 = exports.Difficulty = exports.Bytes = void 0;
 const boost_pow_string_model_1 = require("./boost-pow-string-model");
 const boost_pow_job_model_1 = require("./boost-pow-job-model");
 const boost_pow_job_proof_model_1 = require("./boost-pow-job-proof-model");
@@ -33,7 +33,7 @@ const defaultOptions = {
     api_url: 'https://api.mattercloud.net',
     // api_url: 'http://localhost:3000',
     network: 'main',
-    version_path: 'api/v3',
+    version_path: 'api/v3', // Do not change
 };
 class BoostGraphClient {
     constructor(providedOptions) {
