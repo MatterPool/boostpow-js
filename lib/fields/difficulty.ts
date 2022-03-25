@@ -8,6 +8,10 @@ export class Difficulty {
   ) {
   }
 
+  valid(): boolean {
+    return this.diff > 0
+  }
+
   static fromBits(bits: number): Difficulty {
     return new Difficulty(BoostUtils.difficulty(bits))
   }

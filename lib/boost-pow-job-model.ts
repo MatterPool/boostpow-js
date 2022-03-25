@@ -6,7 +6,7 @@ import { Digest32 } from './fields/digest32'
 import { Digest20 } from './fields/digest20'
 import { Bytes } from './fields/bytes'
 import { Difficulty } from './fields/difficulty'
-import { BoostPowStringModel } from './boost-pow-string-model'
+import * as work from './work/proof'
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model'
 import { BoostPowMetadataModel } from './boost-pow-metadata-model'
 import { BoostUtils } from './boost-utils'
@@ -585,7 +585,62 @@ export class BoostPowJobModel {
         })
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: BoostPowStringModel | null, boostPowMetadata: BoostPowMetadataModel | null } {
+    static proof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): work.Proof {
+      const meta = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
+
+      let meta_begin = new Bytes(Buffer.concat([
+          meta.tag.buffer,
+          meta.minerPubKeyHash.buffer
+      ]))
+
+      let meta_end = new Bytes(Buffer.concat([
+          meta.userNonce.buffer,
+          meta.additionalData.buffer
+      ]))
+
+      let z: work.Puzzle
+      let x: work.Solution
+
+      if (boostPowJob.useGeneralPurposeBits) {
+        z = new work.Puzzle(
+          boostPowJob.category,
+          boostPowJob.content,
+          new Difficulty(boostPowJob.difficulty),
+          meta_begin,
+          meta_end,
+          Int32Little.fromNumber(BoostUtils.generalPurposeBitsMask())
+        )
+      } else {
+        z = new work.Puzzle(
+          boostPowJob.category,
+          boostPowJob.content,
+          new Difficulty(boostPowJob.difficulty),
+          meta_begin,
+          meta_end
+        )
+      }
+
+      if (boostPowJobProof.generalPurposeBits) {
+        x = new work.Solution(
+          boostPowJobProof.time,
+          boostPowJobProof.extraNonce1,
+          boostPowJobProof.extraNonce2,
+          boostPowJobProof.nonce,
+          boostPowJobProof.generalPurposeBits,
+        )
+      } else {
+        x = new work.Solution(
+          boostPowJobProof.time,
+          boostPowJobProof.extraNonce1,
+          boostPowJobProof.extraNonce2,
+          boostPowJobProof.nonce
+        )
+      }
+
+      return new work.Proof(z, x)
+    }
+
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString | null, boostPowMetadata: BoostPowMetadataModel | null } {
         var category: Buffer
 
         if (boostPowJob.useGeneralPurposeBits) {
@@ -617,7 +672,7 @@ export class BoostPowJobModel {
         const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf)
         if (blockHeader.validProofOfWork()) {
             return {
-                boostPowString: new BoostPowStringModel(blockHeader),
+                boostPowString: new work.PowString(blockHeader),
                 boostPowMetadata: boostPowMetadataCoinbaseString,
             }
         }

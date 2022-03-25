@@ -7,6 +7,9 @@ class Difficulty {
     constructor(diff) {
         this.diff = diff;
     }
+    valid() {
+        return this.diff > 0;
+    }
     static fromBits(bits) {
         return new Difficulty(boost_utils_1.BoostUtils.difficulty(bits));
     }
