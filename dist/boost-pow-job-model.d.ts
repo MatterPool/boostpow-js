@@ -98,8 +98,8 @@ export declare class BoostPowJobModel {
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
     static proof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): work.Proof;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | {
-        boostPowString: work.PowString | null;
-        boostPowMetadata: BoostPowMetadataModel | null;
+        boostPowString: work.PowString;
+        boostPowMetadata: BoostPowMetadataModel;
     };
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
     static scriptOperations(useGeneralPurposeBits: boolean): any[];

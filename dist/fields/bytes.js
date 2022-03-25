@@ -8,6 +8,9 @@ class Bytes {
     constructor(data) {
         this.data = data;
     }
+    static fromHex(b) {
+        return new Bytes(Buffer.from(b, 'hex'));
+    }
     get buffer() {
         return this.data;
     }

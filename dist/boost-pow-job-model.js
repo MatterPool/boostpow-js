@@ -488,40 +488,13 @@ class BoostPowJobModel {
         return new work.Proof(z, x);
     }
     static tryValidateJobProof(boostPowJob, boostPowJobProof) {
-        var category;
-        if (boostPowJob.useGeneralPurposeBits) {
-            var generalPurposeBits = boostPowJobProof.generalPurposeBits;
-            if (generalPurposeBits) {
-                category = boost_utils_1.BoostUtils.writeUInt32LE((boostPowJob.category.number & boost_utils_1.BoostUtils.generalPurposeBitsMask()) |
-                    (generalPurposeBits.number & ~boost_utils_1.BoostUtils.generalPurposeBitsMask()));
-            }
-            else {
-                return null;
-            }
-        }
-        else if (boostPowJobProof.generalPurposeBits) {
+        let x = this.proof(boostPowJob, boostPowJobProof).string();
+        if (!(x && x.valid()))
             return null;
-        }
-        else {
-            category = boostPowJob.category.buffer;
-        }
-        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
-        const headerBuf = Buffer.concat([
-            category,
-            boostPowJob.content.buffer,
-            boostPowMetadataCoinbaseString.hash.buffer,
-            boostPowJobProof.time.buffer,
-            boostPowJob.bits.buffer,
-            boostPowJobProof.nonce.buffer,
-        ]);
-        const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
-        if (blockHeader.validProofOfWork()) {
-            return {
-                boostPowString: new work.PowString(blockHeader),
-                boostPowMetadata: boostPowMetadataCoinbaseString,
-            };
-        }
-        return null;
+        return {
+            boostPowString: x,
+            boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
+        };
     }
     static loopOperation(loopIterations, generateFragmentInvoker) {
         let concatOps = [];

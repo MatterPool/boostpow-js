@@ -8,6 +8,10 @@ export class Bytes {
   ) {
   }
 
+  static fromHex(b: string): Bytes {
+    return new Bytes(Buffer.from(b, 'hex'))
+  }
+
   get buffer(): Buffer {
     return this.data
   }

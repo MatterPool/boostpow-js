@@ -640,43 +640,14 @@ export class BoostPowJobModel {
       return new work.Proof(z, x)
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString | null, boostPowMetadata: BoostPowMetadataModel | null } {
-        var category: Buffer
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString, boostPowMetadata: BoostPowMetadataModel } {
+        let x = this.proof(boostPowJob, boostPowJobProof).string()
+        if (!(x && x.valid())) return null
 
-        if (boostPowJob.useGeneralPurposeBits) {
-          var generalPurposeBits = boostPowJobProof.generalPurposeBits
-          if (generalPurposeBits) {
-            category = BoostUtils.writeUInt32LE(
-              (boostPowJob.category.number & BoostUtils.generalPurposeBitsMask()) |
-                (generalPurposeBits.number & ~BoostUtils.generalPurposeBitsMask()))
-          } else {
-            return null
-          }
-        } else if (boostPowJobProof.generalPurposeBits) {
-            return null
-        } else {
-          category = boostPowJob.category.buffer
+        return {
+          boostPowString: x,
+          boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
         }
-
-        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
-
-        const headerBuf = Buffer.concat([
-            category,
-            boostPowJob.content.buffer,
-            boostPowMetadataCoinbaseString.hash.buffer,
-            boostPowJobProof.time.buffer,
-            boostPowJob.bits.buffer,
-            boostPowJobProof.nonce.buffer,
-        ])
-
-        const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf)
-        if (blockHeader.validProofOfWork()) {
-            return {
-                boostPowString: new work.PowString(blockHeader),
-                boostPowMetadata: boostPowMetadataCoinbaseString,
-            }
-        }
-        return null
     }
 
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function) {
