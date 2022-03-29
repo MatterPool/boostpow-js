@@ -5,6 +5,7 @@ export declare class Difficulty {
     constructor(diff: number);
     valid(): boolean;
     static fromBits(bits: number): Difficulty;
+    static fromHex(hex: string): Difficulty | undefined;
     get number(): number;
     get bits(): number;
     get buffer(): Buffer;
