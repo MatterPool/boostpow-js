@@ -5,7 +5,7 @@ import { UInt16Little } from './fields/uint16Little';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
-import { BoostPowStringModel } from './boost-pow-string-model';
+import * as work from './work/proof';
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostPowJobModel {
@@ -96,9 +96,10 @@ export declare class BoostPowJobModel {
      */
     static createRedeemTransaction(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null;
     static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel;
+    static proof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): work.Proof;
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | {
-        boostPowString: BoostPowStringModel | null;
-        boostPowMetadata: BoostPowMetadataModel | null;
+        boostPowString: work.PowString;
+        boostPowMetadata: BoostPowMetadataModel;
     };
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function): never[];
     static scriptOperations(useGeneralPurposeBits: boolean): any[];

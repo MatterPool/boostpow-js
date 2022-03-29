@@ -8,8 +8,19 @@ export class Difficulty {
   ) {
   }
 
+  valid(): boolean {
+    return this.diff > 0
+  }
+
   static fromBits(bits: number): Difficulty {
     return new Difficulty(BoostUtils.difficulty(bits))
+  }
+
+  static fromHex(hex: string): Difficulty | undefined {
+    let bits = UInt32Little.fromHex(hex)
+    if (bits) {
+      return this.fromBits(bits.number)
+    }
   }
 
   get number(): number {

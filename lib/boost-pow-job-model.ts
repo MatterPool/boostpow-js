@@ -6,7 +6,7 @@ import { Digest32 } from './fields/digest32'
 import { Digest20 } from './fields/digest20'
 import { Bytes } from './fields/bytes'
 import { Difficulty } from './fields/difficulty'
-import { BoostPowStringModel } from './boost-pow-string-model'
+import * as work from './work/proof'
 import { BoostPowJobProofModel } from './boost-pow-job-proof-model'
 import { BoostPowMetadataModel } from './boost-pow-metadata-model'
 import { BoostUtils } from './boost-utils'
@@ -585,43 +585,69 @@ export class BoostPowJobModel {
         })
     }
 
-    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: BoostPowStringModel | null, boostPowMetadata: BoostPowMetadataModel | null } {
-        var category: Buffer
+    static proof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): work.Proof {
+      const meta = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
 
-        if (boostPowJob.useGeneralPurposeBits) {
-          var generalPurposeBits = boostPowJobProof.generalPurposeBits
-          if (generalPurposeBits) {
-            category = BoostUtils.writeUInt32LE(
-              (boostPowJob.category.number & BoostUtils.generalPurposeBitsMask()) |
-                (generalPurposeBits.number & ~BoostUtils.generalPurposeBitsMask()))
-          } else {
-            return null
-          }
-        } else if (boostPowJobProof.generalPurposeBits) {
-            return null
-        } else {
-          category = boostPowJob.category.buffer
+      let meta_begin = new Bytes(Buffer.concat([
+          meta.tag.buffer,
+          meta.minerPubKeyHash.buffer
+      ]))
+
+      let meta_end = new Bytes(Buffer.concat([
+          meta.userNonce.buffer,
+          meta.additionalData.buffer
+      ]))
+
+      let z: work.Puzzle
+      let x: work.Solution
+
+      if (boostPowJob.useGeneralPurposeBits) {
+        z = new work.Puzzle(
+          boostPowJob.category,
+          boostPowJob.content,
+          new Difficulty(boostPowJob.difficulty),
+          meta_begin,
+          meta_end,
+          Int32Little.fromNumber(BoostUtils.generalPurposeBitsMask())
+        )
+      } else {
+        z = new work.Puzzle(
+          boostPowJob.category,
+          boostPowJob.content,
+          new Difficulty(boostPowJob.difficulty),
+          meta_begin,
+          meta_end
+        )
+      }
+
+      if (boostPowJobProof.generalPurposeBits) {
+        x = new work.Solution(
+          boostPowJobProof.time,
+          boostPowJobProof.extraNonce1,
+          boostPowJobProof.extraNonce2,
+          boostPowJobProof.nonce,
+          boostPowJobProof.generalPurposeBits,
+        )
+      } else {
+        x = new work.Solution(
+          boostPowJobProof.time,
+          boostPowJobProof.extraNonce1,
+          boostPowJobProof.extraNonce2,
+          boostPowJobProof.nonce
+        )
+      }
+
+      return new work.Proof(z, x)
+    }
+
+    static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString, boostPowMetadata: BoostPowMetadataModel } {
+        let x = this.proof(boostPowJob, boostPowJobProof).string()
+        if (!(x && x.valid())) return null
+
+        return {
+          boostPowString: x,
+          boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
         }
-
-        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
-
-        const headerBuf = Buffer.concat([
-            category,
-            boostPowJob.content.buffer,
-            boostPowMetadataCoinbaseString.hash.buffer,
-            boostPowJobProof.time.buffer,
-            boostPowJob.bits.buffer,
-            boostPowJobProof.nonce.buffer,
-        ])
-
-        const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf)
-        if (blockHeader.validProofOfWork()) {
-            return {
-                boostPowString: new BoostPowStringModel(blockHeader),
-                boostPowMetadata: boostPowMetadataCoinbaseString,
-            }
-        }
-        return null
     }
 
     static loopOperation(loopIterations: number, generateFragmentInvoker: Function) {

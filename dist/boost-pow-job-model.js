@@ -7,7 +7,8 @@ const uint32Little_1 = require("./fields/uint32Little");
 const uint16Little_1 = require("./fields/uint16Little");
 const digest32_1 = require("./fields/digest32");
 const bytes_1 = require("./fields/bytes");
-const boost_pow_string_model_1 = require("./boost-pow-string-model");
+const difficulty_1 = require("./fields/difficulty");
+const work = require("./work/proof");
 const boost_pow_metadata_model_1 = require("./boost-pow-metadata-model");
 const boost_utils_1 = require("./boost-utils");
 class BoostPowJobModel {
@@ -460,41 +461,40 @@ class BoostPowJobModel {
             additionalData: boostPowJob.additionalData.buffer,
         });
     }
-    static tryValidateJobProof(boostPowJob, boostPowJobProof) {
-        var category;
+    static proof(boostPowJob, boostPowJobProof) {
+        const meta = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
+        let meta_begin = new bytes_1.Bytes(Buffer.concat([
+            meta.tag.buffer,
+            meta.minerPubKeyHash.buffer
+        ]));
+        let meta_end = new bytes_1.Bytes(Buffer.concat([
+            meta.userNonce.buffer,
+            meta.additionalData.buffer
+        ]));
+        let z;
+        let x;
         if (boostPowJob.useGeneralPurposeBits) {
-            var generalPurposeBits = boostPowJobProof.generalPurposeBits;
-            if (generalPurposeBits) {
-                category = boost_utils_1.BoostUtils.writeUInt32LE((boostPowJob.category.number & boost_utils_1.BoostUtils.generalPurposeBitsMask()) |
-                    (generalPurposeBits.number & ~boost_utils_1.BoostUtils.generalPurposeBitsMask()));
-            }
-            else {
-                return null;
-            }
-        }
-        else if (boostPowJobProof.generalPurposeBits) {
-            return null;
+            z = new work.Puzzle(boostPowJob.category, boostPowJob.content, new difficulty_1.Difficulty(boostPowJob.difficulty), meta_begin, meta_end, int32Little_1.Int32Little.fromNumber(boost_utils_1.BoostUtils.generalPurposeBitsMask()));
         }
         else {
-            category = boostPowJob.category.buffer;
+            z = new work.Puzzle(boostPowJob.category, boostPowJob.content, new difficulty_1.Difficulty(boostPowJob.difficulty), meta_begin, meta_end);
         }
-        const boostPowMetadataCoinbaseString = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof);
-        const headerBuf = Buffer.concat([
-            category,
-            boostPowJob.content.buffer,
-            boostPowMetadataCoinbaseString.hash.buffer,
-            boostPowJobProof.time.buffer,
-            boostPowJob.bits.buffer,
-            boostPowJobProof.nonce.buffer,
-        ]);
-        const blockHeader = bsv.BlockHeader.fromBuffer(headerBuf);
-        if (blockHeader.validProofOfWork()) {
-            return {
-                boostPowString: new boost_pow_string_model_1.BoostPowStringModel(blockHeader),
-                boostPowMetadata: boostPowMetadataCoinbaseString,
-            };
+        if (boostPowJobProof.generalPurposeBits) {
+            x = new work.Solution(boostPowJobProof.time, boostPowJobProof.extraNonce1, boostPowJobProof.extraNonce2, boostPowJobProof.nonce, boostPowJobProof.generalPurposeBits);
         }
-        return null;
+        else {
+            x = new work.Solution(boostPowJobProof.time, boostPowJobProof.extraNonce1, boostPowJobProof.extraNonce2, boostPowJobProof.nonce);
+        }
+        return new work.Proof(z, x);
+    }
+    static tryValidateJobProof(boostPowJob, boostPowJobProof) {
+        let x = this.proof(boostPowJob, boostPowJobProof).string();
+        if (!(x && x.valid()))
+            return null;
+        return {
+            boostPowString: x,
+            boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
+        };
     }
     static loopOperation(loopIterations, generateFragmentInvoker) {
         let concatOps = [];

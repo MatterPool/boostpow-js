@@ -3,7 +3,7 @@ import { UInt32Little } from './fields/uint32Little';
 import { Digest32 } from './fields/digest32';
 import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
-import { BoostPowStringModel } from './boost-pow-string-model';
+import * as work from './work/string';
 import { BoostPowMetadataModel } from './boost-pow-metadata-model';
 export declare class BoostSignalModel {
     private boostPowString;
@@ -13,7 +13,7 @@ export declare class BoostSignalModel {
     private constructor();
     get jobId(): string | undefined;
     get jobProofId(): string | undefined;
-    get powString(): BoostPowStringModel;
+    get powString(): work.String;
     get metadata(): BoostPowMetadataModel;
     get hash(): Digest32;
     get difficulty(): number;
