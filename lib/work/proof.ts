@@ -26,7 +26,7 @@ export class Solution {
     public ExtraNonce1: UInt32Big,
     public ExtraNonce2: Bytes,
     public Nonce: UInt32Little,
-    public GeneralPurposeBits?: UInt32Little) {}
+    public GeneralPurposeBits?: Int32Little) {}
 }
 
 export function meta(p: Puzzle, x: Solution): Bytes {

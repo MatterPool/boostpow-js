@@ -1,6 +1,7 @@
 import * as bsv from 'bsv'
 import { BoostUtils } from './boost-utils'
 import { UInt32Little } from './fields/uint32Little'
+import { Int32Little } from './fields/int32Little'
 import { UInt32Big } from './fields/uint32Big'
 import { Digest20 } from './fields/digest20'
 import { Bytes } from './fields/bytes'
@@ -19,7 +20,7 @@ export class BoostPowJobProofModel {
         private ExtraNonce2: Bytes,
         private Nonce: UInt32Little,
         private MinerPubKeyHash?: Digest20,
-        private GeneralPurposeBits?: UInt32Little,
+        private GeneralPurposeBits?: Int32Little,
         // Optional tx information attached or not
         private Txid?: string,
         private Vin?: number,
@@ -96,7 +97,7 @@ export class BoostPowJobProofModel {
       return this.Time
     }
 
-    get generalPurposeBits(): UInt32Little | undefined {
+    get generalPurposeBits(): Int32Little | undefined {
       return this.GeneralPurposeBits
     }
 
