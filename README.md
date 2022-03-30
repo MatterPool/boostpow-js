@@ -158,7 +158,7 @@ The simplest Boost Publisher usage looks like this:
 
 ```javascript
 // in HTML
-<script src="https://publish.boostpow.com/publish.js"></script>
+<script src="https://publish.boost.pow.co/publish.js"></script>
 
 // in javascript
 boostPublish.open({
