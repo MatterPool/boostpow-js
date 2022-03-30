@@ -1,5 +1,6 @@
 import * as bsv from 'bsv';
 import { UInt32Little } from './fields/uint32Little';
+import { Int32Little } from './fields/int32Little';
 import { UInt32Big } from './fields/uint32Big';
 import { Digest20 } from './fields/digest20';
 import { Bytes } from './fields/bytes';
@@ -32,7 +33,7 @@ export declare class BoostPowJobProofModel {
         generalPurposeBits?: string;
     }): BoostPowJobProofModel;
     get time(): UInt32Little;
-    get generalPurposeBits(): UInt32Little | undefined;
+    get generalPurposeBits(): Int32Little | undefined;
     get extraNonce1(): UInt32Big;
     get extraNonce2(): Bytes;
     get nonce(): UInt32Little;

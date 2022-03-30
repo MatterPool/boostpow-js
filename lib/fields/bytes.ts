@@ -31,4 +31,8 @@ export class Bytes {
   get hash256(): Digest32 {
     return new Digest32(bsv.crypto.Hash.sha256sha256(this.buffer))
   }
+
+  get length(): number {
+    return this.data.length
+  }
 }

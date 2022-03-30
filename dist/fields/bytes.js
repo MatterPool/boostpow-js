@@ -26,5 +26,8 @@ class Bytes {
     get hash256() {
         return new digest32_1.Digest32(bsv.crypto.Hash.sha256sha256(this.buffer));
     }
+    get length() {
+        return this.data.length;
+    }
 }
 exports.Bytes = Bytes;

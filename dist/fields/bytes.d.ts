@@ -9,4 +9,5 @@ export declare class Bytes {
     get string(): string;
     get utf8(): string;
     get hash256(): Digest32;
+    get length(): number;
 }

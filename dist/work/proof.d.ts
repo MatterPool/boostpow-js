@@ -20,8 +20,8 @@ export declare class Solution {
     ExtraNonce1: UInt32Big;
     ExtraNonce2: Bytes;
     Nonce: UInt32Little;
-    GeneralPurposeBits?: UInt32Little | undefined;
-    constructor(Time: UInt32Little, ExtraNonce1: UInt32Big, ExtraNonce2: Bytes, Nonce: UInt32Little, GeneralPurposeBits?: UInt32Little | undefined);
+    GeneralPurposeBits?: Int32Little | undefined;
+    constructor(Time: UInt32Little, ExtraNonce1: UInt32Big, ExtraNonce2: Bytes, Nonce: UInt32Little, GeneralPurposeBits?: Int32Little | undefined);
 }
 export declare function meta(p: Puzzle, x: Solution): Bytes;
 export declare function pow_string(p: Puzzle, x: Solution): PowString | undefined;
