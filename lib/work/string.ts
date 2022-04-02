@@ -35,7 +35,7 @@ export class PowString {
     }
 
     get content(): Digest32 {
-        return new Digest32(new Buffer(this.toObject().content,'hex').reverse())
+        return new Digest32(Buffer.from(this.toObject().content, 'hex').reverse())
     }
 
     get bits(): UInt32Little {
@@ -43,7 +43,7 @@ export class PowString {
     }
 
     get metadataHash(): Digest32 {
-        return new Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse())
+        return new Digest32(Buffer.from(this.toObject().metadataHash, 'hex').reverse())
     }
 
     get nonce(): UInt32Little {

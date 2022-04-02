@@ -129,15 +129,15 @@ export class BoostPowJobModel {
             if (params.minerPubKeyHash.length > 40) {
                 throw new Error('minerPubKeyHash too large. Max 4 bytes.')
             }
-            minerPubKeyHash = new Bytes(new Buffer(params.minerPubKeyHash, 'hex'))
+            minerPubKeyHash = new Bytes(Buffer.from(params.minerPubKeyHash, 'hex'))
         }
 
         return new BoostPowJobModel(
             new Digest32(BoostUtils.createBufferAndPad(params.content, 32)),
             params.diff,
             category,
-            new Bytes(params.tag ? new Buffer(params.tag, 'hex') : new Buffer(0)),
-            new Bytes(params.additionalData ? new Buffer(params.additionalData, 'hex') : new Buffer(0)),
+            new Bytes(params.tag ? Buffer.from(params.tag, 'hex') : Buffer.alloc(0)),
+            new Bytes(params.additionalData ? Buffer.from(params.additionalData, 'hex') : Buffer.alloc(0)),
             new UInt32Little(BoostUtils.createBufferAndPad(userNonce, 4, false)),
             params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false,
             minerPubKeyHash
@@ -643,7 +643,7 @@ export class BoostPowJobModel {
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString, boostPowMetadata: BoostPowMetadataModel } {
         let x = this.proof(boostPowJob, boostPowJobProof).string()
         if (!(x && x.valid())) return null
-        
+
         return {
           boostPowString: x,
           boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)

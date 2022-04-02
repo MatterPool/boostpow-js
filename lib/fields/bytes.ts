@@ -17,7 +17,7 @@ export class Bytes {
   }
 
   get hex(): string {
-    return new Buffer(this.buffer).toString('hex')
+    return this.buffer.toString('hex')
   }
 
   get string(): string {

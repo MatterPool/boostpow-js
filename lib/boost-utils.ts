@@ -11,14 +11,14 @@
     static writeInt32LE(x: number): Buffer {
         if (x > 0x7fffffff) throw "number too big to be an int32."
         if (x < -2147483648) throw "number too small to be an int32."
-        let b: Buffer = new Buffer(4)
+        let b: Buffer = Buffer.alloc(4)
         b.writeInt32LE(x)
         return b
     }
 
     static writeUInt32LE(x: number): Buffer {
         if (x > 0xffffffff) throw "number too big to be a uint32."
-        let b: Buffer = new Buffer(4)
+        let b: Buffer = Buffer.alloc(4)
         b.writeUInt32LE(x)
         return b
     }

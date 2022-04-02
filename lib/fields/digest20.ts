@@ -8,7 +8,7 @@ export class Digest20 {
   }
 
   get hex(): string {
-    return new Buffer(this.data).toString('hex')
+    return this.data.toString('hex')
   }
 
   get buffer(): Buffer {
