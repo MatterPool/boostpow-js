@@ -147,7 +147,9 @@
     }
 
     static generalPurposeBitsMask(): number {
-      return 0xE0001FFF
+      // should be 0xE0001FFF but javascript won't read
+      // this is a negative number.
+      return -(0xffffffff + 1 - 0xE0001FFF)
     }
 
     static generalPurposeBits(category: number): number {

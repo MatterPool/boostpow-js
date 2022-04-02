@@ -10,9 +10,6 @@ export class PowString {
 
     constructor(blockheader: bsv.BlockHeader) {
         this._blockheader = blockheader
-        if (!this._blockheader.validProofOfWork()) {
-            throw new Error('INVALID_POW')
-        }
     }
 
     // Use boosthash(), hash() and id() to all be equal to the string
@@ -61,21 +58,21 @@ export class PowString {
       return this._blockheader.validProofOfWork()
     }
 
-    static fromBuffer (buf) {
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+    static fromBuffer (buf): PowString {
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromString(str) {
+    static fromString(str): PowString {
         var buf = Buffer.from(str, 'hex')
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromHex(str) {
+    static fromHex(str): PowString {
         var buf = Buffer.from(str, 'hex')
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromObject(obj) {
+    static fromObject(obj): PowString {
         const spoofedObj = {
             prevHash: obj.content,
             bits: obj.bits,
@@ -84,7 +81,7 @@ export class PowString {
             time: obj.time,
             nonce: obj.nonce,
         }
-        return new String(bsv.BlockHeader.fromObject(spoofedObj))
+        return new PowString(bsv.BlockHeader.fromObject(spoofedObj))
     }
 
     toBuffer () {

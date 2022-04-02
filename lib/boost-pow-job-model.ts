@@ -643,7 +643,7 @@ export class BoostPowJobModel {
     static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString, boostPowMetadata: BoostPowMetadataModel } {
         let x = this.proof(boostPowJob, boostPowJobProof).string()
         if (!(x && x.valid())) return null
-
+        
         return {
           boostPowString: x,
           boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)

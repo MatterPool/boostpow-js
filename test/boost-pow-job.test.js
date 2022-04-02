@@ -615,6 +615,8 @@ describe("BoostPowJob", () => {
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     )
 
+    expect(boostPowString.hash).to.not.equal(undefined)
+
     expect(boostPowString.hash.hex).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     )

@@ -2,9 +2,9 @@
   "name": "boostpow",
   "version": "1.3.5",
   "description": "BoostPow Javascript SDK",
-  "main": "dist/lib/index.js",
-  "types": "dist//lib/index.d.ts",
-  "typings": "dist/lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist//index.d.ts",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && gulp build",
     "test": "mocha --reporter spec test/*.js test*.ts",

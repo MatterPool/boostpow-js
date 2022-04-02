@@ -84,16 +84,9 @@ describe("boost #BoostPowString.fromString", () => {
   })
 
   it("should correctly decode Bitcoin header but invalid target", async () => {
-    try {
-      index.BoostPowString.fromString(
-        "020000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-      )
-    } catch (ex) {
-      expect(ex.message).to.equal("INVALID_POW")
-      return
-    }
-    // Should never get here
-    expect(true).to.equal(false)
+    expect(index.BoostPowString.fromString(
+      "020000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
+    ).valid()).to.equal(false)
   })
 
   it("should correctly decode from string to object", async () => {
@@ -115,16 +108,15 @@ describe("boost #BoostPowString.fromString", () => {
   })
 })
 
-describe("boost #BoostPowString validateProofOfWork ", () => {
+describe("boost #BoostPowString validateProofOfWork from string", () => {
   it("validProofOfWorkFromString success ", async () => {
-    const result = index.BoostPowString.validProofOfWorkFromString(
+    expect(index.BoostPowString.fromString(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    )
-    expect(result).to.eql(true)
+    ).valid()).to.eql(true)
   })
 
-  it("validProofOfWorkFromObject success ", async () => {
-    const result = index.BoostPowString.validProofOfWorkFromObject({
+  it("boost #BoostPowString validateProofOfWork from object", async () => {
+    expect(index.BoostPowString.fromObject({
       content:
         "0000000000000b60bc96a44724fd72daf9b92cf8ad00510b5224c6253ac40095",
       bits: 443192243,
@@ -133,23 +125,18 @@ describe("boost #BoostPowString validateProofOfWork ", () => {
       time: 1305200806,
       nonce: 2436437219,
       category: 1,
-    })
-
-    expect(result).to.eql(true)
+    }).valid()).to.eql(true)
   })
 
-  it("validProofOfWorkFromBuffer success ", async () => {
-    const buf = Buffer.from(
+  it("boost #BoostPowString validateProofOfWork from buffer", async () => {
+    expect(index.BoostPowString.fromBuffer(Buffer.from(
       "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991",
       "hex"
-    )
-
-    const result = index.BoostPowString.validProofOfWorkFromBuffer(buf)
-    expect(result).to.eql(true)
+    )).valid()).to.eql(true)
   })
 
-  it("validProofOfWorkFromObject success", async () => {
-    const result = index.BoostPowString.validProofOfWorkFromObject({
+  it("boost #BoostPowString validateProofOfWork from object, fail case", async () => {
+    expect(index.BoostPowString.fromObject({
       content:
         "0000000000000b60bc96a44724fd72daf9b92cf8ad00510b5224c6253ac40095",
       bits: 443192243,
@@ -158,9 +145,7 @@ describe("boost #BoostPowString validateProofOfWork ", () => {
       time: 1305200806,
       nonce: 1,
       category: 1,
-    })
-
-    expect(result).to.eql(false)
+    }).valid()).to.eql(false)
   })
 
   it("getDifficulty success", async () => {
@@ -169,39 +154,6 @@ describe("boost #BoostPowString validateProofOfWork ", () => {
     )
     const diff = boostPowString.difficulty
     expect(diff).to.eql(157416.40184364)
-  })
-
-  it("fromStringArray success ", async () => {
-    const result = index.BoostPowString.fromStringArray([
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991",
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991",
-    ])
-
-    const boostPowString1 = index.BoostPowString.fromString(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    )
-    const boostPowString2 = index.BoostPowString.fromString(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    )
-
-    expect(result).to.eql([boostPowString1, boostPowString2])
-  })
-
-  it("fromStringArray success ensure always sorted direction=desc", async () => {
-    const result = index.BoostPowString.fromStringArray([
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991",
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991",
-    ])
-
-    const boostPowString1 = index.BoostPowString.fromString(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    )
-    const boostPowString2 = index.BoostPowString.fromString(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
-    )
-
-    // todo
-    expect(result).to.eql([boostPowString1, boostPowString2])
   })
 })
 
