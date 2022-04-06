@@ -29,12 +29,12 @@ export class BoostPowMetadataModel {
     }): BoostPowMetadataModel {
 
         return new BoostPowMetadataModel(
-            new Bytes(new Buffer(params.tag, 'hex')),
+            new Bytes(Buffer.from(params.tag, 'hex')),
             new Digest20(BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false)),
             new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)),
             new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
             new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
-            new Bytes(new Buffer(params.additionalData, 'hex')),
+            new Bytes(Buffer.from(params.additionalData, 'hex')),
         )
     }
 

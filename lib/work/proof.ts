@@ -44,7 +44,7 @@ export function pow_string(p: Puzzle, x: Solution): PowString | undefined {
   if (p.Mask) {
     var generalPurposeBits = x.GeneralPurposeBits
     if (generalPurposeBits) {
-      category = BoostUtils.writeUInt32LE(
+      category = BoostUtils.writeInt32LE(
         (p.Category.number & p.Mask.number) |
           (generalPurposeBits.number & ~p.Mask.number))
     } else {
@@ -58,16 +58,14 @@ export function pow_string(p: Puzzle, x: Solution): PowString | undefined {
 
   const boostPowMetadataCoinbaseString = meta(p, x)
 
-  const headerBuf = Buffer.concat([
-      category,
-      p.Content.buffer,
-      boostPowMetadataCoinbaseString.hash256.buffer,
-      x.Time.buffer,
-      p.Difficulty.buffer,
-      x.Nonce.buffer,
-  ])
-
-  return new PowString(bsv.BlockHeader.fromBuffer(headerBuf))
+  return new PowString(bsv.BlockHeader.fromBuffer(Buffer.concat([
+    category,
+    p.Content.buffer,
+    boostPowMetadataCoinbaseString.hash256.buffer,
+    x.Time.buffer,
+    p.Difficulty.buffer,
+    x.Nonce.buffer,
+  ])))
 }
 
 // TODO the puzzle also needs to contain a Merkle branch but for Boost that is empty.

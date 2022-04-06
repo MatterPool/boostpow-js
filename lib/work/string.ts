@@ -10,9 +10,6 @@ export class PowString {
 
     constructor(blockheader: bsv.BlockHeader) {
         this._blockheader = blockheader
-        if (!this._blockheader.validProofOfWork()) {
-            throw new Error('INVALID_POW')
-        }
     }
 
     // Use boosthash(), hash() and id() to all be equal to the string
@@ -38,7 +35,7 @@ export class PowString {
     }
 
     get content(): Digest32 {
-        return new Digest32(new Buffer(this.toObject().content,'hex').reverse())
+        return new Digest32(Buffer.from(this.toObject().content, 'hex').reverse())
     }
 
     get bits(): UInt32Little {
@@ -46,7 +43,7 @@ export class PowString {
     }
 
     get metadataHash(): Digest32 {
-        return new Digest32(new Buffer(this.toObject().metadataHash, 'hex').reverse())
+        return new Digest32(Buffer.from(this.toObject().metadataHash, 'hex').reverse())
     }
 
     get nonce(): UInt32Little {
@@ -61,21 +58,21 @@ export class PowString {
       return this._blockheader.validProofOfWork()
     }
 
-    static fromBuffer (buf) {
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+    static fromBuffer (buf): PowString {
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromString(str) {
+    static fromString(str): PowString {
         var buf = Buffer.from(str, 'hex')
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromHex(str) {
+    static fromHex(str): PowString {
         var buf = Buffer.from(str, 'hex')
-        return new String(bsv.BlockHeader.fromBuffer(buf))
+        return new PowString(bsv.BlockHeader.fromBuffer(buf))
     }
 
-    static fromObject(obj) {
+    static fromObject(obj): PowString {
         const spoofedObj = {
             prevHash: obj.content,
             bits: obj.bits,
@@ -84,7 +81,7 @@ export class PowString {
             time: obj.time,
             nonce: obj.nonce,
         }
-        return new String(bsv.BlockHeader.fromObject(spoofedObj))
+        return new PowString(bsv.BlockHeader.fromObject(spoofedObj))
     }
 
     toBuffer () {
