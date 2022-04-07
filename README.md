@@ -19,7 +19,7 @@ We can objectively order content of Boost Pow Strings from most to least energy 
 ```
 010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991
 ```
-And it's hash256 is: **0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca**
+And its hash256 is: **0000000000002917ed80650c6174aac8dfc46f5fe36480aaef682ff6cd83c3ca**
 
 **Sample code to verify Boost Pow String**:
 ```javascript
