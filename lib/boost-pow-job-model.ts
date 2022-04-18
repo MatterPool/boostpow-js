@@ -81,6 +81,15 @@ export class BoostPowJobModel {
     return this.scriptHash
   }
 
+  get scriptVersion(): number {
+    if (this.useGeneralPurposeBits) return 2
+    return 1
+  }
+
+  get useASICBoost(): boolean {
+    return this.scriptVersion > 1
+  }
+
   isContract(): boolean {
     return !!this.MinerPubKeyHash
   }

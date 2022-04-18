@@ -394,6 +394,20 @@ describe("boost integration test ", () => {
     expect(userNonce.buffer).to.eql(userNonceBuffer)
   })
 
+  it("should get script version from locking script", async () => {
+    expect(jobBountyV1.scriptVersion).to.eql(1)
+    expect(jobBountyV1.useASICBoost).to.eql(false)
+
+    expect(jobBountyV2.scriptVersion).to.eql(2)
+    expect(jobBountyV2.useASICBoost).to.eql(true)
+
+    expect(jobContractV1.scriptVersion).to.eql(1)
+    expect(jobContractV1.useASICBoost).to.eql(false)
+
+    expect(jobContractV2.scriptVersion).to.eql(2)
+    expect(jobContractV2.useASICBoost).to.eql(true)
+  })
+
   const solutionBountyV1 = index.BoostPowJobProof.fromObject({
     signature: signatureHex,
     minerPubKeyHash: minerPubKeyHashHex,
@@ -534,7 +548,7 @@ describe("boost integration test ", () => {
     "OP_CAT OP_BIN2NUM OP_LESSTHAN OP_VERIFY OP_DUP OP_HASH160 " +
     "OP_FROMALTSTACK OP_EQUALVERIFY OP_CHECKSIG"
 
-const expectedLockingScriptBountyV2 =
+  const expectedLockingScriptBountyV2 =
     "626F6F7374706F77 OP_DROP D2040000 " +
     "68656C6C6F20616E696D616C0000000000000000000000000000000000000000 " +
     "D80F271E 74686973206973206120746167 C8010000 " +
