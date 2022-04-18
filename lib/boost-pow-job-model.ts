@@ -188,7 +188,7 @@ export class BoostPowJobModel {
     }
 
     toScript(): bsv.Script {
-        let buildOut = bsv.Script()
+        let buildOut = new bsv.Script()
 
         buildOut.add(this.toOpCode(Buffer.from('boostpow', 'utf8')))
 
