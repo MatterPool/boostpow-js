@@ -1,4 +1,4 @@
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class UInt64Big {
   constructor(
@@ -19,6 +19,6 @@ export class UInt64Big {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }

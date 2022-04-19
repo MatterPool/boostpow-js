@@ -1,4 +1,4 @@
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class UInt16Little {
   constructor(

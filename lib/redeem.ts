@@ -1,5 +1,5 @@
 import * as bsv from './bsv'
-import { BoostUtils } from './boost-utils'
+import { Utils } from './utils'
 import { UInt32Little } from './fields/uint32Little'
 import { Int32Little } from './fields/int32Little'
 import { UInt32Big } from './fields/uint32Big'
@@ -10,7 +10,7 @@ import { Bytes } from './fields/bytes'
  * Responsible for redeem script proof that work was done.
  * This gets combined with BoostPowJobModel
  */
-export class BoostPowJobProofModel {
+export class Redeem {
 
     private constructor(
         private Signature: Bytes,
@@ -38,7 +38,7 @@ export class BoostPowJobProofModel {
         extraNonce2: string,
         minerPubKeyHash?: string,
         generalPurposeBits?: string
-    }): BoostPowJobProofModel {
+    }): Redeem {
 
         if (params.signature.length > 166) {
             throw new Error('signature too large. Max 83 bytes.')
@@ -70,7 +70,7 @@ export class BoostPowJobProofModel {
             if (params.generalPurposeBits.length > 8) {
               throw new Error('generalPurposeBits too large. Max 8 bytes.')
             }
-            generalPurposeBits = new UInt32Little(BoostUtils.createBufferAndPad(params.generalPurposeBits, 4, false))
+            generalPurposeBits = new UInt32Little(Utils.createBufferAndPad(params.generalPurposeBits, 4, false))
 
             if (params.extraNonce2.length > 32) {
                 throw new Error('extraNonce2 too large. Max 32 bytes.')
@@ -81,13 +81,13 @@ export class BoostPowJobProofModel {
           }
         }
 
-        return new BoostPowJobProofModel(
+        return new Redeem(
             new Bytes(Buffer.from(params.signature, 'hex')),
             new Bytes(minerPubKey),
-            new UInt32Little(BoostUtils.createBufferAndPad(params.time, 4, false)),
-            new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4,false)),
+            new UInt32Little(Utils.createBufferAndPad(params.time, 4, false)),
+            new UInt32Big(Utils.createBufferAndPad(params.extraNonce1, 4,false)),
             new Bytes(Buffer.from(params.extraNonce2, 'hex')),
-            new UInt32Little(BoostUtils.createBufferAndPad(params.nonce, 4, false)),
+            new UInt32Little(Utils.createBufferAndPad(params.nonce, 4, false)),
             minerPubKeyHash,
             generalPurposeBits
         )
@@ -189,7 +189,7 @@ export class BoostPowJobProofModel {
       return buildOut
     }
 
-    static fromTransaction(tx: bsv.Transaction): BoostPowJobProofModel | undefined {
+    static fromTransaction(tx: bsv.Transaction): Redeem | undefined {
         if (!tx) {
             return undefined
         }
@@ -197,7 +197,7 @@ export class BoostPowJobProofModel {
         let inp = 0
         for (const input of tx.inputs) {
             try {
-                return BoostPowJobProofModel.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex)
+                return Redeem.fromScript(input.script, tx.hash, inp, input.prevTxId.toString('hex'), input.outputIndex)
             } catch (ex) {
                 // Skip and try another output
             }
@@ -207,16 +207,16 @@ export class BoostPowJobProofModel {
         return undefined
     }
 
-    static fromRawTransaction(rawtx: string): BoostPowJobProofModel | undefined {
+    static fromRawTransaction(rawtx: string): Redeem | undefined {
         if (!rawtx || rawtx === '') {
             return undefined
         }
 
         const tx = new bsv.Transaction(rawtx)
-        return BoostPowJobProofModel.fromTransaction(tx)
+        return Redeem.fromTransaction(tx)
     }
 
-    static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
+    static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): Redeem {
       let signature
       let minerPubKey
       let time
@@ -297,10 +297,10 @@ export class BoostPowJobProofModel {
       nonce = new UInt32Little(script.chunks[2].buf)
       time = new UInt32Little(script.chunks[3].buf)
 
-      extraNonce2 = new Bytes(BoostUtils.fromOpCode(script.chunks[4]))
+      extraNonce2 = new Bytes(Utils.fromOpCode(script.chunks[4]))
       extraNonce1 = new UInt32Big(script.chunks[5].buf)
 
-      return new BoostPowJobProofModel(
+      return new Redeem(
         signature,
         minerPubKey,
         time,
@@ -316,13 +316,13 @@ export class BoostPowJobProofModel {
       )
     }
 
-    static fromHex(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromScript(new bsv.Script(asm), txid, vin, spentTxid, spentVout)
+    static fromHex(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): Redeem {
+        return Redeem.fromScript(new bsv.Script(asm), txid, vin, spentTxid, spentVout)
     }
 
 
-    static fromASM(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromScript(new bsv.Script.fromASM(asm), txid, vin, spentTxid, spentVout)
+    static fromASM(asm: string, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): Redeem {
+        return Redeem.fromScript(new bsv.Script.fromASM(asm), txid, vin, spentTxid, spentVout)
     }
 
     // Optional attached information if available
@@ -351,8 +351,8 @@ export class BoostPowJobProofModel {
         return this.SpentVout
     }
 
-    static fromASM2(str: string, txid?: string, vin?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str, txid, vin)
+    static fromASM2(str: string, txid?: string, vin?: number): Redeem {
+        return Redeem.fromHex(str, txid, vin)
     }
 
     toString(): string {
@@ -363,7 +363,7 @@ export class BoostPowJobProofModel {
         return this.toScript().toBuffer()
     }
 
-    static fromString(str: string, txid?: string, vin?: number): BoostPowJobProofModel {
-        return BoostPowJobProofModel.fromHex(str, txid, vin)
+    static fromString(str: string, txid?: string, vin?: number): Redeem {
+        return Redeem.fromHex(str, txid, vin)
     }
 }

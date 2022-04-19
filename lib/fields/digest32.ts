@@ -1,5 +1,5 @@
 import * as bsv from '../bsv'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class Digest32 {
   constructor(
@@ -30,6 +30,6 @@ export class Digest32 {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }

@@ -1,5 +1,5 @@
 import * as bsv from './bsv'
-import { BoostUtils } from './boost-utils'
+import { Utils } from './utils'
 import { UInt32Little } from './fields/uint32Little'
 import { UInt32Big } from './fields/uint32Big'
 import { UInt64Big } from './fields/uint64Big'
@@ -7,7 +7,7 @@ import { Digest32 } from './fields/digest32'
 import { Digest20 } from './fields/digest20'
 import { Bytes } from './fields/bytes'
 
-export class BoostPowMetadataModel {
+export class Metadata {
 
     private constructor(
         private Tag: Bytes,
@@ -26,14 +26,14 @@ export class BoostPowMetadataModel {
         extraNonce2: string,
         userNonce: string,
         additionalData: string
-    }): BoostPowMetadataModel {
+    }): Metadata {
 
-        return new BoostPowMetadataModel(
+        return new Metadata(
             new Bytes(Buffer.from(params.tag, 'hex')),
-            new Digest20(BoostUtils.createBufferAndPad(params.minerPubKeyHash, 20, false)),
-            new UInt32Big(BoostUtils.createBufferAndPad(params.extraNonce1, 4, false)),
-            new UInt64Big(BoostUtils.createBufferAndPad(params.extraNonce2, 8, false)),
-            new UInt32Little(BoostUtils.createBufferAndPad(params.userNonce, 4, false)),
+            new Digest20(Utils.createBufferAndPad(params.minerPubKeyHash, 20, false)),
+            new UInt32Big(Utils.createBufferAndPad(params.extraNonce1, 4, false)),
+            new UInt64Big(Utils.createBufferAndPad(params.extraNonce2, 8, false)),
+            new UInt32Little(Utils.createBufferAndPad(params.userNonce, 4, false)),
             new Bytes(Buffer.from(params.additionalData, 'hex')),
         )
     }
@@ -45,9 +45,9 @@ export class BoostPowMetadataModel {
         extraNonce2: Buffer,
         userNonce: Buffer,
         additionalData: Buffer
-    }): BoostPowMetadataModel {
+    }): Metadata {
 
-        return new BoostPowMetadataModel(
+        return new Metadata(
             new Bytes(params.tag),
             new Digest20(params.minerPubKeyHash),
             new UInt32Big(params.extraNonce1),

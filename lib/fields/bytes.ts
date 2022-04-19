@@ -1,5 +1,5 @@
 import * as bsv from '../bsv'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 import { Digest32 } from './digest32'
 
 export class Bytes {
@@ -25,7 +25,7 @@ export class Bytes {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.buffer, true)
+    return Utils.trimBufferString(this.buffer, true)
   }
 
   get hash256(): Digest32 {

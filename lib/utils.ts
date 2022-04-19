@@ -1,6 +1,6 @@
 import * as bsv from './bsv'
 
-export class BoostUtils {
+export class Utils {
 
   static getSha256(str, encoding: 'utf8' | 'hex' = 'utf8') {
     const hashed = Buffer.from(str, encoding)
@@ -70,8 +70,8 @@ export class BoostUtils {
    * @return {Number}
    */
   static difficulty (bits: number): number {
-    var difficulty1TargetBN = BoostUtils.getTargetDifficulty(BoostUtils.unitBits())
-    var currentTargetBN = BoostUtils.getTargetDifficulty(bits)
+    var difficulty1TargetBN = Utils.getTargetDifficulty(Utils.unitBits())
+    var currentTargetBN = Utils.getTargetDifficulty(bits)
 
     if (currentTargetBN.gt(difficulty1TargetBN)) {
       return parseFloat(difficulty1TargetBN.toString(10)) / parseFloat(currentTargetBN.toString(10))
@@ -89,7 +89,7 @@ export class BoostUtils {
       throw 'difficulty cannot be infinite'
     }
 
-    var absolute = parseFloat(BoostUtils.getTargetDifficulty(BoostUtils.unitBits()).toString(10)) / difficulty
+    var absolute = parseFloat(Utils.getTargetDifficulty(Utils.unitBits()).toString(10)) / difficulty
 
     var exponent = 0
 
@@ -99,11 +99,11 @@ export class BoostUtils {
     }
 
     if (exponent < 3) {
-      return BoostUtils.minBits()
+      return Utils.minBits()
     }
 
     if (exponent > 32) {
-      return BoostUtils.maxBits()
+      return Utils.maxBits()
     }
 
     let word = Math.trunc(16777216 * absolute) & 0xffffff
@@ -116,7 +116,7 @@ export class BoostUtils {
   }
 
   static getTargetAsNumberBuffer(diff: any): any {
-    const i = BoostUtils.difficulty2bits(diff)
+    const i = Utils.difficulty2bits(diff)
     return Buffer.from(i.toString(16), 'hex').reverse()
   }
 

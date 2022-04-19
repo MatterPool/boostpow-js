@@ -1,4 +1,4 @@
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class InvalidUInt32Big implements Error {
   name = 'InvalidUInt32Big'
@@ -50,6 +50,6 @@ export class UInt32Big {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }

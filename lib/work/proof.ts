@@ -5,7 +5,7 @@ import { UInt32Big } from '../fields/uint32Big'
 import { Digest32 } from '../fields/digest32'
 import { Bytes } from '../fields/bytes'
 import { Difficulty } from '../fields/difficulty'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 import { PowString } from './string'
 export { PowString } from './string'
 
@@ -44,7 +44,7 @@ export function pow_string(p: Puzzle, x: Solution): PowString | undefined {
   if (p.Mask) {
     var generalPurposeBits = x.GeneralPurposeBits
     if (generalPurposeBits) {
-      category = BoostUtils.writeInt32LE(
+      category = Utils.writeInt32LE(
         (p.Category.number & p.Mask.number) |
           (generalPurposeBits.number & ~p.Mask.number))
     } else {

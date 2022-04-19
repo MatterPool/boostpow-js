@@ -7,11 +7,11 @@ import { Digest20 } from './fields/digest20'
 import { Bytes } from './fields/bytes'
 import { Difficulty } from './fields/difficulty'
 import * as work from './work/proof'
-import { BoostPowJobProofModel } from './boost-pow-job-proof-model'
-import { BoostPowMetadataModel } from './boost-pow-metadata-model'
-import { BoostUtils } from './boost-utils'
+import { Redeem } from './redeem'
+import { Metadata } from './metadata'
+import { Utils } from './utils'
 
-export class BoostPowJobModel {
+export class Job {
   private constructor(
     // The hash of the content to be boosted.
     private Content: Digest32,
@@ -70,7 +70,7 @@ export class BoostPowJobModel {
   }
 
   get bits(): UInt32Little {
-    return UInt32Little.fromNumber(BoostUtils.difficulty2bits(this.difficulty))
+    return UInt32Little.fromNumber(Utils.difficulty2bits(this.difficulty))
   }
 
   get minerPubKeyHash(): Digest20 | undefined {
@@ -100,7 +100,7 @@ export class BoostPowJobModel {
 
   // the 16 bits of category that can be set by the user.
   get magicNumber(): UInt16Little {
-    return UInt16Little.fromNumber(BoostUtils.magicNumber(this.category.number))
+    return UInt16Little.fromNumber(Utils.magicNumber(this.category.number))
   }
 
   static fromObject(params: {
@@ -112,7 +112,7 @@ export class BoostPowJobModel {
     userNonce?: string,
     minerPubKeyHash?: string,
     useGeneralPurposeBits?: boolean
-  }): BoostPowJobModel {
+  }): Job {
 
     if (params.content && params.content.length > 64) {
       throw new Error('content too large. Max 32 bytes.')
@@ -127,7 +127,7 @@ export class BoostPowJobModel {
       if (params.category.length > 8) {
         throw new Error('category too large. Max 4 bytes.')
       }
-      category = new Int32Little(BoostUtils.createBufferAndPad(params.category, 4, false))
+      category = new Int32Little(Utils.createBufferAndPad(params.category, 4, false))
     } else {
       category = Int32Little.fromNumber(0)
     }
@@ -159,12 +159,12 @@ export class BoostPowJobModel {
       minerPubKeyHash = new Bytes(Buffer.from(params.minerPubKeyHash, 'hex'))
     }
 
-    return new BoostPowJobModel(
-      new Digest32(BoostUtils.createBufferAndPad(params.content, 32)),
+    return new Job(
+      new Digest32(Utils.createBufferAndPad(params.content, 32)),
       params.diff, category,
       new Bytes(params.tag ? Buffer.from(params.tag, 'hex') : Buffer.alloc(0)),
       new Bytes(params.additionalData ? Buffer.from(params.additionalData, 'hex') : Buffer.alloc(0)),
-      new UInt32Little(BoostUtils.createBufferAndPad(userNonce, 4, false)),
+      new UInt32Little(Utils.createBufferAndPad(userNonce, 4, false)),
       params.useGeneralPurposeBits ? params.useGeneralPurposeBits : false,
       minerPubKeyHash
     )
@@ -236,7 +236,7 @@ export class BoostPowJobModel {
     buildOut.add(this.toOpCode(this.additionalData.buffer))
 
     // Add the rest of the script
-    for (const op of BoostPowJobModel.scriptOperations(this.useGeneralPurposeBits)) {
+    for (const op of Job.scriptOperations(this.useGeneralPurposeBits)) {
       buildOut.add(op)
     }
 
@@ -270,7 +270,7 @@ export class BoostPowJobModel {
     return true
   }
 
-  static readScript(script, txid?: string, vout?: number, value?: number): BoostPowJobModel {
+  static readScript(script, txid?: string, vout?: number, value?: number): Job {
     let category
     let content
     let diff
@@ -328,23 +328,23 @@ export class BoostPowJobModel {
         script.chunks[7].opcodenum == bsv.Opcode.OP_1NEGATE ||
         (script.chunks[7].opcodenum >= bsv.Opcode.OP_1 && script.chunks[7].opcodenum <= bsv.Opcode.OP_16))
       ) {
-        if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+        if (Job.remainingOperationsMatchExactly(script.chunks, 8, Job.scriptOperationsV1NoASICBoost())) {
           useGeneralPurposeBits = false
-        } else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 8, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+        } else if (Job.remainingOperationsMatchExactly(script.chunks, 8, Job.scriptOperationsV2ASICBoost())) {
           useGeneralPurposeBits = true
         } else throw new Error('Invalid script program')
 
-        category = new Int32Little(BoostUtils.fromOpCode(script.chunks[2]))
-        content = new Digest32(BoostUtils.fromOpCode(script.chunks[3]))
-        let targetHex = (BoostUtils.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('')
+        category = new Int32Little(Utils.fromOpCode(script.chunks[2]))
+        content = new Digest32(Utils.fromOpCode(script.chunks[3]))
+        let targetHex = (Utils.fromOpCode(script.chunks[4]).toString('hex').match(/../g) || []).reverse().join('')
         let targetInt = parseInt(targetHex, 16)
-        diff = BoostUtils.difficulty(targetInt)
+        diff = Utils.difficulty(targetInt)
 
-        tag = new Bytes(BoostUtils.fromOpCode(script.chunks[5]))
+        tag = new Bytes(Utils.fromOpCode(script.chunks[5]))
 
-        userNonce = new UInt32Little(BoostUtils.fromOpCode(script.chunks[6]))
+        userNonce = new UInt32Little(Utils.fromOpCode(script.chunks[6]))
 
-        additionalData = new Bytes(BoostUtils.fromOpCode(script.chunks[7]))
+        additionalData = new Bytes(Utils.fromOpCode(script.chunks[7]))
 
       } else throw new Error('Not valid Boost Output')
     } else {
@@ -378,28 +378,28 @@ export class BoostPowJobModel {
         script.chunks[8].opcodenum == bsv.Opcode.OP_1NEGATE ||
         (script.chunks[8].opcodenum >= bsv.Opcode.OP_1 && script.chunks[8].opcodenum <= bsv.Opcode.OP_16))
       ) {
-        if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 9, BoostPowJobModel.scriptOperationsV1NoASICBoost())) {
+        if (Job.remainingOperationsMatchExactly(script.chunks, 9, Job.scriptOperationsV1NoASICBoost())) {
           useGeneralPurposeBits = false
-        } else if (BoostPowJobModel.remainingOperationsMatchExactly(script.chunks, 9, BoostPowJobModel.scriptOperationsV2ASICBoost())) {
+        } else if (Job.remainingOperationsMatchExactly(script.chunks, 9, Job.scriptOperationsV2ASICBoost())) {
           useGeneralPurposeBits = true
         } else throw new Error('Not valid Boost Output')
 
-        minerPubKeyHash = new Bytes(BoostUtils.fromOpCode(script.chunks[2]))
-        category = new Int32Little(BoostUtils.fromOpCode(script.chunks[3]))
-        content = new Digest32(BoostUtils.fromOpCode(script.chunks[4]))
-        let targetHex = (BoostUtils.fromOpCode(script.chunks[5]).toString('hex').match(/../g) || []).reverse().join('')
+        minerPubKeyHash = new Bytes(Utils.fromOpCode(script.chunks[2]))
+        category = new Int32Little(Utils.fromOpCode(script.chunks[3]))
+        content = new Digest32(Utils.fromOpCode(script.chunks[4]))
+        let targetHex = (Utils.fromOpCode(script.chunks[5]).toString('hex').match(/../g) || []).reverse().join('')
         let targetInt = parseInt(targetHex, 16)
-        diff = BoostUtils.difficulty(targetInt)
+        diff = Utils.difficulty(targetInt)
 
-        tag = new Bytes(BoostUtils.fromOpCode(script.chunks[6]))
+        tag = new Bytes(Utils.fromOpCode(script.chunks[6]))
 
-        userNonce = new UInt32Little(BoostUtils.fromOpCode(script.chunks[7]))
+        userNonce = new UInt32Little(Utils.fromOpCode(script.chunks[7]))
 
-        additionalData = new Bytes(BoostUtils.fromOpCode(script.chunks[8]))
+        additionalData = new Bytes(Utils.fromOpCode(script.chunks[8]))
       } else throw new Error('Invalid boost format')
     }
 
-    return new BoostPowJobModel(
+    return new Job(
       content,
       diff,
       category,
@@ -414,12 +414,12 @@ export class BoostPowJobModel {
     )
   }
 
-  static fromHex(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.readScript(new bsv.Script(asm), txid, vout, value)
+  static fromHex(asm: string, txid?: string, vout?: number, value?: number): Job {
+    return Job.readScript(new bsv.Script(asm), txid, vout, value)
   }
 
-  static fromASM(asm: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.readScript(new bsv.Script.fromASM(asm), txid, vout, value)
+  static fromASM(asm: string, txid?: string, vout?: number, value?: number): Job {
+    return Job.readScript(new bsv.Script.fromASM(asm), txid, vout, value)
   }
 
   toASM(): string {
@@ -428,12 +428,12 @@ export class BoostPowJobModel {
     return makeAsm.toASM()
   }
 
-  static fromASM4(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.fromHex(str, txid, vout, value)
+  static fromASM4(str: string, txid?: string, vout?: number, value?: number): Job {
+    return Job.fromHex(str, txid, vout, value)
   }
 
-  static fromASM2(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.fromHex(str, txid, vout, value)
+  static fromASM2(str: string, txid?: string, vout?: number, value?: number): Job {
+    return Job.fromHex(str, txid, vout, value)
   }
 
   toString(): string {
@@ -442,12 +442,12 @@ export class BoostPowJobModel {
     return makeAsm.toString()
   }
 
-  static fromString(str: string, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.fromHex(str, txid, vout, value)
+  static fromString(str: string, txid?: string, vout?: number, value?: number): Job {
+    return Job.fromHex(str, txid, vout, value)
   }
 
-  static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): BoostPowJobModel {
-    return BoostPowJobModel.fromHex(script, txid, vout, value)
+  static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): Job {
+    return Job.fromHex(script, txid, vout, value)
   }
 
   // Optional attached information if available
@@ -480,7 +480,7 @@ export class BoostPowJobModel {
     return bsv.crypto.Hash.sha256(buffer).reverse().toString('hex')
   }
 
-  static fromTransaction(tx: bsv.Transaction, vout: number = 0): BoostPowJobModel | undefined {
+  static fromTransaction(tx: bsv.Transaction, vout: number = 0): Job | undefined {
     if (!tx) {
       return undefined
     }
@@ -490,22 +490,22 @@ export class BoostPowJobModel {
     }
 
     if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf && tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-      return BoostPowJobModel.fromScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis)
+      return Job.fromScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis)
     }
 
     return undefined
   }
 
-  static fromTransactionGetAllOutputs(tx: bsv.Transaction): BoostPowJobModel[] {
+  static fromTransactionGetAllOutputs(tx: bsv.Transaction): Job[] {
     if (!tx) {
       return []
     }
 
-    const boostJobs: BoostPowJobModel[] = []
+    const boostJobs: Job[] = []
     let o = 0
     for (const out of tx.outputs) {
       if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-        boostJobs.push(BoostPowJobModel.fromScript(out.script, tx.hash, o, out.satoshis))
+        boostJobs.push(Job.fromScript(out.script, tx.hash, o, out.satoshis))
       }
       o++
     }
@@ -513,13 +513,13 @@ export class BoostPowJobModel {
     return boostJobs
   }
 
-  static fromRawTransaction(rawtx: string, vout: number = 0): BoostPowJobModel | undefined {
+  static fromRawTransaction(rawtx: string, vout: number = 0): Job | undefined {
     if (isNaN(vout)) {
       return undefined
     }
 
     const tx = new bsv.Transaction(rawtx)
-    return BoostPowJobModel.fromTransaction(tx, vout)
+    return Job.fromTransaction(tx, vout)
   }
 
   /**
@@ -529,8 +529,8 @@ export class BoostPowJobModel {
    * @param boostPowJobProof Boost job proof to use to redeem
    * @param privateKey The private key string of the minerPubKeyHash
    */
-  static createRedeemTransaction(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null {
-    const boostPowString = BoostPowJobModel.tryValidateJobProof(boostPowJob, boostPowJobProof)
+  static createRedeemTransaction(boostPowJob: Job, boostPowJobProof: Redeem, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null {
+    const boostPowString = Job.tryValidateJobProof(boostPowJob, boostPowJobProof)
     if (!boostPowString) {
       throw new Error('createRedeemTransaction: Invalid Job Proof')
     }
@@ -593,7 +593,7 @@ export class BoostPowJobModel {
     return tx
   }
 
-  static createBoostPowMetadata(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): BoostPowMetadataModel {
+  static createBoostPowMetadata(boostPowJob: Job, boostPowJobProof: Redeem): Metadata {
     let minerPubKeyHash
     if (boostPowJobProof.minerPubKeyHash) {
       minerPubKeyHash = boostPowJobProof.minerPubKeyHash
@@ -601,7 +601,7 @@ export class BoostPowJobModel {
       minerPubKeyHash = boostPowJob.minerPubKeyHash
     } else throw "invalid proof"
 
-    return BoostPowMetadataModel.fromBuffer({
+    return Metadata.fromBuffer({
       tag: boostPowJob.tag.buffer,
       minerPubKeyHash: minerPubKeyHash.buffer,
       extraNonce1: boostPowJobProof.extraNonce1.buffer,
@@ -611,8 +611,8 @@ export class BoostPowJobModel {
     })
   }
 
-  static proof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): work.Proof {
-    const meta = BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
+  static proof(boostPowJob: Job, boostPowJobProof: Redeem): work.Proof {
+    const meta = Job.createBoostPowMetadata(boostPowJob, boostPowJobProof)
 
     let meta_begin = new Bytes(Buffer.concat([
       meta.tag.buffer,
@@ -634,7 +634,7 @@ export class BoostPowJobModel {
         new Difficulty(boostPowJob.difficulty),
         meta_begin,
         meta_end,
-        Int32Little.fromNumber(BoostUtils.generalPurposeBitsMask())
+        Int32Little.fromNumber(Utils.generalPurposeBitsMask())
       )
     } else {
       z = new work.Puzzle(
@@ -666,13 +666,13 @@ export class BoostPowJobModel {
     return new work.Proof(z, x)
   }
 
-  static tryValidateJobProof(boostPowJob: BoostPowJobModel, boostPowJobProof: BoostPowJobProofModel): null | { boostPowString: work.PowString, boostPowMetadata: BoostPowMetadataModel } {
+  static tryValidateJobProof(boostPowJob: Job, boostPowJobProof: Redeem): null | { boostPowString: work.PowString, boostPowMetadata: Metadata } {
     let x = this.proof(boostPowJob, boostPowJobProof).string()
     if (!(x && x.valid())) return null
 
     return {
       boostPowString: x,
-      boostPowMetadata: BoostPowJobModel.createBoostPowMetadata(boostPowJob, boostPowJobProof)
+      boostPowMetadata: Job.createBoostPowMetadata(boostPowJob, boostPowJobProof)
     }
   }
 
@@ -753,9 +753,9 @@ export class BoostPowJobModel {
       bsv.Opcode.OP_CAT,
 
       // Take hash of work string and ensure that it is positive and minimally encoded.
-      bsv.Opcode.OP_HASH256, ...BoostPowJobModel.ensure_positive(),
+      bsv.Opcode.OP_HASH256, ...Job.ensure_positive(),
 
-      bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.ensure_positive(),
+      bsv.Opcode.OP_FROMALTSTACK, ...Job.expand_target(), ...Job.ensure_positive(),
 
       // check that the hash of the Boost POW string is less than the target
       bsv.Opcode.OP_LESSTHAN,
@@ -850,9 +850,9 @@ export class BoostPowJobModel {
       bsv.Opcode.OP_CAT,
 
       // Take hash of work string and ensure that it is positive and minimally encoded.
-      bsv.Opcode.OP_HASH256, ...BoostPowJobModel.ensure_positive(),
+      bsv.Opcode.OP_HASH256, ...Job.ensure_positive(),
 
-      bsv.Opcode.OP_FROMALTSTACK, ...BoostPowJobModel.expand_target(), ...BoostPowJobModel.ensure_positive(),
+      bsv.Opcode.OP_FROMALTSTACK, ...Job.expand_target(), ...Job.ensure_positive(),
 
       // check that the hash of the Boost POW string is less than the target
       bsv.Opcode.OP_LESSTHAN,

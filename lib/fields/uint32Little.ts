@@ -1,4 +1,4 @@
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class UInt32Little {
   constructor(
@@ -45,6 +45,6 @@ export class UInt32Little {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }
