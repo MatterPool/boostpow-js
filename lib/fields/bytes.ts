@@ -1,4 +1,4 @@
-import * as bsv from '../bsv/index'
+import * as bsv from '../bsv'
 import { BoostUtils } from '../boost-utils'
 import { Digest32 } from './digest32'
 

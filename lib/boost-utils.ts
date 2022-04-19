@@ -1,4 +1,4 @@
-import * as bsv from './bsv/index'
+import * as bsv from './bsv'
 
 export class BoostUtils {
 
