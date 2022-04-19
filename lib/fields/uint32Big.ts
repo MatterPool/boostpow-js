@@ -1,8 +1,7 @@
-import * as bsv from 'bsv'
 import { BoostUtils } from '../boost-utils'
 
 export class InvalidUInt32Big implements Error {
-  name = 'InvalidUInt32Big' 
+  name = 'InvalidUInt32Big'
   message = 'Value must be between 0 and 4294967295'
 }
 

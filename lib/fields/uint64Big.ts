@@ -1,4 +1,3 @@
-import * as bsv from 'bsv'
 import { BoostUtils } from '../boost-utils'
 
 export class UInt64Big {

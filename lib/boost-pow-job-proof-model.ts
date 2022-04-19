@@ -1,4 +1,4 @@
-import * as bsv from 'bsv'
+import * as bsv from './bsv/index'
 import { BoostUtils } from './boost-utils'
 import { UInt32Little } from './fields/uint32Little'
 import { Int32Little } from './fields/int32Little'
