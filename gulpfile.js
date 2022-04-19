@@ -13,6 +13,8 @@ var paths = {
 var header = require('gulp-header');
 // using data from package.json
 var pkg = require('./package.json');
+const babel = require('gulp-babel');
+const babelify = require('babelify');
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
   ' * @version v<%= pkg.version %>',
@@ -46,11 +48,16 @@ var banner = ['/**',
   ' */',
   ''].join('\n');
 
-gulp.task("copy-html", function () {
+
+
+gulp.task("copy-bsv", function () {
+  return gulp.src('lib/bsv/**/*.js')
+      .pipe(gulp.dest('dist/bsv'))
+})
+gulp.task("copy-html", gulp.series("copy-bsv",function () {
   return gulp.src(paths.pages)
       .pipe(gulp.dest("dist"));
-});
-
+}));
 gulp.task("build", gulp.series('copy-html', function () {
   return browserify({
       basedir: '.',
@@ -59,6 +66,10 @@ gulp.task("build", gulp.series('copy-html', function () {
       cache: {},
       packageCache: {}
   })
+      .transform(babelify.configure({
+        presets: ['@babel/preset-env'],
+        sourceType: 'module',
+      }))
   .plugin(tsify)
   .bundle()
   .pipe(source('boostpow.js'))

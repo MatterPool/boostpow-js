@@ -1,4 +1,4 @@
-import { bsv } from './bsv'
+import * as bsv from './bsv'
 import { Int32Little } from './fields/int32Little'
 import { UInt32Little } from './fields/uint32Little'
 import { UInt16Little } from './fields/uint16Little'

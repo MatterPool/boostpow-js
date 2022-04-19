@@ -49,11 +49,11 @@ export class BoostUtils {
    * @param {Number} bits
    * @returns {BN} An instance of BN with the decoded difficulty bits
    */
-  public static getTargetDifficulty(bits: number): bsv.Bn {
-    var target = new bsv.Bn(bits & 0xffffff)
+  public static getTargetDifficulty(bits: number): bsv.crypto.BN {
+    var target = new bsv.crypto.BN(bits & 0xffffff)
     var mov = ((bits >>> 24) - 3)
     while (mov-- > 0) {
-      target = target.mul(new bsv.Bn(256))
+      target = target.mul(new bsv.crypto.BN(256))
     }
     return target
   }
