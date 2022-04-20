@@ -567,7 +567,7 @@ export class BoostPowJobModel {
       satoshis: receiveSats ? receiveSats - 517 : 0 //subtract miner fee
     }))
 
-    const signature = bsv.Transaction.sighash.sign(tx,
+    const signature = bsv.Transaction.Sighash.sign(tx,
       privKey, sigtype, 0, tx.inputs[0].output.script,
       new bsv.crypto.BN(tx.inputs[0].output.satoshis), flags)
 

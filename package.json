@@ -7,6 +7,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && gulp build",
+    "bt": "npm run build && npm run test",
     "test": "mocha --reporter spec test/*.js test*.ts",
     "test_submitBoostJob": "mocha --reporter spec --grep 'submitBoostJob'",
     "test_BoostPowMetadata": "mocha --reporter spec --grep 'BoostPowMetadata'",
