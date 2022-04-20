@@ -593,6 +593,41 @@ export class Job {
     return tx
   }
 
+  static puzzle(boostPowJob: Job, address?: Digest20): work.Puzzle {
+    let minerPubKeyHash
+    if (boostPowJob.isBounty() && address !== undefined) {
+      minerPubKeyHash = address
+    } else if (boostPowJob.isContract() && address === undefined) {
+      minerPubKeyHash = boostPowJob.minerPubKeyHash
+    } else throw "invalid"
+
+    let meta_begin = new Bytes(Buffer.concat([
+      boostPowJob.tag.buffer,
+      minerPubKeyHash.buffer
+    ]))
+
+    let meta_end = new Bytes(Buffer.concat([
+      boostPowJob.userNonce.buffer,
+      boostPowJob.additionalData.buffer
+    ]))
+
+    return boostPowJob.useGeneralPurposeBits ?
+      new work.Puzzle(
+        boostPowJob.category,
+        boostPowJob.content,
+        new Difficulty(boostPowJob.difficulty),
+        meta_begin,
+        meta_end,
+        Int32Little.fromNumber(Utils.generalPurposeBitsMask())
+      ) : new work.Puzzle(
+        boostPowJob.category,
+        boostPowJob.content,
+        new Difficulty(boostPowJob.difficulty),
+        meta_begin,
+        meta_end
+      )
+  }
+
   static createBoostPowMetadata(boostPowJob: Job, boostPowJobProof: Redeem): Metadata {
     let minerPubKeyHash
     if (boostPowJobProof.minerPubKeyHash) {
