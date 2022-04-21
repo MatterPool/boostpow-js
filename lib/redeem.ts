@@ -156,7 +156,7 @@ export class Redeem {
       return obj
     }
 
-    toScript(): bsv.Script {
+    private toScript(): bsv.Script {
 
       let buildOut = bsv.Script()
 
@@ -216,7 +216,7 @@ export class Redeem {
         return Redeem.fromTransaction(tx)
     }
 
-    static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): Redeem {
+    private static fromScript(script: bsv.Script, txid?: string, vin?: number, spentTxid?: string, spentVout?: number): Redeem {
       let signature
       let minerPubKey
       let time
@@ -359,8 +359,12 @@ export class Redeem {
         return this.toScript().toString()
     }
 
-    toBuffer(): string {
+    toBuffer(): Bytes {
         return this.toScript().toBuffer()
+    }
+
+    static fromBuffer(b: Buffer): Redeem {
+        return Redeem.fromScript(bsv.Script.fromBuffer(b))
     }
 
     static fromString(str: string, txid?: string, vin?: number): Redeem {

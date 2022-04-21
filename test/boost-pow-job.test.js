@@ -1001,9 +1001,15 @@ describe("test serialize with empty values", () => {
     let job = index.BoostPowJob.fromObject({
       content: '00000000000000000000000058e3baf54d1f81304bafcf2a3e24db4bfd6b5cca',
       diff: 0.001
-    }).toScript()
+    })
 
-    expect(job).to.eql(index.BoostPowJob.fromScript(job).toScript())
+    let hex = job.toHex()
+    let buf = job.toBuffer()
+    let asm = job.toASM()
+
+    expect(hex).to.eql(index.BoostPowJob.fromHex(hex).toHex())
+    expect(buf).to.eql(index.BoostPowJob.fromBuffer(buf).toBuffer())
+    expect(asm).to.eql(index.BoostPowJob.fromASM(asm).toASM())
 
   })
 })

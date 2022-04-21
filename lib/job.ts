@@ -199,6 +199,10 @@ export class Job {
     return this.toScript().toHex()
   }
 
+  toBuffer(): Buffer {
+    return this.toScript().toBuffer()
+  }
+
   private toOpCode(num:Buffer)  {
     if(num.length == 1) {
       if (num[0] >= 1 && num[0] <= 16) {
@@ -270,7 +274,7 @@ export class Job {
     return true
   }
 
-  static readScript(script, txid?: string, vout?: number, value?: number): Job {
+  private static readScript(script: bsv.Script, txid?: string, vout?: number, value?: number): Job {
     let category
     let content
     let diff
@@ -422,6 +426,10 @@ export class Job {
     return Job.readScript(new bsv.Script.fromASM(asm), txid, vout, value)
   }
 
+  static fromBuffer(b: Buffer, txid?: string, vout?: number, value?: number): Job {
+    return Job.readScript(new bsv.Script.fromBuffer(b), txid, vout, value)
+  }
+
   toASM(): string {
     const makeHex = this.toHex()
     const makeAsm = new bsv.Script(makeHex)
@@ -444,10 +452,6 @@ export class Job {
 
   static fromString(str: string, txid?: string, vout?: number, value?: number): Job {
     return Job.fromHex(str, txid, vout, value)
-  }
-
-  static fromScript(script: bsv.Script, txid?: string, vout?: number, value?: number): Job {
-    return Job.fromHex(script, txid, vout, value)
   }
 
   // Optional attached information if available
@@ -490,7 +494,7 @@ export class Job {
     }
 
     if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf && tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-      return Job.fromScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis)
+      return Job.readScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis)
     }
 
     return undefined
@@ -505,7 +509,7 @@ export class Job {
     let o = 0
     for (const out of tx.outputs) {
       if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
-        boostJobs.push(Job.fromScript(out.script, tx.hash, o, out.satoshis))
+        boostJobs.push(Job.readScript(out.script, tx.hash, o, out.satoshis))
       }
       o++
     }
