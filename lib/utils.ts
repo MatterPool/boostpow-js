@@ -115,7 +115,7 @@ export class Utils {
     return (exponent << 24) | word
   }
 
-  static getTargetAsNumberBuffer(diff: any): any {
+  static getTargetAsNumberBuffer(diff: number): Buffer {
     const i = Utils.difficulty2bits(diff)
     return Buffer.from(i.toString(16), 'hex').reverse()
   }
@@ -164,7 +164,7 @@ export class Utils {
     return this.generalPurposeBitsMask() & category
   }
 
-  static createBufferAndPad(buf: any, length: number, reverse = true): any {
+  static createBufferAndPad(buf, length: number, reverse = true): Buffer {
     if (!buf) {
       const emptyBuffer = Buffer.alloc(length)
       emptyBuffer.fill(0)

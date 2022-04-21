@@ -13,7 +13,7 @@ var paths = {
 var header = require('gulp-header');
 // using data from package.json
 var pkg = require('./package.json');
-const babel = require('gulp-babel');
+//const babel = require('gulp-babel');
 const babelify = require('babelify');
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
