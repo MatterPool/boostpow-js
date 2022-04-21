@@ -1,10 +1,10 @@
-import * as bsv from 'bsv'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class UInt32Little {
   constructor(
     private data: Buffer,
   ) {
+    this.data = data;
   }
 
   static fromNumber(num: number): UInt32Little {
@@ -12,6 +12,19 @@ export class UInt32Little {
     if (num <= 4294967295 && num >= 0) {
       data.writeUInt32LE(num)
     }
+    return new UInt32Little(data)
+  }
+
+  static fromHex(hex: string): UInt32Little | undefined {
+    if (hex.length != 8) {
+      return
+    }
+
+    let data = Buffer.from(hex, 'hex');
+    if (data.length != 4) {
+      return
+    }
+
     return new UInt32Little(data)
   }
 
@@ -32,6 +45,6 @@ export class UInt32Little {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }

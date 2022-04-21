@@ -1,8 +1,8 @@
 "use strict"
 var expect = require("chai").expect
-var index = require("../dist/index.js")
+var index = require("..")
 
-var bsv = require("bsv")
+var bsv = require("../lib/bsv")
 var sampleTx1 =
   "010000000174d9f6dc235207fbbcdff7bdc412dcb375eb634da698ed164cc1e9aa1b88729a040000006b4830450221008596410738406e0e8589292a0e7a4d960e739025ab1859a3df6c77b4cf8c59ac0220733024f199162bc7b9ccd648aae56f0a0e307558a9827a26d35b1016de1865c54121025a77fe27d1db166b660205ff08b97f7dd87c7c68edaa2931895c2c8577f1a351ffffffff027d20000000000000e108626f6f7374706f777504000000002035b8fcb6882f93bddb928c9872198bcdf057ab93ed615ad938f24a63abde588104ffff001d14000000000000000000000000000000000000000004000000002000000000000000000000000000000000000000000000000000000000000000007e7c557a766b7e52796b557a8254887e557a8258887e7c7eaa7c6b7e7e7c8254887e6c7e7c8254887eaa01007e816c825488537f7681530121a5696b768100a0691d00000000000000000000000000000000000000000000000000000000007e6c539458959901007e819f6976a96c88acb461590e000000001976a914ba6e459a2b505dc78e44e8c5874776c00890e16088ac00000000";
 var sampleTx1Value = 8317
@@ -615,6 +615,8 @@ describe("BoostPowJob", () => {
       "01000000646c726f77206f6c6c65480000000000000000000000000000000000000000002a96153663424ecfd483872e26e59bb02fd781a965df6575c437b0848e27d8aca6c8cb4dffff001dae5172dc"
     )
 
+    expect(boostPowString.hash).to.not.equal(undefined)
+
     expect(boostPowString.hash.hex).to.equal(
       "0000000086915e291fe43f10bdd8232f65e6eb64628bbb4d128be3836c21b6cc"
     )
@@ -999,9 +1001,15 @@ describe("test serialize with empty values", () => {
     let job = index.BoostPowJob.fromObject({
       content: '00000000000000000000000058e3baf54d1f81304bafcf2a3e24db4bfd6b5cca',
       diff: 0.001
-    }).toScript()
+    })
 
-    expect(job).to.eql(index.BoostPowJob.fromScript(job).toScript())
+    let hex = job.toHex()
+    let buf = job.toBuffer()
+    let asm = job.toASM()
+
+    expect(hex).to.eql(index.BoostPowJob.fromHex(hex).toHex())
+    expect(buf).to.eql(index.BoostPowJob.fromBuffer(buf).toBuffer())
+    expect(asm).to.eql(index.BoostPowJob.fromASM(asm).toASM())
 
   })
 })
