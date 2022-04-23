@@ -79,21 +79,27 @@
     "mocha": "^8.4.0",
     "semantic-release": "^19.0.2",
     "streamqueue": "^1.1.2",
+    "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "tsify": "^4.0.1",
-    "typescript": "^3.9.6",
+    "typescript": "^3.9.10",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@types/node": "^13.7.7",
     "axios": "^0.21.1",
     "bs58": "^5.0.0",
     "clone-deep": "^4.0.1",
+    "crypto-browserify": "^3.12.0",
     "crypto-random-string": "^3.1.0",
     "i": "^0.3.6",
     "mattercloudjs": "^1.0.12",
-    "randombytes": "^2.1.0"
+    "randombytes": "^2.1.0",
+    "stream-browserify": "^3.0.0",
+    "vm-browserify": "^1.1.2",
+    "webpack": "^5.72.0"
   },
   "files": [
     "dist/*"
