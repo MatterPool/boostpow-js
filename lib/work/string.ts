@@ -1,9 +1,9 @@
-import * as bsv from 'bsv'
+import * as bsv from '../bsv'
 import { Int32Little } from '../fields/int32Little'
 import { UInt32Little } from '../fields/uint32Little'
 import { UInt16Little } from '../fields/uint16Little'
 import { Digest32 } from '../fields/digest32'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class PowString {
     private _blockheader
@@ -31,7 +31,7 @@ export class PowString {
     }
 
     get magicNumber(): UInt16Little {
-      return UInt16Little.fromNumber(BoostUtils.magicNumber(this.category.number))
+      return UInt16Little.fromNumber(Utils.magicNumber(this.category.number))
     }
 
     get content(): Digest32 {
@@ -117,3 +117,5 @@ export class PowString {
     }
 
 }
+
+export { PowString as BoostPowString }

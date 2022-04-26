@@ -1,8 +1,7 @@
-import * as bsv from 'bsv'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class InvalidUInt32Big implements Error {
-  name = 'InvalidUInt32Big' 
+  name = 'InvalidUInt32Big'
   message = 'Value must be between 0 and 4294967295'
 }
 
@@ -51,6 +50,6 @@ export class UInt32Big {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.data, true)
+    return Utils.trimBufferString(this.data, true)
   }
 }

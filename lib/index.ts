@@ -1,7 +1,8 @@
-import { BoostPowJobModel } from './boost-pow-job-model'
-import { BoostPowJobProofModel } from './boost-pow-job-proof-model'
-import { BoostPowMetadataModel } from './boost-pow-metadata-model'
-import { BoostUtils } from './boost-utils'
+import { Job } from './job'
+import { Redeem } from './redeem'
+import { Metadata } from './metadata'
+import { Utils } from './utils'
+import { BoostPowString } from './work/string'
 import * as work from './work/proof'
 
 export { Bytes } from './fields/bytes'
@@ -15,8 +16,13 @@ export { UInt32Big } from './fields/uint32Big'
 export { UInt64Big } from './fields/uint64Big'
 export * as work from './work/proof'
 
-export let BoostPowJob = BoostPowJobModel
-export let BoostPowJobProof = BoostPowJobProofModel
-export let BoostPowString = work.PowString
-export let BoostPowMetadata = BoostPowMetadataModel
-export let BoostUtilsHelper = BoostUtils
+export { Job }
+export { Redeem }
+export { Metadata }
+export { Utils }
+
+export { BoostPowString } from './work/string'
+export { Job as BoostPowJob }
+export { Redeem as BoostPowJobProof }
+export { Metadata as BoostPowMetadata }
+export { Utils as BoostUtilsHelper }

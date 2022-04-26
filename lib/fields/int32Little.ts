@@ -1,5 +1,4 @@
-import * as bsv from 'bsv'
-import { BoostUtils } from '../boost-utils'
+import { Utils } from '../utils'
 
 export class Int32Little {
   constructor(
@@ -45,7 +44,7 @@ export class Int32Little {
   }
 
   get utf8(): string {
-    return BoostUtils.trimBufferString(this.buffer, true)
+    return Utils.trimBufferString(this.buffer, true)
   }
 
 }
