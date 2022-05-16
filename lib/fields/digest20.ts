@@ -21,4 +21,8 @@ export class Digest20 {
   get utf8(): string {
     return Utils.trimBufferString(this.data, true)
   }
+
+  equals(d: Digest20): boolean {
+    return this.data.equals(d.buffer)
+  }
 }

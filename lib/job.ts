@@ -539,11 +539,8 @@ export class Job {
       throw new Error('createRedeemTransaction: Invalid Job Proof')
     }
 
-    if (!boostPowJob.txid ||
-      (boostPowJob.vout === undefined ||  boostPowJob.vout === null ) ||
-      !boostPowJob.value) {
-      throw new Error('createRedeemTransaction: Boost Pow Job requires txid, vout, and value')
-    }
+    if (!boostPowJob.txid || !boostPowJob.vout || !boostPowJob.value)
+      throw new Error('createRedeemTransaction: job requires txid, vout, and value')
 
     let tx = new bsv.Transaction()
     tx.addInput(

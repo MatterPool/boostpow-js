@@ -2,8 +2,6 @@ import { Job } from './job'
 import { Redeem } from './redeem'
 import { Metadata } from './metadata'
 import { Utils } from './utils'
-import { BoostPowString } from './work/string'
-import * as work from './work/proof'
 
 export { Bytes } from './fields/bytes'
 export { Difficulty } from './fields/difficulty'
@@ -15,11 +13,14 @@ export { UInt32Little } from './fields/uint32Little'
 export { UInt32Big } from './fields/uint32Big'
 export { UInt64Big } from './fields/uint64Big'
 export * as work from './work/proof'
+export * as bsv from './bsv'
 
 export { Job }
 export { Redeem }
 export { Metadata }
 export { Utils }
+export { Output } from './output'
+export { Puzzle } from './puzzle'
 
 export { BoostPowString } from './work/string'
 export { Job as BoostPowJob }

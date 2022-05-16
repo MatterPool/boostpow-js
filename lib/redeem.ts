@@ -1,4 +1,5 @@
 import * as bsv from './bsv'
+import * as work from './work/proof'
 import { Utils } from './utils'
 import { UInt32Little } from './fields/uint32Little'
 import { Int32Little } from './fields/int32Little'
@@ -91,6 +92,16 @@ export class Redeem {
             minerPubKeyHash,
             generalPurposeBits
         )
+    }
+
+    static fromSolution(
+        signature: Bytes,
+        minerPubKey: Bytes,
+        solution: work.Solution,
+        minerPubKeyHash?: Digest20): Redeem {
+      return new Redeem(signature, minerPubKey,
+        solution.Time, solution.ExtraNonce1, solution.ExtraNonce2, solution.Nonce,
+        minerPubKeyHash, solution.GeneralPurposeBits)
     }
 
     get time(): UInt32Little {
