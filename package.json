@@ -1,13 +1,15 @@
 {
-  "name": "@matterpool/boostpow-js",
-  "version": "1.2.32",
-  "description": "BoostPow Javascript SDK - matterpool.io",
+  "name": "boostpow",
+  "version": "1.4.1",
+  "description": "BoostPow Javascript SDK",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist//index.d.ts",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && gulp build",
-    "test": "mocha --reporter spec",
+    "tsc": "tsc",
+    "build": "tsc && webpack",
+    "bt": "npm run build && npm run test",
+    "test": "mocha --reporter spec test/*.js test*.ts",
     "test_submitBoostJob": "mocha --reporter spec --grep 'submitBoostJob'",
     "test_BoostPowMetadata": "mocha --reporter spec --grep 'BoostPowMetadata'",
     "test_BoostPowJobProof": "mocha --reporter spec --grep 'BoostPowJobProof'",
@@ -16,17 +18,15 @@
     "test_curr": "mocha --reporter spec --grep 'test_curr'",
     "test_decode": "mocha --reporter spec --grep 'test_decode'",
     "test_file": "mocha --reporter spec --grep 'filepay'",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "commit": "npx cz",
+    "semantic-release": "npx semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MatterPool/boostpow-js.git"
+    "url": "https://github.com/ProofOfWorkCompany/boostpow-js.git"
   },
-  "author": "MatterPool Inc.",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/MatterPool/boostpow-js/issues"
-  },
+  "author": "",
   "keywords": [
     "bitcoin",
     "bsv",
@@ -39,53 +39,52 @@
     "boost-protocal",
     "hashcash",
     "blockchain",
-    "matterpool",
     "satoshi",
     "satoshi-vision"
   ],
-  "homepage": "https://github.com/MatterPool/boostpow-js#readme",
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ],
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.6",
     "@babel/plugin-transform-arrow-functions": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.16.11",
+    "@types/mocha": "^9.1.0",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "browserify-shim": "^3.8.14",
-    "bsv": "^1.5.6",
     "chai": "^4.2.0",
-    "gulp": "^4.0.2",
-    "gulp-batch": "^1.0.5",
-    "gulp-clean-css": "^3.10.0",
-    "gulp-clone": "^2.0.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-concat-css": "^3.1.0",
-    "gulp-cssimport": "^6.0.1",
-    "gulp-foreach": "^0.1.0",
-    "gulp-header": "^2.0.7",
-    "gulp-htmlmin": "^5.0.1",
-    "gulp-less": "^4.0.1",
-    "gulp-livereload": "^4.0.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-typescript": "^5.0.1",
-    "gulp-uglify": "^3.0.2",
-    "gulp-uglify-es": "^1.0.4",
-    "gulp-watch": "^5.0.1",
+    "copy-webpack-plugin": "^10.2.4",
+    "cz": "^1.8.2",
+    "cz-conventional-changelog": "^3.3.0",
     "mocha": "^8.4.0",
+    "semantic-release": "^19.0.2",
     "streamqueue": "^1.1.2",
+    "ts-loader": "^9.2.8",
+    "ts-node": "^10.7.0",
     "tsify": "^4.0.1",
-    "typescript": "^3.9.6",
+    "typescript": "^4.6.3",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "webpack-cli": "^4.9.2",
+    "webpack": "^5.72.0"
   },
   "dependencies": {
     "@types/node": "^13.7.7",
     "axios": "^0.21.1",
+    "bs58": "^5.0.0",
+    "clone-deep": "^4.0.1",
+    "crypto-browserify": "^3.12.0",
     "crypto-random-string": "^3.1.0",
     "i": "^0.3.6",
     "mattercloudjs": "^1.0.12",
-    "randombytes": "^2.1.0"
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "randombytes": "^2.1.0",
+    "stream-browserify": "^3.0.0",
+    "vm-browserify": "^1.1.2"
   },
   "files": [
     "dist/*"
@@ -93,5 +92,10 @@
   "directories": {
     "lib": "lib",
     "test": "test"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

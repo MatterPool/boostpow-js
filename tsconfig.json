@@ -6,6 +6,15 @@
     "outDir": "./dist",
     "strict": true,
     "noImplicitAny": false
-  }
+  },
+  "include": [
+    "lib/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts"
+  ]
 }
 
