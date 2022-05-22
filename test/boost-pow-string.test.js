@@ -20,7 +20,9 @@ describe("boost #BoostPowString.fromObject", () => {
     )
 
     expect(obj.toString()).to.eql(
-      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8cb4db3936a1ae3143991"
+      "010000009500c43a25c624520b5100adf82cb9f9da72fd2447a496bc600b0000000000" +
+      "006cd862370395dedf1da2841ccda0fc489e3039de5f1ccddef0e834991a65600ea6c8" +
+      "cb4db3936a1ae3143991"
     )
   })
 })

@@ -1,3 +1,4 @@
+import * as bsv from './bsv'
 import { Job } from './job'
 import { Digest32 } from './fields/digest32'
 
@@ -19,6 +20,11 @@ export class Output {
     else if (!job.txid) throw "invalid output: missing parameter txid"
     if (vout) this._vout = vout
     else if (!job.vout) throw "invalid output: missing parameter vout"
+  }
+
+  static fromTransaction(tx: bsv.Transaction, vout: number): Output | undefined {
+    let j = Job.fromTransaction(tx, vout)
+    if (j) return new Output(j)
   }
 
   get value(): number {

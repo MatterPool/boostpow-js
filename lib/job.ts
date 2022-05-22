@@ -493,7 +493,8 @@ export class Job {
       return undefined
     }
 
-    if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf && tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
+    if (tx.outputs[vout].script && tx.outputs[vout].script.chunks[0].buf &&
+      tx.outputs[vout].script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
       return Job.readScript(tx.outputs[vout].script, tx.hash, vout, tx.outputs[vout].satoshis)
     }
 
@@ -508,7 +509,8 @@ export class Job {
     const boostJobs: Job[] = []
     let o = 0
     for (const out of tx.outputs) {
-      if (out.script && out.script.chunks[0].buf && out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
+      if (out.script && out.script.chunks[0].buf &&
+        out.script.chunks[0].buf.toString('hex') === Buffer.from('boostpow', 'utf8').toString('hex')) {
         boostJobs.push(Job.readScript(out.script, tx.hash, o, out.satoshis))
       }
       o++
@@ -533,14 +535,21 @@ export class Job {
    * @param boostPowJobProof Boost job proof to use to redeem
    * @param privateKey The private key string of the minerPubKeyHash
    */
-  static createRedeemTransaction(boostPowJob: Job, boostPowJobProof: Redeem, privateKeyStr: string, receiveAddressStr: string): bsv.Transaction | null {
+  static createRedeemTransaction(
+    boostPowJob: Job,
+    boostPowJobProof: Redeem,
+    privateKeyStr: string,
+    receiveAddressStr: string): bsv.Transaction | null {
     const boostPowString = Job.tryValidateJobProof(boostPowJob, boostPowJobProof)
     if (!boostPowString) {
       throw new Error('createRedeemTransaction: Invalid Job Proof')
     }
 
-    if (!boostPowJob.txid || !boostPowJob.vout || !boostPowJob.value)
-      throw new Error('createRedeemTransaction: job requires txid, vout, and value')
+    if (boostPowJob.value === undefined) throw new Error('createRedeemTransaction: job requires satoshi value')
+
+    if (boostPowJob.txid === undefined) throw new Error('createRedeemTransaction: job requires txid')
+
+    if (boostPowJob.vout === undefined) throw new Error('createRedeemTransaction: job requires vout')
 
     let tx = new bsv.Transaction()
     tx.addInput(
@@ -702,7 +711,8 @@ export class Job {
     return new work.Proof(z, x)
   }
 
-  static tryValidateJobProof(boostPowJob: Job, boostPowJobProof: Redeem): null | { boostPowString: work.PowString, boostPowMetadata: Metadata } {
+  static tryValidateJobProof(boostPowJob: Job, boostPowJobProof: Redeem):
+    null | { boostPowString: work.PowString, boostPowMetadata: Metadata } {
     let x = this.proof(boostPowJob, boostPowJobProof).string()
     if (!(x && x.valid())) return null
 
@@ -938,7 +948,10 @@ export class Job {
   }
 
   /*
-  Numbers in Bitcoin script are in little endian and the last bit is a sign bit. However, the target and the hash digest are both supposed to be positive numbers. Thus, we have to attach an extra byte of zeros to numbers if they would be treated as negative in Bitcoin script.
+  Numbers in Bitcoin script are in little endian and the last bit is a sign bit.
+  However, the target and the hash digest are both supposed to be positive
+  numbers. Thus, we have to attach an extra byte of zeros to numbers if they
+  would be treated as negative in Bitcoin script.
   */
   static ensure_positive() {
     return [
